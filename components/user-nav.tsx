@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,28 +10,29 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+} from "@/components/ui/dropdown-menu";
+import { createClient } from "@/lib/supabase/client";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export function UserNav() {
-  const supabase = createClient()
-  const router = useRouter()
-  const [user, setUser] = useState<any>(null)
+  const supabase = createClient();
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     const getUser = async () => {
-      const { data } = await supabase.auth.getUser()
-      setUser(data.user)
-    }
-    getUser()
-  }, [supabase.auth])
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user);
+    };
+    getUser();
+  }, [supabase.auth]);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.refresh()
-  }
+    await supabase.auth.signOut();
+    router.push("/");
+  };
 
   return (
     <DropdownMenu>
@@ -46,7 +47,9 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user?.user_metadata.name}</p>
+            <p className="text-sm font-medium leading-none">
+              {user?.user_metadata.name}
+            </p>
             <p className="text-xs leading-none text-muted-foreground">
               {user?.email}
             </p>
@@ -54,13 +57,13 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Hồ sơ</DropdownMenuItem>
-          <DropdownMenuItem>Thanh toán</DropdownMenuItem>
-          <DropdownMenuItem>Cài đặt</DropdownMenuItem>
+          <Link href="/dashboard/subscription">
+            <DropdownMenuItem>Hồ sơ</DropdownMenuItem>
+          </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>Đăng xuất</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

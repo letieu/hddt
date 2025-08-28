@@ -10,9 +10,7 @@ export function Header() {
           <div className="h-8 w-8 rounded-lg bg-accent flex items-center justify-center">
             <Image width={60} height={60} src={"/logo.png"} alt="HD" />
           </div>
-          <span className="text-xl font-bold text-foreground">
-            Hóa đơn điên tử
-          </span>
+          <span className="text-xl font-bold text-foreground">Tải hóa đơn</span>
         </div>
 
         <nav className="hidden md:flex items-center space-x-8 mx-auto">
