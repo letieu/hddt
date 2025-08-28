@@ -9,7 +9,6 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { CheckCircle2 } from "lucide-react"; // Added Sparkles and CheckCircle2
 
 type CreditOption = {
   id: string;
@@ -33,7 +32,7 @@ const creditOptions: CreditOption[] = [
     name: "Gói A2",
     credits: 500,
     price: 450000, // Numeric price
-    description: "Tiết kiệm hơn với gói tín dụng lớn.",
+    description: "Tiết kiệm hơn với gói credit lớn.",
     isPopular: true,
   },
   {
@@ -85,11 +84,11 @@ export function CreditSection() {
 
   const handlePaymentConfirmation = () => {
     if (!selectedOption) {
-      alert("Vui lòng chọn một gói tín dụng để nạp.");
+      alert("Vui lòng chọn một gói credit để nạp.");
       return;
     }
     alert(
-      `Bạn đã chọn gói ${selectedOption.name}. Chúng tôi sẽ xác nhận thanh toán và cập nhật tín dụng của bạn trong thời gian sớm nhất.`,
+      `Bạn đã chọn gói ${selectedOption.name}. Chúng tôi sẽ xác nhận thanh toán và cập nhật credit của bạn trong thời gian sớm nhất.`,
     );
     // In a real application, you would have a webhook from your payment provider
     // to automatically update the credit count. This is a simulation.
@@ -111,27 +110,26 @@ export function CreditSection() {
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader className="text-center">
-        <CardTitle className="text-3xl font-bold">Quản lý tín dụng</CardTitle>
+        <CardTitle className="text-3xl font-bold">Quản lý credit</CardTitle>
         <CardDescription className="text-md text-muted-foreground">
-          Xem số dư tín dụng hiện tại và nạp thêm để tiếp tục sử dụng dịch vụ.
+          Xem số dư credit hiện tại và nạp thêm để tiếp tục sử dụng dịch vụ.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-8">
         <div className="text-center p-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-lg">
           <h3 className="text-lg font-semibold mb-2">
-            Tín dụng hiện tại của bạn
+            credit hiện tại của bạn
           </h3>
           <p className="text-6xl font-extrabold tracking-tight">
             {creditCount}
           </p>
-          <p className="text-sm mt-2 opacity-80">Tín dụng khả dụng</p>
+          <p className="text-sm mt-2 opacity-80">credit khả dụng</p>
         </div>
 
         <div className="text-center">
-          <h3 className="text-2xl font-bold mb-4">Chọn gói tín dụng</h3>
+          <h3 className="text-2xl font-bold mb-4">Chọn gói credit</h3>
           <p className="text-muted-foreground mb-6">
-            Nạp thêm tín dụng để mở khóa nhiều tính năng hơn và tiết kiệm chi
-            phí.
+            Nạp thêm credit để mở khóa nhiều tính năng hơn và tiết kiệm chi phí.
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             {creditOptions.map((option) => (
@@ -157,7 +155,7 @@ export function CreditSection() {
                   <div className="text-4xl font-extrabold mb-2">
                     {option.credits}{" "}
                     <span className="text-xl font-semibold text-muted-foreground">
-                      tín dụng
+                      credit
                     </span>
                   </div>
                   <p className="text-2xl font-bold text-blue-600 mb-4">
