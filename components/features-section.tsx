@@ -4,27 +4,27 @@ import { Download, Calendar, FileSpreadsheet, Zap } from "lucide-react"
 const features = [
   {
     icon: Download,
-    title: "Bulk Export in One Click",
+    title: "Xuất hàng loạt chỉ với một cú nhấp chuột",
     description:
-      "Export thousands of e-invoices from wide date ranges instantly. No more downloading invoices one by one - get everything in a single bundle.",
+      "Xuất hàng nghìn hoá đơn điện tử trong khoảng thời gian rộng ngay lập tức. Không còn phải tải từng hoá đơn một - nhận tất cả trong một gói duy nhất.",
   },
   {
     icon: FileSpreadsheet,
-    title: "Complete Data Bundle",
+    title: "Gói dữ liệu hoàn chỉnh",
     description:
-      "Get both Excel summary files and original XML invoice files in one download. Perfect for accounting, analysis, and record keeping.",
+      "Nhận cả tệp tóm tắt Excel và tệp hoá đơn XML gốc trong một lần tải xuống. Hoàn hảo cho việc kế toán, phân tích và lưu trữ hồ sơ.",
   },
   {
     icon: Calendar,
-    title: "Flexible Date Filtering",
+    title: "Lọc ngày linh hoạt",
     description:
-      "Export data from any date range - days, months, or entire years. Filter by seller/buyer invoice numbers for precise data extraction.",
+      "Xuất dữ liệu từ bất kỳ khoảng thời gian nào - ngày, tháng hoặc cả năm. Lọc theo số hoá đơn của người bán/người mua để trích xuất dữ liệu chính xác.",
   },
   {
     icon: Zap,
-    title: "Lightning Fast Processing",
+    title: "Xử lý nhanh như chớp",
     description:
-      "Process thousands of invoices in seconds, not hours. Our optimized system handles large datasets efficiently with real-time progress tracking.",
+      "Xử lý hàng nghìn hoá đơn trong vài giây, không phải hàng giờ. Hệ thống được tối ưu hóa của chúng tôi xử lý các bộ dữ liệu lớn một cách hiệu quả với theo dõi tiến trình thời gian thực.",
   },
 ]
 
@@ -34,10 +34,10 @@ export function FeaturesSection() {
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-balance">
-            Why choose our e-invoice export tool?
+            Tại sao chọn công cụ xuất hoá đơn điện tử của chúng tôi?
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
-            Powerful features designed to make bulk e-invoice data export simple, fast, and comprehensive.
+            Các tính năng mạnh mẽ được thiết kế để giúp việc xuất dữ liệu hoá đơn điện tử hàng loạt trở nên đơn giản, nhanh chóng và toàn diện.
           </p>
         </div>
 

@@ -14,7 +14,6 @@ export default function HomePage() {
         <HeroSection />
         <AppSection />
         <FeaturesSection />
-        <TestimonialsSection />
         <PricingSection />
       </main>
       <Footer />

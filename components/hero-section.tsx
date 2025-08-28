@@ -1,17 +1,15 @@
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
-  CalendarDays,
   Cloud,
-  CodeXmlIcon,
   Download,
   File,
   FileOutput,
-  Files,
   FileSpreadsheet,
   FileX,
   Zap,
 } from "lucide-react";
+import Link from "next/link";
 
 export function HeroSection() {
   return (
@@ -29,17 +27,19 @@ export function HeroSection() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button
-              size="lg"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 group cursor-pointer"
-            >
-              Bắt Đầu Xuất Dữ Liệu
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
+            <Link href="#app">
+              <Button
+                size="lg"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 group cursor-pointer"
+              >
+                Bắt Đầu Xuất Dữ Liệu
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
             <Button
               variant="outline"
               size="lg"
-              className="group bg-transparent cursor-pointer"
+              className="group bg-white cursor-pointer"
             >
               <Download className="mr-2 h-4 w-4" />
               Xem file demo

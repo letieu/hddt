@@ -42,9 +42,11 @@ export function Header() {
           </Link>
         </nav>
 
-        <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-          Bắt đầu
-        </Button>
+        <Link href="#app">
+          <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+            Bắt đầu
+          </Button>
+        </Link>
       </div>
     </header>
   );

@@ -49,7 +49,7 @@ const plans = [
 
 export function PricingSection() {
   return (
-    <section id="pricing" className="py-20 px-4 bg-background">
+    <section id="pricing" className="py-20 px-4 bg-card">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-balance">
@@ -64,7 +64,7 @@ export function PricingSection() {
           {plans.map((plan, index) => (
             <Card
               key={index}
-              className={`relative ${plan.popular ? "border-accent shadow-lg scale-105" : "border-border"}`}
+              className={`bg-white relative ${plan.popular ? "border-accent shadow-lg scale-105" : "border-border"}`}
             >
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">

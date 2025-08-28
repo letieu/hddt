@@ -78,7 +78,7 @@ export function AppSection() {
   };
 
   return (
-    <section className="relative py-20 px-4 overflow-hidden">
+    <section className="relative py-20 px-4 overflow-hidden" id="app">
       {/* Background Effects */}
       <DotPattern width={20} height={20} cx={1} cy={1} cr={1} />
 
