@@ -1,6 +1,5 @@
-'use client'
+"use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,11 +10,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { BorderBeam } from "@/components/magicui/border-beam";
 import { RainbowButton } from "./magicui/rainbow-button";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 import { LoginButton } from "./login-button";
+import { ShineBorder } from "./magicui/shine-border";
 
 export function InputForm() {
   const supabase = createClient();
@@ -34,7 +33,7 @@ export function InputForm() {
       (_event, session) => {
         setUser(session?.user ?? null);
         setIsLoggedIn(!!session?.user);
-      }
+      },
     );
 
     return () => {
@@ -48,14 +47,14 @@ export function InputForm() {
 
   const formatDate = (date: Date) => {
     const d = new Date(date);
-    let month = '' + (d.getMonth() + 1);
-    let day = '' + d.getDate();
+    let month = "" + (d.getMonth() + 1);
+    let day = "" + d.getDate();
     const year = d.getFullYear();
 
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
 
-    return [year, month, day].join('-');
+    return [year, month, day].join("-");
   };
 
   return (
@@ -87,11 +86,7 @@ export function InputForm() {
                 <Label htmlFor="password">
                   Mật khẩu <span className="text-red-500">*</span>
                 </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Mật khẩu"
-                />
+                <Input id="password" type="password" placeholder="Mật khẩu" />
               </div>
             </div>
             <div className="flex flex-col space-y-1.5">
@@ -117,7 +112,8 @@ export function InputForm() {
               </div>
               {!isLoggedIn && (
                 <p className="text-sm text-muted-foreground">
-                  <LoginButton /> để xuất dữ liệu trong khoảng thời gian dài hơn.
+                  <LoginButton /> để xuất dữ liệu trong khoảng thời gian dài
+                  hơn.
                 </p>
               )}
             </div>
@@ -143,7 +139,7 @@ export function InputForm() {
       <CardFooter className="flex justify-between">
         <RainbowButton className="w-full">Xuất dữ liệu</RainbowButton>
       </CardFooter>
-      <BorderBeam duration={8} size={100} />
+      <ShineBorder />
     </Card>
   );
 }
