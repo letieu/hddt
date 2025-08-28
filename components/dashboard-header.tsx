@@ -5,15 +5,35 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { RainbowButton } from "./magicui/rainbow-button";
+import { Wallet } from "lucide-react";
 
 const links = [
-  { href: "/dashboard", label: "Tổng quan" },
-  { href: "/dashboard/subscription", label: "Gói dịch vụ" },
-  { href: "/", label: "Tải hóa đơn" },
+  { href: "/dashboard", label: "Credit" },
+  { href: "/#app", label: "Tải hóa đơn" },
 ];
 
 export function DashboardHeader() {
   const pathname = usePathname();
+  const supabase = createClient();
+  const [creditCount, setCreditCount] = useState(0);
+
+  useEffect(() => {
+    const fetchCredits = async () => {
+      const { data, error } = await supabase
+        .from("credits")
+        .select("credit_count")
+        .single();
+
+      if (data) {
+        setCreditCount(data.credit_count);
+      }
+    };
+
+    fetchCredits();
+  }, [supabase]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -22,9 +42,7 @@ export function DashboardHeader() {
           <div className="h-8 w-8 rounded-lg bg-accent flex items-center justify-center">
             <Image width={60} height={60} src={"/logo.png"} alt="HD" />
           </div>
-          <span className="text-xl font-bold text-foreground">
-            Tải hóa đơn
-          </span>
+          <span className="text-xl font-bold text-foreground">Tải hóa đơn</span>
         </Link>
 
         <nav className="hidden md:flex items-center space-x-8 mx-auto px-4">
@@ -43,6 +61,12 @@ export function DashboardHeader() {
         </nav>
 
         <div className="flex items-center justify-end space-x-4">
+          <Link href="/dashboard">
+            <RainbowButton>
+              <span className="pl-2">{creditCount}</span>
+              <Wallet />
+            </RainbowButton>
+          </Link>
           <AuthButton />
         </div>
       </div>

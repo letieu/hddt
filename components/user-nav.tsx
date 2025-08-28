@@ -57,8 +57,8 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <Link href="/dashboard/subscription">
-            <DropdownMenuItem>Hồ sơ</DropdownMenuItem>
+          <Link href="/dashboard">
+            <DropdownMenuItem>Credit</DropdownMenuItem>
           </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
