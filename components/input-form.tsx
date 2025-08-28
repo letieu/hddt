@@ -1,3 +1,5 @@
+'use client'
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,8 +13,51 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BorderBeam } from "@/components/magicui/border-beam";
 import { RainbowButton } from "./magicui/rainbow-button";
+import { createClient } from "@/lib/supabase/client";
+import { useEffect, useState } from "react";
+import { LoginButton } from "./login-button";
 
 export function InputForm() {
+  const supabase = createClient();
+  const [user, setUser] = useState<any>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user);
+      setIsLoggedIn(!!data.user);
+    };
+    getUser();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+        setIsLoggedIn(!!session?.user);
+      }
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [supabase.auth]);
+
+  const today = new Date();
+  const oneWeekAgo = new Date(today);
+  oneWeekAgo.setDate(today.getDate() - 7);
+
+  const formatDate = (date: Date) => {
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+  };
+
   return (
     <Card className="relative overflow-hidden bg-white">
       <CardHeader>
@@ -54,10 +99,27 @@ export function InputForm() {
                 Khoảng ngày <span className="text-red-500">*</span>
               </Label>
               <div className="flex items-center space-x-2">
-                <Input type="date" id="from-date" />
+                <Input
+                  type="date"
+                  id="from-date"
+                  disabled={!isLoggedIn}
+                  min={!isLoggedIn ? formatDate(oneWeekAgo) : undefined}
+                  max={!isLoggedIn ? formatDate(today) : undefined}
+                />
                 <span>đến</span>
-                <Input type="date" id="to-date" />
+                <Input
+                  type="date"
+                  id="to-date"
+                  disabled={!isLoggedIn}
+                  min={!isLoggedIn ? formatDate(oneWeekAgo) : undefined}
+                  max={!isLoggedIn ? formatDate(today) : undefined}
+                />
               </div>
+              {!isLoggedIn && (
+                <p className="text-sm text-muted-foreground">
+                  <LoginButton /> để xuất dữ liệu trong khoảng thời gian dài hơn.
+                </p>
+              )}
             </div>
             <div className="flex space-x-4">
               <div className="flex w-1/2 flex-col space-y-1.5">

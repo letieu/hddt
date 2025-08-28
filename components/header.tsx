@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { AuthButton } from "./auth-button";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -42,11 +42,7 @@ export function Header() {
           </Link>
         </nav>
 
-        <Link href="#app">
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-            Bắt đầu
-          </Button>
-        </Link>
+        <AuthButton />
       </div>
     </header>
   );
