@@ -1,89 +1,87 @@
 "use client";
 
-import { useState } from "react";
-import {
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Download, CheckCircle, FileText, Sparkles } from "lucide-react";
-import { MagicCard } from "@/components/magicui/magic-card";
-import { NumberTicker } from "./magicui/number-ticker";
+import * as XLSX from "xlsx";
+import { useState, useRef, useEffect } from "react";
 import { DotPattern } from "./magicui/dot-pattern";
-import { BorderBeam } from "./magicui/border-beam";
 import { InputForm } from "./input-form";
-import { AnimatedSpan, Terminal, TypingAnimation } from "./magicui/terminal";
+import { Terminal, TypingAnimation } from "./magicui/terminal";
+import { CaptchaDialog } from "./captcha-popup";
+
+import {
+  FetchInvoiceOptions,
+  fetchProfile,
+  InvoiceType,
+} from "@/lib/download/hoadon-api";
+import {
+  InvoiceExportManager,
+  InvoiceExportLog,
+} from "@/lib/download/invoice-export-manager";
+
+export type ExportInput = {
+  credential: {
+    username: string;
+    password: string;
+  };
+  invoiceType: InvoiceType;
+  fromDate: Date;
+  toDate: Date;
+  filter: FetchInvoiceOptions;
+};
 
 export function AppSection() {
-  const [isExporting, setIsExporting] = useState(false);
-  const [exportComplete, setExportComplete] = useState(false);
-  const [logs, setLogs] = useState<string[]>([]);
-  const [invoiceCount, setInvoiceCount] = useState(0);
+  const [logs, setLogs] = useState<Map<string, InvoiceExportLog>>(new Map());
+  const [downloading, setDownloading] = useState(false);
 
-  const handleExport = async () => {
-    setIsExporting(true);
-    setExportComplete(false);
-    setLogs([]);
-    setInvoiceCount(0);
+  const [openCaptcha, setOpenCaptcha] = useState(false);
+  const [input, setInput] = useState<ExportInput>();
 
-    const exportLogs = [
-      "🔐 Đang xác thực thông tin đăng nhập...",
-      "✅ Xác thực thành công",
-      "📅 Xử lý khoảng thời gian: 01/01/2024 đến 31/12/2024",
-      "🔍 Đang tìm kiếm hóa đơn phù hợp với tiêu chí...",
-      "📊 Tìm thấy hóa đơn để xuất",
-      "📄 Đang tạo file Excel tổng hợp...",
-      "📦 Đang đóng gói các file XML hóa đơn...",
-      "💾 Đang tạo gói tải xuống...",
-      "✅ Xuất hoàn tất! Bắt đầu tải xuống...",
-    ];
+  const handleExport = async (input: ExportInput) => {
+    setLogs(new Map());
+    setInput(input);
 
-    for (let i = 0; i < exportLogs.length; i++) {
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      if (i === 4) {
-        // Animate invoice count when we find invoices
-        let currentCount = 0;
-        const targetCount = 2847;
-        const incrementCount = () => {
-          if (currentCount < targetCount) {
-            currentCount += Math.ceil((targetCount - currentCount) / 10);
-            setInvoiceCount(currentCount);
-            setTimeout(incrementCount, 50);
-          } else {
-            setInvoiceCount(targetCount);
-          }
-        };
-        incrementCount();
-        setLogs((prev) => [
-          ...prev,
-          `📊 Tìm thấy ${targetCount} hóa đơn để xuất`,
-        ]);
-      } else {
-        setLogs((prev) => [...prev, exportLogs[i]]);
+    let currentJwt = localStorage.getItem(`jwt_${input.credential.username}`);
+    if (currentJwt) {
+      try {
+        await fetchProfile(currentJwt);
+        await startExport(input);
+      } catch (e) {
+        setOpenCaptcha(true);
       }
+      return;
     }
 
-    setIsExporting(false);
-    setExportComplete(true);
-
-    // Simulate file download
-    setTimeout(() => {
-      const link = document.createElement("a");
-      link.href = "#";
-      link.download = "goi_xuat_hoa_don.zip";
-      link.click();
-    }, 1000);
+    setOpenCaptcha(true);
   };
+
+  async function startExport(input: ExportInput) {
+    let currentJwt = localStorage.getItem(`jwt_${input.credential?.username}`);
+    if (!currentJwt) {
+      alert("need token");
+      return;
+    }
+
+    const manager = new InvoiceExportManager(currentJwt);
+    manager.on("log", (log: InvoiceExportLog) => {
+      setLogs((prev) => new Map(prev).set(log.id!, log));
+    });
+
+    setLogs(new Map());
+    setDownloading(true);
+    await manager.start({
+      fromDate: input.fromDate,
+      toDate: input.toDate,
+      filter: input.filter,
+      invoiceType: input.invoiceType,
+    }).finally(() => {
+      setDownloading(false);
+    });
+  }
 
   return (
     <section className="relative py-20 px-4 overflow-hidden" id="app">
-      {/* Background Effects */}
       <DotPattern width={20} height={20} cx={1} cy={1} cr={1} />
 
       <div className="container mx-auto max-w-7xl relative z-10">
-        {/* Header Section with Animated Text */}
         <div className="text-center mb-16 space-y-6">
           <h2 className="text-4xl md:text-5xl font-bold bg-clip-text">
             Công Cụ Xuất Hóa Đơn
@@ -91,27 +89,42 @@ export function AppSection() {
         </div>
 
         <div className="grid xl:grid-cols-2 gap-12 items-start">
-          {/* Input Form Card */}
-          <InputForm />
+          {/* Input Form */}
+          <div>
+            <InputForm onStartClick={handleExport} downloading={downloading} />
+          </div>
 
-          <Terminal className="w-ful">
-            <TypingAnimation>&gt; pnpm dlx shadcn@latest init</TypingAnimation>
-
-            <AnimatedSpan className="text-green-500">
-              ✔ Preflight checks.
-            </AnimatedSpan>
-
-            <AnimatedSpan className="text-green-500">
-              ✔ Validating Tailwind CSS.
-            </AnimatedSpan>
-
-            <TypingAnimation className="text-muted-foreground">
-              Success! Project initialization completed.
-            </TypingAnimation>
+          {/* Terminal */}
+          <Terminal className="w-full">
+            {logs.size === 0 && (
+              <TypingAnimation className="text-muted-foreground">
+                Chưa có tiến trình nào...
+              </TypingAnimation>
+            )}
+            {Array.from(logs.entries()).map(([id, log]) => (
+              <div key={id}>
+                <span className={log.status === "failed" ? "text-red-500" : ""}>
+                  {log.message}
+                </span>
+              </div>
+            ))}
           </Terminal>
         </div>
       </div>
+
+      {input?.credential && (
+        <CaptchaDialog
+          open={openCaptcha}
+          credential={input.credential}
+          onClose={() => setOpenCaptcha(false)}
+          onSuccess={(jwt) => {
+            console.log("Got token:", jwt);
+            localStorage.setItem(`jwt_${input.credential?.username}`, jwt);
+            setOpenCaptcha(false);
+            startExport(input);
+          }}
+        />
+      )}
     </section>
   );
 }
-

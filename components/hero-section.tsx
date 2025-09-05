@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
+  Box,
   Cloud,
   Download,
   File,
@@ -75,23 +76,23 @@ export function HeroSection() {
                   </div>
                   <div>
                     <p className="font-semibold text-foreground">
-                      Danh sách hóa đơn bán ra
+                      Danh sách hóa đơn
                     </p>
                     <p className="text-muted-foreground">
-                      File excel danh sách hóa đơn bán ra
+                      File excel danh sách hóa đơn bán ra, mua vào
                     </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
                   <div className="p-2 bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400 rounded-full">
-                    <FileSpreadsheet className="h-6 w-6" />
+                    <Box className="h-6 w-6" />
                   </div>
                   <div>
                     <p className="font-semibold text-foreground">
-                      Danh sách hóa đơn mua vào
+                      Chi tiết sản phẩm theo hóa đơn
                     </p>
                     <p className="text-muted-foreground">
-                      File excel danh sách hóa đơn mua vào
+                      Kèm theo danh sách sản phẩm trong file excel
                     </p>
                   </div>
                 </div>
