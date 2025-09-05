@@ -130,6 +130,7 @@ export class InvoiceExportManager extends EventEmitter {
   ) {
     const concurrency = 5; // tune based on API limits
     let index = 0;
+    const total = invoices.length;
 
     const results: any[] = [];
     const workers = Array.from({ length: concurrency }, async () => {
@@ -139,7 +140,7 @@ export class InvoiceExportManager extends EventEmitter {
 
         this._log({
           id: `detail-${invoice.id}`,
-          message: `🚧 lấy chi tiết SP hóa đơn ${invoice.khhdon}/${invoice.shdon}`,
+          message: `🚧 Chi tiết SP hóa đơn ${invoice.khhdon}/${invoice.shdon} (${index}/${total})`,
         });
 
         try {
@@ -153,7 +154,7 @@ export class InvoiceExportManager extends EventEmitter {
           invoice.detail = detail;
           this._log({
             id: `detail-${invoice.id}`,
-            message: `✅ lấy chi tiết SP hóa đơn ${invoice.khhdon}/${invoice.shdon}`,
+            message: `✅ Chi tiết SP hóa đơn ${invoice.khhdon}/${invoice.shdon} (${index}/${total})`,
           });
         } catch (err) {
           console.error(
@@ -163,7 +164,7 @@ export class InvoiceExportManager extends EventEmitter {
           invoice.detail = null; // mark as missing
           this._log({
             id: `detail-${invoice.id}`,
-            message: `❌ Lấy chi tiết hóa đơn ${invoice.khhdon} thất bại`,
+            message: `❌ Chi tiết hóa đơn ${invoice.khhdon} thất bại (${index}/${total})`,
             status: "failed",
           });
         }

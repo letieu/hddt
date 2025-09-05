@@ -17,12 +17,7 @@ import { LoginButton } from "./login-button";
 import { ShineBorder } from "./magicui/shine-border";
 import { ExportInput } from "./app-section";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "./ui/button";
-import {
-  getAuthToken,
-  getCaptcha,
-  InvoiceType,
-} from "@/lib/download/hoadon-api";
+import { InvoiceType } from "@/lib/download/hoadon-api";
 
 function formatDateInput(date: Date) {
   const year = date.getFullYear();
@@ -50,7 +45,7 @@ export function InputForm(props: {
 
   const [invoiceBuyer, setInvoiceBuyer] = useState("");
   const [invoiceSeller, setInvoiceSeller] = useState("");
-  const [invoiceType, setInvoiceType] = useState<InvoiceType>("sold");
+  const [invoiceType, setInvoiceType] = useState<InvoiceType>("purchase");
   const [errors, setErrors] = useState({
     username: "",
     password: "",
@@ -141,11 +136,15 @@ export function InputForm(props: {
             <div className="flex space-x-4">
               <div className="flex w-1/2 flex-col space-y-1.5">
                 <Label htmlFor="username">
-                  Tên đăng nhập <span className="text-red-500">*</span>
+                  Tài khoản{" "}
+                  <span className="text-blue-500">
+                    hoadondientu.gdt.gov.vn
+                  </span>{" "}
+                  <span className="text-red-500">*</span>
                 </Label>
                 <Input
                   id="username"
-                  placeholder="Tên đăng nhập"
+                  placeholder="Tên đăng nhập từ hoadondientu.gdt.gov.vn"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
