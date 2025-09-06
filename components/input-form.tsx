@@ -11,13 +11,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RainbowButton } from "./magicui/rainbow-button";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { LoginButton } from "./login-button";
 import { ShineBorder } from "./magicui/shine-border";
 import { ExportInput } from "./app-section";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InvoiceType } from "@/lib/download/hoadon-api";
 import { Checkbox } from "./ui/checkbox";
+import { creditUsageEstimate } from "@/lib/credit";
 
 function formatDateInput(date: Date) {
   const year = date.getFullYear();
@@ -95,6 +96,13 @@ export function InputForm(props: {
     });
   };
 
+  const estimateCreditUsage = useMemo(() => {
+    const from = new Date(fromDate);
+    const to = new Date(toDate);
+    const isDownloadFiles = downloadFiles;
+    return creditUsageEstimate(from, to, isDownloadFiles);
+  }, [fromDate, toDate, downloadFiles]);
+
   return (
     <Card className="relative overflow-hidden bg-white">
       <CardHeader>
@@ -156,6 +164,7 @@ export function InputForm(props: {
                   id="from-date"
                   value={fromDate}
                   onChange={(e) => setFromDate(e.target.value)}
+                  max={formatDateInput(today)}
                 />
                 <span>đến</span>
                 <Input
@@ -163,6 +172,7 @@ export function InputForm(props: {
                   id="to-date"
                   value={toDate}
                   onChange={(e) => setToDate(e.target.value)}
+                  max={formatDateInput(today)}
                 />
               </div>
               {errors.date && (
@@ -226,7 +236,8 @@ export function InputForm(props: {
             onClick={handleClick}
             disabled={props.downloading}
           >
-            Xuất dữ liệu
+            Xuất dữ liệu{" "}
+            <span className="ml-1">( {estimateCreditUsage || 0} Credit )</span>
             {props.downloading && (
               <span className="ml-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></span>
             )}

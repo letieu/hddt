@@ -28,7 +28,13 @@ import {
 } from "@/lib/download/invoice-export-manager";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
-import { User } from "@supabase/supabase-js";
+import {
+  FunctionsFetchError,
+  FunctionsHttpError,
+  FunctionsRelayError,
+  User,
+} from "@supabase/supabase-js";
+import { creditUsageEstimate } from "@/lib/credit";
 
 export type ExportInput = {
   credential: {
@@ -77,6 +83,28 @@ export function AppSection() {
     };
   }, [supabase.auth]);
 
+  const checkCredit = async (creditsToDeduct: number) => {
+    const { error } = await supabase.functions.invoke("check-credit", {
+      body: { creditAmount: creditsToDeduct },
+    });
+
+    if (!error) {
+      return;
+    }
+
+    let errorMessage;
+    if (error instanceof FunctionsHttpError) {
+      const errorResponse = await error.context.json();
+      errorMessage = errorResponse?.error ?? error.message;
+    } else if (error instanceof FunctionsRelayError) {
+      errorMessage = error.message;
+    } else if (error instanceof FunctionsFetchError) {
+      errorMessage = error.message;
+    }
+
+    return errorMessage;
+  };
+
   const handleExport = async (input: ExportInput) => {
     if (!isLoggedIn || !user) {
       alert("Bạn cần đăng nhập để thực hiện chức năng này.");
@@ -91,38 +119,20 @@ export function AppSection() {
     const toDate = input.toDate;
     const downloadFiles = input.downloadFiles;
 
-    // Calculate months: (year_diff * 12) + month_diff + 1 (to include current month)
-    const months = (toDate.getFullYear() - fromDate.getFullYear()) * 12 + (toDate.getMonth() - fromDate.getMonth()) + 1;
-    let creditsToDeduct = months * 10; // 1 month = 10 credit
+    const creditsToDeduct = creditUsageEstimate(
+      fromDate,
+      toDate,
+      downloadFiles ?? false,
+    );
 
-    if (downloadFiles) {
-      creditsToDeduct *= 2; // Double credit usage if downloadFiles is true
-    }
-
-    try {
-      const { data, error } = await supabase.functions.invoke("check-credit", {
-        body: { creditAmount: creditsToDeduct },
-      });
-
-      if (error) {
-        throw new Error("Lỗi khi kết nối tới máy chủ.");
-      }
-
-      // The check-credit function now returns an error if insufficient credits
-      // and includes the current credit count in the response body.
-      // So, we check for data.error or if the returned credit_count is less than required.
-      if (data.error) {
-        throw new Error(data.error);
-      }
-
-      // The check-credit function now handles the credit check internally and returns 403 if insufficient.
-      // The error handling above will catch the 403 from the edge function.
-
-    } catch (error: any) {
-      setLogs(
-        new Map([
-          ["credit-error", { status: "failed", message: error.message }],
-        ]),
+    const errorMessage = await checkCredit(creditsToDeduct);
+    console.log("Error message:", errorMessage);
+    if (errorMessage) {
+      setLogs((prev) =>
+        new Map(prev).set("credit-error", {
+          status: "failed",
+          message: errorMessage,
+        }),
       );
       setLoading(false);
       return;
@@ -135,7 +145,7 @@ export function AppSection() {
     if (currentJwt) {
       try {
         await fetchProfile(currentJwt);
-        await startExport(input, creditsToDeduct); // Pass creditsToDeduct
+        await startExport(input); // Pass creditsToDeduct
       } catch (e) {
         setOpenCaptcha(true);
       } finally {
@@ -149,12 +159,18 @@ export function AppSection() {
   };
 
   // Modify startExport signature to accept creditsToDeduct
-  async function startExport(input: ExportInput, creditsToDeduct: number) {
+  async function startExport(input: ExportInput) {
     let currentJwt = localStorage.getItem(`jwt_${input.credential?.username}`);
     if (!currentJwt) {
       alert("need token");
       return;
     }
+
+    const creditsToDeduct = creditUsageEstimate(
+      input.fromDate,
+      input.toDate,
+      input.downloadFiles ?? false,
+    );
 
     const manager = new InvoiceExportManager(currentJwt);
     manager.on("log", (log: InvoiceExportLog) => {
@@ -169,34 +185,36 @@ export function AppSection() {
           new Map(prev).set("credit-deduction", {
             status: "info",
             message: "Đang trừ credit...",
-          })
+          }),
         );
         try {
           // Pass creditsToDeduct to deduct-credit function
-          const { data, error } = await supabase.functions.invoke("deduct-credit", {
-            body: { creditAmount: creditsToDeduct },
-          });
+          const { data, error } = await supabase.functions.invoke(
+            "deduct-credit",
+            {
+              body: { creditAmount: creditsToDeduct },
+            },
+          );
           if (error) {
             setLogs((prev) =>
               new Map(prev).set("credit-deduction-error", {
                 status: "failed",
                 message: `Lỗi khi trừ credit: ${error.message}. Vui lòng liên hệ hỗ trợ.`,
-              })
+              }),
             );
           } else if (data.error) {
             setLogs((prev) =>
               new Map(prev).set("credit-deduction-error", {
                 status: "failed",
                 message: `Lỗi khi trừ credit: ${data.error}. Vui lòng liên hệ hỗ trợ.`,
-              })
+              }),
             );
-          }
-          else {
+          } else {
             setLogs((prev) =>
               new Map(prev).set("credit-deduction-success", {
                 status: "success",
                 message: "Đã trừ credit thành công.",
-              })
+              }),
             );
             window.dispatchEvent(new Event("credit-update"));
           }
@@ -205,7 +223,7 @@ export function AppSection() {
             new Map(prev).set("credit-deduction-error", {
               status: "failed",
               message: `Lỗi khi trừ credit: ${e.message}. Vui lòng liên hệ hỗ trợ.`,
-            })
+            }),
           );
         }
       }
@@ -264,9 +282,15 @@ export function AppSection() {
                     })}
                   >
                     {log.message}
-                    {id === 'credit-error' && log.message.includes("Bạn không đủ Credit") && (
-                      <a href="/dashboard" className="underline ml-2 text-blue-500">Nạp Credit</a>
-                    )}
+                    {id === "credit-error" &&
+                      log?.message?.includes("Bạn không đủ Credit") && (
+                        <a
+                          href="/dashboard"
+                          className="underline ml-2 text-blue-500"
+                        >
+                          Nạp Credit
+                        </a>
+                      )}
                   </span>
                 </div>
               );
