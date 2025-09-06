@@ -1,5 +1,11 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Download, Calendar, FileSpreadsheet, Zap } from "lucide-react"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Download, Calendar, FileSpreadsheet, Zap, Box } from "lucide-react";
 
 const features = [
   {
@@ -21,12 +27,12 @@ const features = [
       "Xuất dữ liệu từ bất kỳ khoảng thời gian nào - ngày, tháng hoặc cả năm. Lọc theo số hoá đơn của người bán/người mua để trích xuất dữ liệu chính xác.",
   },
   {
-    icon: Zap,
-    title: "Xử lý nhanh như chớp",
+    icon: Box,
+    title: "Kèm theo chi tiết sản phẩm",
     description:
-      "Xử lý hàng nghìn hoá đơn trong vài giây, không phải hàng giờ. Hệ thống được tối ưu hóa của chúng tôi xử lý các bộ dữ liệu lớn một cách hiệu quả với theo dõi tiến trình thời gian thực.",
+      "File Excel đã bao gồm thông tin chi tiết về sản phẩm, đơn giá, số lượng, thành tiền, ...",
   },
-]
+];
 
 export function FeaturesSection() {
   return (
@@ -37,26 +43,34 @@ export function FeaturesSection() {
             Tại sao chọn công cụ xuất hoá đơn điện tử của chúng tôi?
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
-            Các tính năng mạnh mẽ được thiết kế để giúp việc xuất dữ liệu hoá đơn điện tử hàng loạt trở nên đơn giản, nhanh chóng và toàn diện.
+            Các tính năng mạnh mẽ được thiết kế để giúp việc xuất dữ liệu hoá
+            đơn điện tử hàng loạt trở nên đơn giản, nhanh chóng và toàn diện.
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature, index) => (
-            <Card key={index} className="border-border hover:shadow-lg transition-shadow">
+            <Card
+              key={index}
+              className="border-border hover:shadow-lg transition-shadow"
+            >
               <CardHeader>
                 <div className="h-12 w-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
                   <feature.icon className="h-6 w-6 text-accent" />
                 </div>
-                <CardTitle className="text-xl text-card-foreground">{feature.title}</CardTitle>
+                <CardTitle className="text-xl text-card-foreground">
+                  {feature.title}
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-muted-foreground">{feature.description}</CardDescription>
+                <CardDescription className="text-muted-foreground">
+                  {feature.description}
+                </CardDescription>
               </CardContent>
             </Card>
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }

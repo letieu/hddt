@@ -243,7 +243,7 @@ export function InputForm(props: {
             )}
           </RainbowButton>
         ) : (
-          <LoginButton text="Đăng nhập để tải file" />
+          <LoginButton className="w-full" text="Đăng nhập để tải file" />
         )}
       </CardFooter>
       <ShineBorder />

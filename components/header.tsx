@@ -86,12 +86,6 @@ export function Header() {
             Bảng giá
           </Link>
           <Link
-            href="#testimonials"
-            className="text-muted-foreground hover:text-accent transition-colors"
-          >
-            Giới thiệu
-          </Link>
-          <Link
             href="#contact"
             className="text-muted-foreground hover:text-accent transition-colors"
           >
