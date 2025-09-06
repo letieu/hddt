@@ -22,25 +22,25 @@ const creditOptions: CreditOption[] = [
   {
     id: "a1",
     name: "Gói A1",
-    credits: 100,
-    price: 100000, // Numeric price
-    description: "Phù hợp cho nhu cầu sử dụng thông thường.",
+    credits: 30,
+    price: 30_000,
+    description: "(≈) 10 lượt xuất file",
     isPopular: false,
   },
   {
     id: "a2",
     name: "Gói A2",
-    credits: 500,
-    price: 450000, // Numeric price
-    description: "Tiết kiệm hơn với gói credit lớn.",
+    credits: 60,
+    price: 50_000,
+    description: "(≈) 20 lượt xuất file",
     isPopular: true,
   },
   {
     id: "a3",
     name: "Gói A3",
-    credits: 1000,
-    price: 800000, // Numeric price
-    description: "Tối ưu chi phí cho người dùng chuyên nghiệp.",
+    credits: 200,
+    price: 150_000,
+    description: "(≈) 70 lượt xuất file",
     isPopular: false,
   },
 ];
@@ -126,6 +126,10 @@ export function CreditSection() {
     return baseUrl + "?" + urlQuery.toString();
   }, [user, selectedOption]);
 
+  if (!user) {
+    return <div className="text-center text-xl">Loading...</div>;
+  }
+
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader className="text-center">
@@ -147,8 +151,12 @@ export function CreditSection() {
 
         <div className="text-center">
           <h3 className="text-2xl font-bold mb-4">Chọn gói credit</h3>
+          <p className="text-muted-foreground">
+            1 lượt xuất file (≈) 3 credit
+          </p>
           <p className="text-muted-foreground mb-6">
-            Nạp thêm credit để mở khóa nhiều tính năng hơn và tiết kiệm chi phí.
+            Số credit phụ thuộc vào tổng số ngày trong khoảng thời gian xuất hóa
+            đơn
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             {creditOptions.map((option) => (
@@ -162,27 +170,27 @@ export function CreditSection() {
                     Phổ biến nhất
                   </div>
                 )}
-                <CardHeader className="pb-4">
+                <CardHeader className="pb-2">
                   <CardTitle className="text-2xl font-bold">
                     {option.name}
                   </CardTitle>
-                  <CardDescription className="mt-1">
+                  <CardDescription className="">
                     {option.description}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow">
-                  <div className="text-4xl font-extrabold mb-2">
+                  <div className="text-4xl font-extrabold mb-1">
                     {option.credits}{" "}
                     <span className="text-xl font-semibold text-muted-foreground">
                       credit
                     </span>
                   </div>
-                  <p className="text-2xl font-bold text-blue-600 mb-4">
+                  <p className="text-2xl font-bold text-blue-600 mb-2">
                     {formatPrice(option.price)}
                   </p>
                 </CardContent>
                 <Button
-                  className="w-full mt-4"
+                  className="w-full mt-2"
                   variant={
                     selectedOption?.id === option.id ? "default" : "outline"
                   }

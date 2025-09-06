@@ -7,7 +7,7 @@ export const creditUsageEstimate = (
     (toDate.getFullYear() - fromDate.getFullYear()) * 12 +
     (toDate.getMonth() - fromDate.getMonth()) +
     1;
-  let creditsToDeduct = months * 5; // 1 month = 5 credit
+  let creditsToDeduct = months * 3; // 1 month = 3 credit
 
   if (isDownloadFiles) {
     creditsToDeduct *= 1.5;
