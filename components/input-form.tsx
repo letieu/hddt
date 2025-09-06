@@ -11,8 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RainbowButton } from "./magicui/rainbow-button";
-import { createClient } from "@/lib/supabase/client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { LoginButton } from "./login-button";
 import { ShineBorder } from "./magicui/shine-border";
 import { ExportInput } from "./app-section";
@@ -30,11 +29,9 @@ function formatDateInput(date: Date) {
 export function InputForm(props: {
   onStartClick: (input: ExportInput) => void;
   downloading: boolean;
+  isLoggedIn: boolean;
 }) {
-  const supabase = createClient();
-  const [user, setUser] = useState<any>(null);
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn } = props;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [downloadFiles, setDownloadFiles] = useState(false);
@@ -53,26 +50,6 @@ export function InputForm(props: {
     password: "",
     date: "",
   });
-
-  useEffect(() => {
-    const getUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setUser(data.user);
-      setIsLoggedIn(!!data.user);
-    };
-    getUser();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ?? null);
-        setIsLoggedIn(!!session?.user);
-      },
-    );
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, [supabase.auth]);
 
   const validate = () => {
     const newErrors = {
@@ -140,9 +117,7 @@ export function InputForm(props: {
               <div className="flex w-1/2 flex-col space-y-1.5">
                 <Label htmlFor="username">
                   Tài khoản{" "}
-                  <span className="text-blue-500">
-                    hoadondientu.gdt.gov.vn
-                  </span>{" "}
+                  <span className="text-blue-500">hoadondientu.gdt.gov.vn</span>{" "}
                   <span className="text-red-500">*</span>
                 </Label>
                 <Input
@@ -179,7 +154,6 @@ export function InputForm(props: {
                 <Input
                   type="date"
                   id="from-date"
-                  disabled={!isLoggedIn}
                   value={fromDate}
                   onChange={(e) => setFromDate(e.target.value)}
                 />
@@ -187,19 +161,12 @@ export function InputForm(props: {
                 <Input
                   type="date"
                   id="to-date"
-                  disabled={!isLoggedIn}
                   value={toDate}
                   onChange={(e) => setToDate(e.target.value)}
                 />
               </div>
               {errors.date && (
                 <p className="text-sm text-red-500">{errors.date}</p>
-              )}
-              {!isLoggedIn && (
-                <p className="text-sm text-muted-foreground">
-                  <LoginButton /> để xuất dữ liệu trong khoảng thời gian dài
-                  hơn.
-                </p>
               )}
             </div>
             <Tabs
@@ -253,16 +220,20 @@ export function InputForm(props: {
         </form>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <RainbowButton
-          className="w-full"
-          onClick={handleClick}
-          disabled={props.downloading}
-        >
-          Xuất dữ liệu
-          {props.downloading && (
-            <span className="ml-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></span>
-          )}
-        </RainbowButton>
+        {isLoggedIn ? (
+          <RainbowButton
+            className="w-full"
+            onClick={handleClick}
+            disabled={props.downloading}
+          >
+            Xuất dữ liệu
+            {props.downloading && (
+              <span className="ml-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></span>
+            )}
+          </RainbowButton>
+        ) : (
+          <LoginButton text="Đăng nhập để tải file" />
+        )}
       </CardFooter>
       <ShineBorder />
     </Card>

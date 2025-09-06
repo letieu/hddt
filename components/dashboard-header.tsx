@@ -22,9 +22,18 @@ export function DashboardHeader() {
 
   useEffect(() => {
     const fetchCredits = async () => {
-      const { data, error } = await supabase
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        return;
+      }
+
+      const { data } = await supabase
         .from("credits")
         .select("credit_count")
+        .eq("user_id", user.id)
         .single();
 
       if (data) {
@@ -33,6 +42,25 @@ export function DashboardHeader() {
     };
 
     fetchCredits();
+
+    const handleCreditUpdate = () => fetchCredits();
+    window.addEventListener("credit-update", handleCreditUpdate);
+
+    const channel = supabase
+      .channel("credit-changes-header")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "credits" },
+        (payload) => {
+          fetchCredits();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      window.removeEventListener("credit-update", handleCreditUpdate);
+      supabase.removeChannel(channel);
+    };
   }, [supabase]);
 
   return (

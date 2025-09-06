@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Coins, CoinsIcon, Wallet } from "lucide-react";
+import { Wallet } from "lucide-react";
 import { RainbowButton } from "./magicui/rainbow-button";
 
 export function Header() {
@@ -19,19 +19,47 @@ export function Header() {
         data: { user },
       } = await supabase.auth.getUser();
       setIsLoggedIn(!!user);
+
       if (user) {
-        const { data, error } = await supabase
+        const { data } = await supabase
           .from("credits")
           .select("credit_count")
+          .eq("user_id", user.id)
           .single();
 
         if (data) {
           setCreditCount(data.credit_count);
         }
+      } else {
+        setCreditCount(0);
       }
     };
 
     fetchCredits();
+
+    const handleCreditUpdate = () => fetchCredits();
+    window.addEventListener("credit-update", handleCreditUpdate);
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(() => {
+      fetchCredits();
+    });
+
+    const channel = supabase
+      .channel("credit-changes-main-header")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "credits" },
+        () => {
+          fetchCredits();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      window.removeEventListener("credit-update", handleCreditUpdate);
+      authListener.subscription.unsubscribe();
+      supabase.removeChannel(channel);
+    };
   }, [supabase]);
 
   return (

@@ -80,6 +80,25 @@ export function CreditSection() {
     };
 
     fetchData();
+
+    const handleCreditUpdate = () => fetchData();
+    window.addEventListener("credit-update", handleCreditUpdate);
+
+    const channel = supabase
+      .channel("credit-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "credits" },
+        (payload) => {
+          fetchData();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      window.removeEventListener("credit-update", handleCreditUpdate);
+      supabase.removeChannel(channel);
+    };
   }, [supabase]);
 
   const handlePaymentConfirmation = () => {

@@ -12,13 +12,13 @@ import { createClient } from "@/lib/supabase/client";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 
-export function LoginButton() {
+export function LoginButton({ text }: { text?: string }) {
   const supabase = createClient();
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="cursor-pointer">Đăng nhập</Button>
+        <Button className="cursor-pointer">{text ? text : "Đăng nhập"}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
