@@ -54,11 +54,11 @@ export function HeroSection() {
             </div>
             <div className="flex items-center gap-2">
               <Zap className="h-5 w-5 text-primary" />
-              <span>Tải xuống ngay lập tức</span>
+              <span>Xuất toàn bộ hóa đơn, không giới hạn ngày</span>
             </div>
             <div className="flex items-center gap-2">
               <FileOutput className="h-5 w-5 text-primary" />
-              <span>Xuất hàng nghìn hóa đơn</span>
+              <span>Kèm theo chi tiết sản phẩm</span>
             </div>
           </div>
         </div>

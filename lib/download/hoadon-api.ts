@@ -3,7 +3,7 @@ import { RateLimiter } from "./rate-limiter";
 
 const rateLimiter = new RateLimiter(
   1, // 3 requests per second
-  10, // 10 retries (same as your original)
+  5, // 5 retries (same as your original)
   14_000, // 14 second timeout (same as your original)
 );
 

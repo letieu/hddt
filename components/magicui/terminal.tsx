@@ -194,6 +194,7 @@ export const Terminal = ({
   startOnView = true,
 }: TerminalProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const scrollRef = useRef<HTMLPreElement | null>(null);
   const isInView = useInView(containerRef as React.RefObject<Element>, {
     amount: 0.3,
     once: true,
@@ -225,6 +226,15 @@ export const Terminal = ({
     ));
   }, [children, sequence]);
 
+  // 👇 Auto-scroll effect
+  useEffect(() => {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollTo({
+      top: scrollRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [wrappedChildren, activeIndex]); // triggers on new logs or sequence step
+
   const content = (
     <div
       ref={containerRef}
@@ -240,7 +250,8 @@ export const Terminal = ({
           <div className="h-2 w-2 rounded-full bg-green-500"></div>
         </div>
       </div>
-      <pre className="p-4 overflow-auto h-[340px]">
+      {/* 👇 attach ref here so we can scroll */}
+      <pre ref={scrollRef} className="p-4 overflow-auto h-[420px]">
         <code className="grid gap-y-1">{wrappedChildren}</code>
       </pre>
     </div>

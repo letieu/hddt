@@ -18,6 +18,7 @@ import { ShineBorder } from "./magicui/shine-border";
 import { ExportInput } from "./app-section";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InvoiceType } from "@/lib/download/hoadon-api";
+import { Checkbox } from "./ui/checkbox";
 
 function formatDateInput(date: Date) {
   const year = date.getFullYear();
@@ -36,6 +37,7 @@ export function InputForm(props: {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [downloadFiles, setDownloadFiles] = useState(false);
 
   const today = new Date();
   const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -112,6 +114,7 @@ export function InputForm(props: {
         nmmst: invoiceBuyer,
       },
       invoiceType: invoiceType,
+      downloadFiles,
     });
   };
 
@@ -238,6 +241,14 @@ export function InputForm(props: {
                 </div>
               </TabsContent>
             </Tabs>
+            <div className="flex items-center space-x-2 pt-4">
+              <Checkbox
+                id="download-files"
+                checked={downloadFiles}
+                onCheckedChange={(checked) => setDownloadFiles(!!checked)}
+              />
+              <Label htmlFor="download-files">Tải file XML, HTML hóa đơn</Label>
+            </div>
           </div>
         </form>
       </CardContent>

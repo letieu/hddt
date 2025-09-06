@@ -28,3 +28,20 @@ export const invoiceItemTypeTitle: Record<number, string> = {
 export function timeStampToDate(time: number) {
   return new Date(time).toLocaleString("vi-VN");
 }
+
+export const invoiceQueryTypeNames = {
+  query: "Hóa đơn điện tử",
+  "sco-query": "Hóa đơn có mã từ máy tính tiền",
+};
+
+export const invoiceTypeNames = {
+  purchase: "Mua vào",
+  sold: "Bán ra",
+};
+
+export function formatDateForFilename(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${day}-${month}-${year}`;
+}

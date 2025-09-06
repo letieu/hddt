@@ -58,6 +58,11 @@ export class RateLimiter {
 
         // ✅ Use your exact retry conditions
         if (response.status === 500) {
+          const responseObject = await response.json().catch(() => null);
+          if (responseObject?.message?.includes("Không tồn tại")) {
+            throw new Error("Không tồn tại");
+          }
+
           console.log(
             `Server error (500). Retrying... (${i + 1}/${this.maxRetries})`,
           );
@@ -75,6 +80,12 @@ export class RateLimiter {
         return response;
       } catch (error: any) {
         clearTimeout(timeoutId);
+
+        if (error.message === "Không tồn tại") {
+          console.log("Không tồn tại, skip retry");
+          throw new Error("Không tồn tại");
+        }
+
         console.log(`Request fail. Retrying... (${i + 1}/${this.maxRetries})`);
 
         // ✅ Use your exponential backoff, but STILL respect rate limit on next attempt
