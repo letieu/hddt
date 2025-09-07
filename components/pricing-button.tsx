@@ -11,7 +11,11 @@ interface PricingButtonProps {
   isPopular: boolean;
 }
 
-export function PricingButton({ planName, isCustom, isPopular }: PricingButtonProps) {
+export function PricingButton({
+  planName,
+  isCustom,
+  isPopular,
+}: PricingButtonProps) {
   const router = useRouter();
   const supabase = createClient();
   const [user, setUser] = useState<any>(null);
@@ -31,9 +35,7 @@ export function PricingButton({ planName, isCustom, isPopular }: PricingButtonPr
 
   const handlePurchaseClick = () => {
     if (isCustom) {
-      alert(
-        "Vui lòng liên hệ với chúng tôi để được tư vấn về gói Doanh nghiệp."
-      );
+      window.open("https://forms.gle/TCfru4HTDuxoVw277", "_blank");
       return;
     }
 
@@ -61,3 +63,4 @@ export function PricingButton({ planName, isCustom, isPopular }: PricingButtonPr
     </Button>
   );
 }
+

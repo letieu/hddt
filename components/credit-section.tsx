@@ -101,16 +101,28 @@ export function CreditSection() {
     };
   }, [supabase]);
 
-  const handlePaymentConfirmation = () => {
+  const handlePaymentConfirmation = async () => {
     if (!selectedOption) {
       alert("Vui lòng chọn một gói credit để nạp.");
       return;
     }
-    alert(
-      `Bạn đã chọn gói ${selectedOption.name}. Chúng tôi sẽ xác nhận thanh toán và cập nhật credit của bạn trong thời gian sớm nhất.`,
-    );
-    // In a real application, you would have a webhook from your payment provider
-    // to automatically update the credit count. This is a simulation.
+
+    try {
+      const { error } = await supabase.functions.invoke("notify-payment", {
+        body: { selectedOption, user },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      alert(
+        `Chúng tôi đã ghi nhận yêu cầu của bạn cho gói ${selectedOption.name}. Chúng tôi sẽ xác nhận thanh toán và cập nhật credit của bạn trong thời gian sớm nhất.`,
+      );
+    } catch (error) {
+      console.error("Error notifying payment:", error);
+      alert("Có lỗi xảy ra khi gửi thông báo. Vui lòng thử lại.");
+    }
   };
 
   const qrLink = useMemo(() => {
@@ -220,11 +232,10 @@ export function CreditSection() {
                   </p>
                   <p>
                     <span className="font-medium">Số tài khoản:</span>{" "}
-                    1234567890
+                    9335581402
                   </p>
                   <p>
-                    <span className="font-medium">Chủ tài khoản:</span> NGUYEN
-                    VAN A
+                    <span className="font-medium">Chủ tài khoản:</span> LÊ CẢNH TIÊU
                   </p>
                   <p>
                     <span className="font-medium">Nội dung chuyển khoản:</span>{" "}
