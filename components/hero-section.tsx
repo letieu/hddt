@@ -1,7 +1,10 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
   Box,
+  CheckCircle2,
   Cloud,
   Download,
   File,
@@ -11,8 +14,19 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "./ui/alert-dialog";
 
 export function HeroSection() {
+  const [showDemoPopup, setShowDemoPopup] = useState(false);
+
   return (
     <section className="py-20 px-4 bg-gradient-to-b from-background to-card">
       <div className="container mx-auto max-w-6xl text-center">
@@ -41,6 +55,7 @@ export function HeroSection() {
               variant="outline"
               size="lg"
               className="group bg-white cursor-pointer"
+              onClick={() => setShowDemoPopup(true)}
             >
               <Download className="mr-2 h-4 w-4" />
               Xem file demo
@@ -127,6 +142,45 @@ export function HeroSection() {
           </div>
         </div>
       </div>
+      <AlertDialog open={showDemoPopup} onOpenChange={setShowDemoPopup}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <CheckCircle2 className="text-green-500" />
+              File demo
+            </AlertDialogTitle>
+            <div>
+              <p>
+                Dưới đây là các file demo để bạn có thể xem trước kết quả.
+              </p>
+              <div className="mt-4 space-y-2 text-sm">
+                <a
+                  href="https://docs.google.com/spreadsheets/d/1blcRYKM6-ZT0YU0vLSGm2zYGhECQPGFAIVtDSa4j-Nk/edit?usp=sharing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:underline"
+                >
+                  1. Google Sheet - Danh sách hóa đơn
+                </a>
+                <br />
+                <a
+                  href="https://drive.google.com/file/d/1HFNYuayV-sD859gFHslkct2stsU9-ALF/view?usp=drive_link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:underline"
+                >
+                  2. Google Drive - File ZIP chứa XML/HTML
+                </a>
+              </div>
+            </div>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowDemoPopup(false)}>
+              Đóng
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </section>
   );
 }
