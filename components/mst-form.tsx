@@ -186,6 +186,7 @@ export function MstForm() {
                   onClick={handleDownloadCsv}
                   className="flex-shrink-0"
                   variant="outline"
+                  type="button"
                 >
                   Tải xuống CSV
                 </Button>

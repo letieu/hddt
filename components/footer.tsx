@@ -25,7 +25,7 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="#"
+                  href="/"
                   className="text-muted-foreground hover:text-accent transition-colors"
                 >
                   Tải hóa đơn điện tử
