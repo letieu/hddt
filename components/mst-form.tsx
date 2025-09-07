@@ -179,7 +179,7 @@ export function MstForm() {
                 className="flex-shrink-0"
                 disabled={loading}
               >
-                {loading ? "Đang tra cứu..." : "Tra cứu"}
+                {loading ? "Đang tra cứu..." : "Tra cứu (Free)"}
               </Button>
               {results.length > 0 && (
                 <Button
