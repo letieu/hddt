@@ -9,6 +9,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type CreditOption = {
   id: string;
@@ -101,12 +102,15 @@ export function CreditSection() {
     };
   }, [supabase]);
 
+  const [loading, setLoading] = useState(false);
+
   const handlePaymentConfirmation = async () => {
     if (!selectedOption) {
       alert("Vui lòng chọn một gói credit để nạp.");
       return;
     }
 
+    setLoading(true);
     try {
       const { error } = await supabase.functions.invoke("notify-payment", {
         body: { selectedOption, user },
@@ -122,6 +126,8 @@ export function CreditSection() {
     } catch (error) {
       console.error("Error notifying payment:", error);
       alert("Có lỗi xảy ra khi gửi thông báo. Vui lòng thử lại.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -137,6 +143,15 @@ export function CreditSection() {
     });
     return baseUrl + "?" + urlQuery.toString();
   }, [user, selectedOption]);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    // focus to qr code when selected
+    if (selectedOption) {
+      router.push("#payment-confirmation");
+    }
+  }, [selectedOption]);
 
   if (!user) {
     return <div className="text-center text-xl">Loading...</div>;
@@ -163,9 +178,7 @@ export function CreditSection() {
 
         <div className="text-center">
           <h3 className="text-2xl font-bold mb-4">Chọn gói credit</h3>
-          <p className="text-muted-foreground">
-            1 lượt xuất file (≈) 3 credit
-          </p>
+          <p className="text-muted-foreground">1 lượt xuất file (≈) 3 credit</p>
           <p className="text-muted-foreground mb-6">
             Số credit phụ thuộc vào tổng số ngày trong khoảng thời gian xuất hóa
             đơn
@@ -217,7 +230,10 @@ export function CreditSection() {
         </div>
 
         {selectedOption && (
-          <div className="p-6 border rounded-lg bg-gray-50 dark:bg-gray-800 shadow-md">
+          <div
+            className="p-6 border rounded-lg bg-gray-50 dark:bg-gray-800 shadow-md"
+            id="payment-confirmation"
+          >
             <h3 className="text-xl font-bold mb-4 text-center">
               Chi tiết thanh toán cho gói {selectedOption.name}
             </h3>
@@ -235,7 +251,8 @@ export function CreditSection() {
                     9335581402
                   </p>
                   <p>
-                    <span className="font-medium">Chủ tài khoản:</span> LÊ CẢNH TIÊU
+                    <span className="font-medium">Chủ tài khoản:</span> LÊ CẢNH
+                    TIÊU
                   </p>
                   <p>
                     <span className="font-medium">Nội dung chuyển khoản:</span>{" "}
@@ -251,6 +268,7 @@ export function CreditSection() {
                 <div
                   className="mt-2 border p-2 rounded-md bg-white flex items-center justify-center"
                   style={{ minWidth: "180px", minHeight: "180px" }}
+                  id="qr-code"
                 >
                   <Image src={qrLink} alt="QR Code" width={300} height={300} />
                 </div>
@@ -262,8 +280,10 @@ export function CreditSection() {
             <Button
               onClick={handlePaymentConfirmation}
               className="mt-8 w-full text-lg py-3"
+              disabled={loading}
             >
               Tôi đã thanh toán gói {selectedOption.name}
+              {loading && <span className="ml-2">...</span>}
             </Button>
 
             <p className="text-center text-sm text-muted-foreground mt-4">
