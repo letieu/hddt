@@ -1,10 +1,38 @@
 import type { Metadata } from "next";
-import { Roboto, Roboto_Mono } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
 
+const title = "Tải Hóa Đơn Điện Tử Hàng Loạt - Nhanh Chóng và Tự Động";
+const description =
+  "Xuất hóa đơn điện tử hang lóạt nhanh chóng và tự động, đầy đủ thông tin, kèo file XML bằng 1 click.";
+const url = "https://taihoadon.online";
+const imageUrl = `${url}/modern-dashboard-interface-with-workflow-automatio.png`;
+
 export const metadata: Metadata = {
-  title: "Tải hóa đơn điện tử hàng loạt",
-  description: "Tải hóa đơn điện tử hàng loạt",
+  metadataBase: new URL(url),
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+    url,
+    images: [
+      {
+        url: imageUrl,
+        width: 1200,
+        height: 630,
+        alt: title,
+      },
+    ],
+    locale: "vi_VN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: [imageUrl],
+  },
 };
 
 const roboto = Roboto({
@@ -18,9 +46,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-sans ${roboto.className}`}>
-        {children}
-      </body>
+      <body className={`font-sans ${roboto.className}`}>{children}</body>
     </html>
   );
 }

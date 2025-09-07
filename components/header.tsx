@@ -67,7 +67,7 @@ export function Header() {
       <div className="container flex h-16 items-center mx-auto">
         <Link href="/" className="flex items-center space-x-2">
           <div className="h-8 w-8 rounded-lg bg-accent flex items-center justify-center">
-            <Image width={60} height={60} src={"/logo.png"} alt="HD" />
+            <Image width={60} height={60} src={"/logo.png"} alt="Tải hóa đơn logo" />
           </div>
           <span className="text-xl font-bold text-foreground">Tải hóa đơn</span>
         </Link>
