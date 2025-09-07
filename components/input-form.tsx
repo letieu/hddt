@@ -125,7 +125,7 @@ export function InputForm(props: {
               <div className="flex w-1/2 flex-col space-y-1.5">
                 <Label htmlFor="username">
                   Tài khoản{" "}
-                  <span className="text-blue-500">hoadondientu.gdt.gov.vn</span>{" "}
+                  <span className="text-blue-500 hidden md:inline">hoadondientu.gdt.gov.vn</span>{" "}
                   <span className="text-red-500">*</span>
                 </Label>
                 <Input

@@ -51,7 +51,7 @@ export function Header() {
         { event: "*", schema: "public", table: "credits" },
         () => {
           fetchCredits();
-        }
+        },
       )
       .subscribe();
 
@@ -65,12 +65,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center mx-auto">
-        <div className="flex items-center space-x-2">
+        <Link href="/" className="flex items-center space-x-2">
           <div className="h-8 w-8 rounded-lg bg-accent flex items-center justify-center">
             <Image width={60} height={60} src={"/logo.png"} alt="HD" />
           </div>
           <span className="text-xl font-bold text-foreground">Tải hóa đơn</span>
-        </div>
+        </Link>
 
         <nav className="hidden md:flex items-center space-x-8 mx-auto">
           <Link

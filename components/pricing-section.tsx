@@ -46,7 +46,6 @@ const plans = [
       "Số credit không giới hạn",
       "Tích hợp theo yêu cầu",
       "Hỗ trợ chuyên sâu",
-      "Hoá đơn VAT",
     ],
     popular: false,
   },
