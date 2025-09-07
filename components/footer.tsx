@@ -33,6 +33,14 @@ export function Footer() {
               </li>
               <li>
                 <Link
+                  href="/mst"
+                  className="text-muted-foreground hover:text-accent transition-colors"
+                >
+                  Tra mã số thuế
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/lap-to-khai-thue"
                   className="text-muted-foreground hover:text-accent transition-colors"
                 >

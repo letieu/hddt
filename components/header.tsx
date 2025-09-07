@@ -1,5 +1,3 @@
-"use client";
-
 import { AuthButton } from "./auth-button";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,9 +8,9 @@ import { DialogTitle } from "./ui/dialog";
 import { CreditCountButton } from "./credit-count-button";
 
 const links = [
-  { href: "#features", label: "Tính năng" },
-  { href: "#pricing", label: "Bảng giá" },
-  { href: "#contact", label: "Liên hệ" },
+  { href: "/", label: "Tải hóa đơn" },
+  { href: "/mst", label: "Tra mã số thuế" },
+  { href: "/lap-to-khai-thue", label: "Lập tờ khai" },
 ];
 
 export function Header() {

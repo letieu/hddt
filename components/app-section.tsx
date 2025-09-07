@@ -251,7 +251,7 @@ export function AppSection() {
       <div className="container mx-auto max-w-7xl relative z-10">
         <div className="text-center mb-16 space-y-6">
           <h2 className="text-4xl md:text-5xl font-bold bg-clip-text">
-            Công Cụ Xuất Hóa Đơn
+            Tải dữ liệu hóa đơn
           </h2>
         </div>
 
