@@ -1,4 +1,3 @@
-import { serve } from "std/server";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN");
@@ -38,7 +37,7 @@ async function editMessageText(chat_id, message_id, text) {
   });
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const supabaseAdmin = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
@@ -103,9 +102,7 @@ serve(async (req) => {
         // 4. Provide feedback to admin
         await answerCallbackQuery(callbackQuery.id, "Payment approved!");
 
-        const approvedMessage = callbackQuery.message.text + "
-
-✅ Approved";
+        const approvedMessage = callbackQuery.message.text + "✅ Approved";
         await editMessageText(callbackQuery.message.chat.id, callbackQuery.message.message_id, approvedMessage);
       }
     }

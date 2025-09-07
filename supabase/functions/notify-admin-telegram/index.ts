@@ -1,5 +1,3 @@
-import { serve } from "std/server";
-
 const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN");
 const TELEGRAM_ADMIN_ID = Deno.env.get("TELEGRAM_ADMIN_ID");
 
@@ -18,7 +16,7 @@ async function sendTelegramMessage(chat_id, text, reply_markup) {
   return responseJson;
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   console.log("notify-admin-telegram function started.");
   try {
     console.log("TELEGRAM_BOT_TOKEN exists:", !!TELEGRAM_BOT_TOKEN);

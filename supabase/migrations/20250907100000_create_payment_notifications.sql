@@ -1,4 +1,4 @@
-CREATE TABLE public.payment_notifications (
+create table if not exists public.payment_notifications (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     created_at timestamp with time zone NOT NULL DEFAULT now(),
     user_id uuid,
@@ -15,12 +15,14 @@ CREATE TABLE public.payment_notifications (
 
 ALTER TABLE public.payment_notifications ENABLE ROW LEVEL SECURITY;
 
+drop policy if exists "Allow authenticated users to insert their own notifications" on public.payment_notifications;
 CREATE POLICY "Allow authenticated users to insert their own notifications"
 ON public.payment_notifications
 FOR INSERT
 TO authenticated
 WITH CHECK (auth.uid() = user_id);
 
+drop policy if exists "Enable read access for admins" on public.payment_notifications;
 CREATE POLICY "Enable read access for admins"
 ON public.payment_notifications
 FOR SELECT
