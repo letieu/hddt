@@ -50,26 +50,12 @@ export function Footer() {
 
             <ul className="flex flex-wrap items-center gap-4">
               <Link
-                href="mailto:letieu8@gmail.com"
-                className="text-muted-foreground hover:text-accent transition-colors"
-              >
-                letieu8@gmail.com
-              </Link>
-              <Link
-                href="https://www.linkedin.com/in/letieu/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-accent transition-colors"
-              >
-                <Linkedin className="h-5 w-5" />
-              </Link>
-              <Link
                 href="https://t.me/tieu_exe"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-accent transition-colors"
               >
-                <Send className="h-5 w-5" />
+                Telegram
               </Link>
             </ul>
 
@@ -102,7 +88,7 @@ export function Footer() {
         {/* Copyright */}
         <div className="border-t mt-8 pt-4 text-center">
           <p className="text-muted-foreground">
-            © 2024 Tải hóa đơn. All rights reserved.
+            © 2024 taihoadon.online . All rights reserved.
           </p>
         </div>
       </div>

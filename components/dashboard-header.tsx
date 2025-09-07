@@ -5,10 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { RainbowButton } from "./magicui/rainbow-button";
-import { Wallet } from "lucide-react";
+import { Menu } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { Button } from "./ui/button";
+import { CreditCountButton } from "./credit-count-button";
+import { DialogTitle } from "./ui/dialog";
 
 const links = [
   { href: "/dashboard", label: "Credit" },
@@ -17,54 +18,9 @@ const links = [
 
 export function DashboardHeader() {
   const pathname = usePathname();
-  const supabase = createClient();
-  const [creditCount, setCreditCount] = useState(0);
-
-  useEffect(() => {
-    const fetchCredits = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        return;
-      }
-
-      const { data } = await supabase
-        .from("credits")
-        .select("credit_count")
-        .eq("user_id", user.id)
-        .single();
-
-      if (data) {
-        setCreditCount(data.credit_count);
-      }
-    };
-
-    fetchCredits();
-
-    const handleCreditUpdate = () => fetchCredits();
-    window.addEventListener("credit-update", handleCreditUpdate);
-
-    const channel = supabase
-      .channel("credit-changes-header")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "credits" },
-        (payload) => {
-          fetchCredits();
-        },
-      )
-      .subscribe();
-
-    return () => {
-      window.removeEventListener("credit-update", handleCreditUpdate);
-      supabase.removeChannel(channel);
-    };
-  }, [supabase]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-2">
       <div className="container flex h-16 items-center mx-auto">
         <Link href="/" className="flex items-center space-x-2">
           <div className="h-8 w-8 rounded-lg bg-accent flex items-center justify-center">
@@ -88,14 +44,48 @@ export function DashboardHeader() {
           ))}
         </nav>
 
-        <div className="flex items-center justify-end space-x-4">
-          <Link href="/dashboard">
-            <RainbowButton>
-              <span className="pl-2">{creditCount}</span>
-              <Wallet />
-            </RainbowButton>
-          </Link>
-          <AuthButton />
+        <div className="flex items-center justify-end space-x-4 ml-auto md:ml-0">
+          <div className="hidden md:flex items-center space-x-4">
+            <CreditCountButton />
+            <AuthButton />
+          </div>
+
+          <div className="md:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Menu />
+                  <span className="sr-only">Toggle Menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left">
+                <DialogTitle>
+                  <div className="p-2">
+                    <AuthButton />
+                  </div>
+                </DialogTitle>
+                <div className="flex flex-col space-y-6 pt-6">
+                  <nav className="flex flex-col space-y-3 px-2">
+                    {links.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className={cn(
+                          "text-muted-foreground hover:text-accent transition-colors text-base",
+                          { "text-accent": pathname === link.href },
+                        )}
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </nav>
+                  <div className="flex flex-col space-y-4 pt-6 border-t px-1">
+                    <CreditCountButton className="w-full justify-center" />
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
     </header>

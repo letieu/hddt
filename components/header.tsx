@@ -3,106 +3,85 @@
 import { AuthButton } from "./auth-button";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { Wallet } from "lucide-react";
-import { RainbowButton } from "./magicui/rainbow-button";
+import { Menu } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { Button } from "./ui/button";
+import { DialogTitle } from "./ui/dialog";
+import { CreditCountButton } from "./credit-count-button";
+
+const links = [
+  { href: "#features", label: "Tính năng" },
+  { href: "#pricing", label: "Bảng giá" },
+  { href: "#contact", label: "Liên hệ" },
+];
 
 export function Header() {
-  const supabase = createClient();
-  const [creditCount, setCreditCount] = useState(0);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const fetchCredits = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setIsLoggedIn(!!user);
-
-      if (user) {
-        const { data } = await supabase
-          .from("credits")
-          .select("credit_count")
-          .eq("user_id", user.id)
-          .single();
-
-        if (data) {
-          setCreditCount(data.credit_count);
-        }
-      } else {
-        setCreditCount(0);
-      }
-    };
-
-    fetchCredits();
-
-    const handleCreditUpdate = () => fetchCredits();
-    window.addEventListener("credit-update", handleCreditUpdate);
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(() => {
-      fetchCredits();
-    });
-
-    const channel = supabase
-      .channel("credit-changes-main-header")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "credits" },
-        () => {
-          fetchCredits();
-        },
-      )
-      .subscribe();
-
-    return () => {
-      window.removeEventListener("credit-update", handleCreditUpdate);
-      authListener.subscription.unsubscribe();
-      supabase.removeChannel(channel);
-    };
-  }, [supabase]);
-
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-2">
       <div className="container flex h-16 items-center mx-auto">
         <Link href="/" className="flex items-center space-x-2">
           <div className="h-8 w-8 rounded-lg bg-accent flex items-center justify-center">
-            <Image width={60} height={60} src={"/logo.png"} alt="Tải hóa đơn logo" />
+            <Image
+              width={60}
+              height={60}
+              src={"/logo.png"}
+              alt="Tải hóa đơn logo"
+            />
           </div>
           <span className="text-xl font-bold text-foreground">Tải hóa đơn</span>
         </Link>
 
         <nav className="hidden md:flex items-center space-x-8 mx-auto">
-          <Link
-            href="#features"
-            className="text-muted-foreground hover:text-accent transition-colors"
-          >
-            Tính năng
-          </Link>
-          <Link
-            href="#pricing"
-            className="text-muted-foreground hover:text-accent transition-colors"
-          >
-            Bảng giá
-          </Link>
-          <Link
-            href="#contact"
-            className="text-muted-foreground hover:text-accent transition-colors"
-          >
-            Liên hệ
-          </Link>
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-muted-foreground hover:text-accent transition-colors"
+            >
+              {link.label}
+            </Link>
+          ))}
         </nav>
 
-        <div className="flex items-center justify-end space-x-4">
-          {isLoggedIn && (
-            <Link href="/dashboard">
-              <RainbowButton>
-                <span className="pl-2">{creditCount}</span>
-                <Wallet />
-              </RainbowButton>
-            </Link>
-          )}
-          <AuthButton />
+        <div className="flex items-center justify-end space-x-4 ml-auto md:ml-0">
+          <div className="hidden md:flex items-center space-x-4">
+            <CreditCountButton />
+            <AuthButton />
+          </div>
+
+          <div className="md:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Menu />
+                  <span className="sr-only">Toggle Menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left">
+                <DialogTitle>
+                  <div className="p-2">
+                    <AuthButton />
+                  </div>
+                </DialogTitle>
+
+                <div className="flex flex-col space-y-6 pt-6">
+                  <nav className="flex flex-col space-y-3 px-2">
+                    {links.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className="text-muted-foreground hover:text-accent transition-colors text-base"
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+
+                    <CreditCountButton className="w-full" />
+                  </nav>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
     </header>

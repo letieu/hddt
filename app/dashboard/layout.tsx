@@ -9,7 +9,7 @@ export default function DashboardLayout({
   return (
     <div>
       <DashboardHeader />
-      <main className="p-10 max-w-6xl mx-auto">{children}</main>
+      <main className="md:p-10 max-w-6xl mx-auto">{children}</main>
       <Footer />
     </div>
   );
