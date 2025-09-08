@@ -36,7 +36,7 @@ import {
 export function MstForm() {
   const [inputText, setInputText] = useState<string>("");
   const [results, setResults] = useState<any[]>([]);
-  const [selectedType, setSelectedType] = useState<string>("dn"); // Default to dn (Doanh nghiệp)
+  const [selectedType, setSelectedType] = useState<string>("cn");
   const [loading, setLoading] = useState<boolean>(false);
 
   const supabase = createClient();
@@ -177,8 +177,8 @@ export function MstForm() {
                     <SelectValue placeholder="Chọn loại tra cứu" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="dn">Doanh nghiệp</SelectItem>
                     <SelectItem value="cn">Cá nhân</SelectItem>
+                    <SelectItem value="dn">Doanh nghiệp</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
