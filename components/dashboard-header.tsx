@@ -14,7 +14,7 @@ import { DialogTitle } from "./ui/dialog";
 const links = [
   { href: "/dashboard", label: "Credit" },
   { href: "/#app", label: "Tải hóa đơn" },
-  { href: "/mst", label: "Tra mã số thuế" },
+  { href: "/tra-cuu-ma-so-thue", label: "Tra mã số thuế" },
   { href: "/lap-to-khai-thue", label: "Lập tờ khai" },
 ];
 

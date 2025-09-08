@@ -150,19 +150,18 @@ export function MstForm() {
                   id="input-tax-ids"
                   placeholder={`1234567890
 1234567891
-1234567892
 1234567899`}
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   rows={15}
-                  className="border bg-muted border-accent"
+                  className="border bg-muted border-accent-800 placeholder:text-gray-400 focus:ring-accent focus:border-accent block w-full p-2.5 text-sm text-gray-900 bg-background rounded-lg shadow-md"
                 />
               </div>
             </div>
 
-            <div className="py-4 flex flex-wrap items-end gap-4">
+            <div className="flex flex-wrap items-end gap-4">
               <div className="flex-grow">
-                <Label htmlFor="mst-input-type">Loại tra cứu</Label>
+                <Label htmlFor="mst-input-type">Cá nhân hoặc doanh nghiệp</Label>
                 <Select value={selectedType} onValueChange={setSelectedType}>
                   <SelectTrigger id="mst-input-type" className="mt-2 shadow-md">
                     <SelectValue placeholder="Chọn loại tra cứu" />

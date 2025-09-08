@@ -9,7 +9,7 @@ import { CreditCountButton } from "./credit-count-button";
 
 const links = [
   { href: "/", label: "Tải hóa đơn" },
-  { href: "/mst", label: "Tra mã số thuế" },
+  { href: "/tra-cuu-ma-so-thue", label: "Tra mã số thuế" },
   { href: "/lap-to-khai-thue", label: "Lập tờ khai" },
 ];
 
