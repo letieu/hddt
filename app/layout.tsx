@@ -10,7 +10,7 @@ const title = "Tải Hóa Đơn Điện Tử Hàng Loạt - Nhanh Chóng và T�
 const description =
   "Xuất hóa đơn điện tử hang lóạt nhanh chóng và tự động, đầy đủ thông tin, kèo file XML bằng 1 click.";
 const url = "https://taihoadon.online";
-const imageUrl = `${url}/modern-dashboard-interface-with-workflow-automatio.png`;
+const imageUrl = `${url}/og/tai-hoa-don.png`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(url),
