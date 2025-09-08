@@ -13,12 +13,15 @@ import {
 } from "./ui/select";
 import { Button } from "./ui/button";
 import { createClient } from "@/lib/supabase/client";
+import { RainbowButton } from "./magicui/rainbow-button";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
+  CardAction,
 } from "@/components/ui/card";
 import { ShineBorder } from "./magicui/shine-border";
 import {
@@ -140,8 +143,8 @@ export function MstForm() {
   return (
     <>
       <Card className="relative overflow-hidden max-w-3xl mx-auto">
-        <CardContent>
-          <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
+          <CardContent>
             <div className="space-y-4 mb-4">
               <div className="grid w-full items-center gap-1.5">
                 <Label htmlFor="input-tax-ids">
@@ -179,45 +182,43 @@ export function MstForm() {
                   </SelectContent>
                 </Select>
               </div>
-
-              <Button
-                type="submit"
-                className="flex-shrink-0"
-                disabled={loading}
-              >
-                {loading ? "Đang tra cứu..." : "Tra cứu mã số thuế"}
-              </Button>
-              {results.length > 0 && (
-                <Button
-                  onClick={handleDownloadCsv}
-                  className="flex-shrink-0"
-                  variant="outline"
-                  type="button"
-                >
-                  Tải xuống CSV
-                </Button>
-              )}
             </div>
-          </form>
-        </CardContent>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-4 mt-3">
+            <RainbowButton type="submit" className="w-full" disabled={loading}>
+              {loading ? "Đang tra cứu..." : "Tra cứu mã số thuế"}
+            </RainbowButton>
+          </CardFooter>
+        </form>
+        <ShineBorder />
       </Card>
 
       <div className="space-y-4 mt-8">
         {loading && (
-          <Card className="max-w-3xl mx-auto">
+          <Card className="max-w-7xl mx-auto">
             <CardContent className="flex flex-col items-center justify-center p-12">
               <Loader2 className="h-12 w-12 animate-spin text-primary" />
-              <p className="mt-4 text-muted-foreground">Đang tra cứu, vui lòng chờ...</p>
+              <p className="mt-4 text-muted-foreground">
+                Đang tra cứu, vui lòng chờ...
+              </p>
             </CardContent>
           </Card>
         )}
         {!loading && results.length > 0 && (
-          <Card className="max-w-3xl mx-auto">
-            <CardHeader>
+          <Card className="max-w-7xl mx-auto">
+            <CardHeader className="flex justify-between">
               <CardTitle>Kết quả tra cứu</CardTitle>
-              <CardDescription>
-                Tìm thấy {results.length} kết quả.
-              </CardDescription>
+              <CardAction>
+                {results.length > 0 && (
+                  <Button
+                    onClick={handleDownloadCsv}
+                    variant="outline"
+                    type="button"
+                  >
+                    Tải xuống CSV
+                  </Button>
+                )}
+              </CardAction>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -232,18 +233,22 @@ export function MstForm() {
                   <TableBody>
                     {results.map((item, index) => (
                       <TableRow key={index}>
-                        <TableCell>{item["STT"] || index + 1}</TableCell>
-                        <TableCell>{item["MST"] || "N/A"}</TableCell>
-                        <TableCell>
+                        <TableCell className="text-left">
+                          {item["STT"] || index + 1}
+                        </TableCell>
+                        <TableCell className="text-left">
+                          {item["MST"] || "N/A"}
+                        </TableCell>
+                        <TableCell className="text-left">
                           {item["Tên người nộp thuế"] || "N/A"}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-left">
                           {item["Địa chỉ trụ sở/địa chỉ kinh doanh"] || "N/A"}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-left">
                           {item["Cơ quan thuế quản lý"] || "N/A"}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-left">
                           {item["Trạng thái MST"] || "N/A"}
                         </TableCell>
                       </TableRow>
@@ -254,17 +259,15 @@ export function MstForm() {
             </CardContent>
           </Card>
         )}
-        {!loading &&
-          results.length === 0 &&
-          inputText.length > 0 && (
-            <Card className="max-w-3xl mx-auto">
-              <CardContent className="p-12 text-center">
-                <p className="text-muted-foreground">
-                  Không tìm thấy dữ liệu hoặc chưa có kết quả.
-                </p>
-              </CardContent>
-            </Card>
-          )}
+        {!loading && results.length === 0 && inputText.length > 0 && (
+          <Card className="max-w-7xl mx-auto">
+            <CardContent className="p-12 text-center">
+              <p className="text-muted-foreground">
+                Không tìm thấy dữ liệu hoặc chưa có kết quả.
+              </p>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </>
   );

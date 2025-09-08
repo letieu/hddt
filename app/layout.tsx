@@ -48,15 +48,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" suppressHydrationWarning>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
-        <body className={`font-sans ${roboto.className}`}>{children}</body>
-        <GoogleAnalytics gaId="G-0YZCEZE5X0" />
-      </ThemeProvider>
+      <head />
+      <body className={`font-sans ${roboto.className}`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
+      </body>
+      <GoogleAnalytics gaId="G-0YZCEZE5X0" />
     </html>
   );
 }
