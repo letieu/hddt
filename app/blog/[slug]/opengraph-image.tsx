@@ -1,5 +1,4 @@
 import { getBlogPostMetadata } from "@/lib/mdx";
-import dynamic from "next/dynamic";
 import { ImageResponse } from "next/og";
 
 // Image metadata

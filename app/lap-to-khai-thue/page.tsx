@@ -2,6 +2,12 @@ import { RainbowButton } from "@/components/magicui/rainbow-button";
 import { ArrowRight, Bot, Cloud, Smile } from "lucide-react";
 import Link from "next/link";
 
+export const metadata = {
+  title: "Lập tờ khai thuế online",
+  description:
+    "Công cụ hỗ trợ lập tờ khai thuế, quản lý tờ khai online, với giao diện dễ dàng và AI hỗ trợ kê khai. Xuất file XML, Excel, DOCX, PDF.",
+};
+
 export default function LapToKhaiThue() {
   return (
     <div className="min-h-screen bg-background">

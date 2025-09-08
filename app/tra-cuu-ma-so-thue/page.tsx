@@ -35,6 +35,12 @@ const features = [
   },
 ];
 
+export const metadata = {
+  title: "Tra Cứu Mã Số Thuế",
+  description:
+    "Tra cứu mã số thuế cá nhân, doanh nghiệp hàng loạt. Kết qủa bao gồm thông tin về tổ chức, cá nhân, và hộ kinh doanh, cơ quan thuế quản lý và trạng thái của mã số thuế.",
+};
+
 export default function MstPage() {
   return (
     <div className="min-h-screen bg-background">
