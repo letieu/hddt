@@ -2,7 +2,11 @@ import type { Metadata } from "next/types";
 import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
-  const blogPosts = ["huong-dan-tra-cuu-thong-tin-thue"];
+  const blogPosts = [
+    "huong-dan-tai-hoa-don-hang-loat",
+    "huong-dan-tra-cuu-thong-tin-thue",
+    "huong-dan-tra-cuu-hoa-don-dien-tu",
+  ];
   const blogStaticParams = blogPosts.map((post) => ({
     slug: post,
   }));
@@ -13,6 +17,8 @@ export async function generateStaticParams() {
 export type PostMetadata = Metadata & {
   title: string;
   description: string;
+  date: string;
+  image?: string;
 };
 
 export type BlogPostData = {
@@ -41,3 +47,14 @@ export async function getBlogPostMetadata(slug: string): Promise<BlogPostData> {
     return notFound();
   }
 }
+
+export async function getListOfPosts() {
+  const params = await generateStaticParams();
+  return Promise.all(
+    params.map(async (param) => {
+      const post = await getBlogPostMetadata(param.slug);
+      return post;
+    }),
+  );
+}
+

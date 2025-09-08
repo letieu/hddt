@@ -133,7 +133,7 @@ export function HeroSection() {
                       File HTML theo hóa đơn
                     </p>
                     <p className="text-muted-foreground">
-                      Toàn bộ file HTML kèm theo, dễ dàng để in hoặc xuất PDF
+                      Toàn bộ file HTML kèm theo, dễ dàng để in hoặc xuất <strong>PDF</strong>
                     </p>
                   </div>
                 </div>

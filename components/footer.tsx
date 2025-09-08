@@ -1,8 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Linkedin, Send } from "lucide-react";
+import { getListOfPosts } from "@/lib/mdx";
 
-export function Footer() {
+export async function Footer() {
+  const posts = (await getListOfPosts()).slice(0, 4);
+
   return (
     <footer className="bg-card border-t">
       <div className="container mx-auto px-4 py-8">
@@ -10,7 +12,12 @@ export function Footer() {
           {/* Logo Section */}
           <div className="flex items-center space-x-2">
             <div className="h-8 w-8 rounded-lg bg-accent flex items-center justify-center">
-              <Image width={60} height={60} src={"/logo.png"} alt="Tải hóa đơn logo" />
+              <Image
+                width={60}
+                height={60}
+                src={"/logo.png"}
+                alt="Tải hóa đơn logo"
+              />
             </div>
             <span className="text-xl font-bold text-foreground">
               Tải hóa đơn
@@ -47,6 +54,25 @@ export function Footer() {
                   Lập tờ khai thuế
                 </Link>
               </li>
+            </ul>
+          </div>
+
+          {/* Latest Blog Posts */}
+          <div>
+            <h3 className="font-semibold text-card-foreground mb-4">
+              Bài viết mới nhất
+            </h3>
+            <ul className="space-y-2">
+              {posts.map((post) => (
+                <li key={post.slug}>
+                  <Link
+                    href={`/blog/${post.slug}/`}
+                    className="text-muted-foreground hover:text-accent transition-colors"
+                  >
+                    {post.metadata.title?.toString()}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
