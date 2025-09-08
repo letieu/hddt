@@ -32,6 +32,16 @@ export function ShineBorder({
   const { theme } = useTheme();
   const shineColor = theme === "dark" ? "#FFFFFF" : "#000000";
 
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
   return (
     <div
       style={
