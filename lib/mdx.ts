@@ -1,13 +1,14 @@
 import type { Metadata } from "next/types";
 import { notFound } from "next/navigation";
 
+export const blogPosts = [
+  "huong-dan-tai-hoa-don-hang-loat",
+  "huong-dan-tra-cuu-thong-tin-thue",
+  "huong-dan-tra-cuu-hoa-don-dien-tu",
+  "phat-trien-cong-cu-lap-to-khai-thue",
+];
+
 export async function generateStaticParams() {
-  const blogPosts = [
-    "huong-dan-tai-hoa-don-hang-loat",
-    "huong-dan-tra-cuu-thong-tin-thue",
-    "huong-dan-tra-cuu-hoa-don-dien-tu",
-    "phat-trien-cong-cu-lap-to-khai-thue",
-  ];
   const blogStaticParams = blogPosts.map((post) => ({
     slug: post,
   }));
@@ -58,4 +59,3 @@ export async function getListOfPosts() {
     }),
   );
 }
-
