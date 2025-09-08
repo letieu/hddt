@@ -203,7 +203,8 @@ export function MstForm() {
               <TableHeader>
                 <TableRow>
                   {headers.map((header) => (
-                    <TableHead key={header}>{header}</TableHead>
+                    <TableHead key={header} className="text-right">
+                      {header}</TableHead>
                   ))}
                 </TableRow>
               </TableHeader>
@@ -212,14 +213,14 @@ export function MstForm() {
                   <TableRow key={index}>
                     <TableCell>{item["STT"] || index + 1}</TableCell>
                     <TableCell>{item["MST"] || "N/A"}</TableCell>
-                    <TableCell>{item["Tên người nộp thuế"] || "N/A"}</TableCell>
-                    <TableCell>
+                    <TableCell className="text-right">{item["Tên người nộp thuế"] || "N/A"}</TableCell>
+                    <TableCell className="text-right">
                       {item["Địa chỉ trụ sở/địa chỉ kinh doanh"] || "N/A"}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="text-right">
                       {item["Cơ quan thuế quản lý"] || "N/A"}
                     </TableCell>
-                    <TableCell>{item["Trạng thái MST"] || "N/A"}</TableCell>
+                    <TableCell className="text-right">{item["Trạng thái MST"] || "N/A"}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
