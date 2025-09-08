@@ -1,5 +1,3 @@
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
 import { MstForm } from "@/components/mst-form";
 import {
   Card,
@@ -37,33 +35,9 @@ const features = [
   },
 ];
 
-const faqItems = [
-  {
-    question: "Mã số thuế là gì?",
-    answer:
-      "Mã số thuế là một dãy số duy nhất được cấp cho mỗi cá nhân hoặc tổ chức khi đăng ký thuế với cơ quan thuế. Nó được sử dụng để xác định và quản lý các nghĩa vụ thuế.",
-  },
-  {
-    question: "Tại sao cần tra cứu mã số thuế?",
-    answer:
-      "Việc tra cứu mã số thuế giúp xác minh tính chính xác thông tin của đối tác kinh doanh, kiểm tra tình trạng hoạt động của doanh nghiệp, và thực hiện các thủ tục hành chính, kế toán liên quan đến thuế.",
-  },
-  {
-    question: "Làm thế nào để tra cứu mã số thuế hàng loạt?",
-    answer:
-      "Bạn chỉ cần chuẩn bị một danh sách các số Chứng minh nhân dân/Căn cước công dân (đối với cá nhân) hoặc tên công ty/mã số doanh nghiệp, sau đó nhập vào ô tra cứu của chúng tôi và nhấn nút. Hệ thống sẽ tự động xử lý và trả về kết quả cho toàn bộ danh sách.",
-  },
-  {
-    question: "Dữ liệu tra cứu có được bảo mật không?",
-    answer:
-      "Chúng tôi cam kết bảo mật thông tin của bạn. Mọi dữ liệu bạn nhập vào đều chỉ được sử dụng cho mục đích tra cứu và không được lưu trữ hay chia sẻ với bất kỳ bên thứ ba nào.",
-  },
-];
-
 export default function MstPage() {
   return (
     <div className="min-h-screen bg-background">
-      <Header />
       <main>
         <section className="py-20 px-4 bg-gradient-to-b from-background to-card">
           <div className="container mx-auto max-w-6xl text-center">
@@ -153,7 +127,6 @@ export default function MstPage() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

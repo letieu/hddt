@@ -1,5 +1,3 @@
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
 import { RainbowButton } from "@/components/magicui/rainbow-button";
 import { ArrowRight, Bot, Cloud, Smile } from "lucide-react";
 import Link from "next/link";
@@ -7,7 +5,6 @@ import Link from "next/link";
 export default function LapToKhaiThue() {
   return (
     <div className="min-h-screen bg-background">
-      <Header />
       <main>
         <section className="py-20 px-4 bg-gradient-to-b from-background to-card">
           <div className="container mx-auto max-w-6xl text-center">
@@ -51,7 +48,6 @@ export default function LapToKhaiThue() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

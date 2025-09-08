@@ -3,5 +3,9 @@
 import { CreditSection } from "@/components/credit-section";
 
 export default function CreditsPage() {
-  return <CreditSection />;
+  return (
+    <main className="md:py-2">
+      <CreditSection />
+    </main>
+  );
 }

@@ -3,6 +3,8 @@ import { Roboto } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
 
 const title = "Tải Hóa Đơn Điện Tử Hàng Loạt - Nhanh Chóng và Tự Động";
 const description =
@@ -51,7 +53,9 @@ export default function RootLayout({
       <head />
       <body className={`font-sans ${roboto.className}`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Header />
           {children}
+          <Footer />
         </ThemeProvider>
       </body>
       <GoogleAnalytics gaId="G-0YZCEZE5X0" />

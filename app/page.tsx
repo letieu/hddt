@@ -7,15 +7,11 @@ import { Footer } from "@/components/footer"
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main>
+    <main className="min-h-screen bg-background">
         <HeroSection />
         <AppSection />
         <FeaturesSection />
         <PricingSection />
-      </main>
-      <Footer />
-    </div>
+    </main>
   )
 }
