@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "./ui/label";
 import {
@@ -138,7 +139,7 @@ export function MstForm() {
 
   return (
     <>
-      <Card className="relative overflow-hidden bg-white max-w-3xl mx-auto">
+      <Card className="relative overflow-hidden max-w-3xl mx-auto">
         <CardContent>
           <form onSubmit={handleSubmit}>
             <div className="space-y-4 mb-4">
@@ -158,7 +159,7 @@ export function MstForm() {
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   rows={12}
-                  className="border bg-muted border-accent-800 placeholder:text-gray-400 focus:ring-accent focus:border-accent block w-full p-2.5 text-sm text-gray-900 bg-background rounded-lg shadow-md"
+                  className="placeholder:text-muted-foreground"
                 />
               </div>
             </div>
@@ -169,7 +170,7 @@ export function MstForm() {
                   Cá nhân hoặc doanh nghiệp
                 </Label>
                 <Select value={selectedType} onValueChange={setSelectedType}>
-                  <SelectTrigger id="mst-input-type" className="mt-2 shadow-md">
+                  <SelectTrigger id="mst-input-type" className="mt-2">
                     <SelectValue placeholder="Chọn loại tra cứu" />
                   </SelectTrigger>
                   <SelectContent>
@@ -202,45 +203,68 @@ export function MstForm() {
       </Card>
 
       <div className="space-y-4 mt-8">
-        {loading && <p>Đang tra cứu...</p>}
+        {loading && (
+          <Card className="max-w-3xl mx-auto">
+            <CardContent className="flex flex-col items-center justify-center p-12">
+              <Loader2 className="h-12 w-12 animate-spin text-primary" />
+              <p className="mt-4 text-muted-foreground">Đang tra cứu, vui lòng chờ...</p>
+            </CardContent>
+          </Card>
+        )}
         {!loading && results.length > 0 && (
-          <div className="overflow-x-auto  bg-white p-6 rounded-lg shadow-md">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  {headers.map((header) => (
-                    <TableHead key={header} className="text-right">
-                      {header}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {results.map((item, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{item["STT"] || index + 1}</TableCell>
-                    <TableCell>{item["MST"] || "N/A"}</TableCell>
-                    <TableCell className="text-right">
-                      {item["Tên người nộp thuế"] || "N/A"}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {item["Địa chỉ trụ sở/địa chỉ kinh doanh"] || "N/A"}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {item["Cơ quan thuế quản lý"] || "N/A"}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {item["Trạng thái MST"] || "N/A"}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+          <Card className="max-w-3xl mx-auto">
+            <CardHeader>
+              <CardTitle>Kết quả tra cứu</CardTitle>
+              <CardDescription>
+                Tìm thấy {results.length} kết quả.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      {headers.map((header) => (
+                        <TableHead key={header}>{header}</TableHead>
+                      ))}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {results.map((item, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{item["STT"] || index + 1}</TableCell>
+                        <TableCell>{item["MST"] || "N/A"}</TableCell>
+                        <TableCell>
+                          {item["Tên người nộp thuế"] || "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          {item["Địa chỉ trụ sở/địa chỉ kinh doanh"] || "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          {item["Cơ quan thuế quản lý"] || "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          {item["Trạng thái MST"] || "N/A"}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
         )}
-        {!loading && results.length === 0 && inputText.length > 0 && (
-          <p>Không tìm thấy dữ liệu hoặc chưa có kết quả.</p>
-        )}
+        {!loading &&
+          results.length === 0 &&
+          inputText.length > 0 && (
+            <Card className="max-w-3xl mx-auto">
+              <CardContent className="p-12 text-center">
+                <p className="text-muted-foreground">
+                  Không tìm thấy dữ liệu hoặc chưa có kết quả.
+                </p>
+              </CardContent>
+            </Card>
+          )}
       </div>
     </>
   );

@@ -10,6 +10,7 @@ import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { CreditCountButton } from "./credit-count-button";
 import { DialogTitle } from "./ui/dialog";
+import { ThemeToggle } from "./theme-toggle";
 
 const links = [
   { href: "/dashboard", label: "Credit" },
@@ -50,6 +51,7 @@ export function DashboardHeader() {
           <div className="hidden md:flex items-center space-x-4">
             <CreditCountButton />
             <AuthButton />
+            <ThemeToggle />
           </div>
 
           <div className="md:hidden">
@@ -62,8 +64,9 @@ export function DashboardHeader() {
               </SheetTrigger>
               <SheetContent side="left">
                 <DialogTitle>
-                  <div className="p-2">
+                  <div className="p-2 flex items-center gap-2">
                     <AuthButton />
+                    <ThemeToggle />
                   </div>
                 </DialogTitle>
                 <div className="flex flex-col space-y-6 pt-6">

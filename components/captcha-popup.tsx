@@ -74,6 +74,7 @@ export function CaptchaDialog({
           <div className="flex items-center gap-4">
             <div
               aria-label="captcha"
+              className="bg-white"
               dangerouslySetInnerHTML={{ __html: svg }}
             />
             <RefreshCwIcon

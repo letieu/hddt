@@ -68,7 +68,7 @@ export function PricingSection() {
           {plans.map((plan, index) => (
             <Card
               key={index}
-              className={`bg-white relative flex flex-col ${
+              className={`relative flex flex-col ${
                 plan.popular
                   ? "border-accent shadow-lg scale-105"
                   : "border-border"

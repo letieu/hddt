@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
-import { GoogleAnalytics } from '@next/third-parties/google'
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const title = "Tải Hóa Đơn Điện Tử Hàng Loạt - Nhanh Chóng và Tự Động";
 const description =
@@ -46,9 +47,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`font-sans ${roboto.className}`}>{children}</body>
-      <GoogleAnalytics gaId="G-0YZCEZE5X0" />
+    <html lang="vi" suppressHydrationWarning>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <body className={`font-sans ${roboto.className}`}>{children}</body>
+        <GoogleAnalytics gaId="G-0YZCEZE5X0" />
+      </ThemeProvider>
     </html>
   );
 }

@@ -104,7 +104,7 @@ export function InputForm(props: {
   }, [fromDate, toDate, downloadFiles]);
 
   return (
-    <Card className="relative overflow-hidden bg-white">
+    <Card className="relative overflow-hidden">
       <CardHeader>
         <CardTitle>Nhập thông tin</CardTitle>
         <CardDescription>
@@ -112,7 +112,7 @@ export function InputForm(props: {
           <a
             href="https://hoadondientu.gdt.gov.vn/"
             target="_blank"
-            className="text-blue-500 underline"
+            className="text-accent underline"
           >
             hoadondientu.gdt.gov.vn
           </a>
@@ -125,8 +125,8 @@ export function InputForm(props: {
               <div className="flex w-1/2 flex-col space-y-1.5">
                 <Label htmlFor="username">
                   Tài khoản{" "}
-                  <span className="text-blue-500 hidden md:inline">hoadondientu.gdt.gov.vn</span>{" "}
-                  <span className="text-red-500">*</span>
+                  <span className="text-accent hidden md:inline">hoadondientu.gdt.gov.vn</span>{" "}
+                  <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="username"
@@ -135,12 +135,12 @@ export function InputForm(props: {
                   onChange={(e) => setUsername(e.target.value)}
                 />
                 {errors.username && (
-                  <p className="text-sm text-red-500">{errors.username}</p>
+                  <p className="text-sm text-destructive">{errors.username}</p>
                 )}
               </div>
               <div className="flex w-1/2 flex-col space-y-1.5">
                 <Label htmlFor="password">
-                  Mật khẩu <span className="text-red-500">*</span>
+                  Mật khẩu <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="password"
@@ -150,13 +150,13 @@ export function InputForm(props: {
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 {errors.password && (
-                  <p className="text-sm text-red-500">{errors.password}</p>
+                  <p className="text-sm text-destructive">{errors.password}</p>
                 )}
               </div>
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label>
-                Khoảng ngày <span className="text-red-500">*</span>
+                Khoảng ngày <span className="text-destructive">*</span>
               </Label>
               <div className="flex items-center space-x-2">
                 <Input
@@ -176,7 +176,7 @@ export function InputForm(props: {
                 />
               </div>
               {errors.date && (
-                <p className="text-sm text-red-500">{errors.date}</p>
+                <p className="text-sm text-destructive">{errors.date}</p>
               )}
             </div>
             <Tabs
@@ -191,7 +191,7 @@ export function InputForm(props: {
                 }
               }}
             >
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="grid w-full grid-cols-2 bg-background">
                 <TabsTrigger value="purchase">Hoá đơn mua vào</TabsTrigger>
                 <TabsTrigger value="sold">Hoá đơn bán ra</TabsTrigger>
               </TabsList>
