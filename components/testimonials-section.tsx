@@ -50,7 +50,7 @@ export function TestimonialsSection() {
                     <Star key={i} className="h-5 w-5 fill-accent text-accent" />
                   ))}
                 </div>
-                <blockquote className="text-card-foreground mb-4 text-pretty">"{testimonial.content}"</blockquote>
+                <blockquote className="text-card-foreground mb-4 text-pretty">&quot;{testimonial.content}&quot;</blockquote>
                 <div className="border-t pt-4">
                   <div className="font-semibold text-card-foreground">{testimonial.name}</div>
                   <div className="text-sm text-muted-foreground">

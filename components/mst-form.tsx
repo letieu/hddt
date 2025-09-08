@@ -146,6 +146,10 @@ export function MstForm() {
                 <Label htmlFor="input-tax-ids">
                   Nhập danh sách MST/Căn cước (mỗi mã một dòng)
                 </Label>
+                <div className="flex text-muted-foreground text-sm">
+                  Tra cứu mã số thuế online hoàn toàn miễn phí và không cần đăng
+                  ký
+                </div>
                 <Textarea
                   id="input-tax-ids"
                   placeholder={`1234567890
@@ -153,7 +157,7 @@ export function MstForm() {
 1234567899`}
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  rows={15}
+                  rows={12}
                   className="border bg-muted border-accent-800 placeholder:text-gray-400 focus:ring-accent focus:border-accent block w-full p-2.5 text-sm text-gray-900 bg-background rounded-lg shadow-md"
                 />
               </div>
@@ -161,7 +165,9 @@ export function MstForm() {
 
             <div className="flex flex-wrap items-end gap-4">
               <div className="flex-grow">
-                <Label htmlFor="mst-input-type">Cá nhân hoặc doanh nghiệp</Label>
+                <Label htmlFor="mst-input-type">
+                  Cá nhân hoặc doanh nghiệp
+                </Label>
                 <Select value={selectedType} onValueChange={setSelectedType}>
                   <SelectTrigger id="mst-input-type" className="mt-2 shadow-md">
                     <SelectValue placeholder="Chọn loại tra cứu" />
@@ -178,7 +184,7 @@ export function MstForm() {
                 className="flex-shrink-0"
                 disabled={loading}
               >
-                {loading ? "Đang tra cứu..." : "Tra cứu (Free)"}
+                {loading ? "Đang tra cứu..." : "Tra cứu mã số thuế"}
               </Button>
               {results.length > 0 && (
                 <Button
@@ -204,7 +210,8 @@ export function MstForm() {
                 <TableRow>
                   {headers.map((header) => (
                     <TableHead key={header} className="text-right">
-                      {header}</TableHead>
+                      {header}
+                    </TableHead>
                   ))}
                 </TableRow>
               </TableHeader>
@@ -213,14 +220,18 @@ export function MstForm() {
                   <TableRow key={index}>
                     <TableCell>{item["STT"] || index + 1}</TableCell>
                     <TableCell>{item["MST"] || "N/A"}</TableCell>
-                    <TableCell className="text-right">{item["Tên người nộp thuế"] || "N/A"}</TableCell>
+                    <TableCell className="text-right">
+                      {item["Tên người nộp thuế"] || "N/A"}
+                    </TableCell>
                     <TableCell className="text-right">
                       {item["Địa chỉ trụ sở/địa chỉ kinh doanh"] || "N/A"}
                     </TableCell>
                     <TableCell className="text-right">
                       {item["Cơ quan thuế quản lý"] || "N/A"}
                     </TableCell>
-                    <TableCell className="text-right">{item["Trạng thái MST"] || "N/A"}</TableCell>
+                    <TableCell className="text-right">
+                      {item["Trạng thái MST"] || "N/A"}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
