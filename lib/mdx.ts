@@ -6,6 +6,7 @@ export async function generateStaticParams() {
     "huong-dan-tai-hoa-don-hang-loat",
     "huong-dan-tra-cuu-thong-tin-thue",
     "huong-dan-tra-cuu-hoa-don-dien-tu",
+    "phat-trien-cong-cu-lap-to-khai-thue",
   ];
   const blogStaticParams = blogPosts.map((post) => ({
     slug: post,

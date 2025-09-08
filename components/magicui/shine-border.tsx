@@ -36,7 +36,7 @@ export function ShineBorder({
     <div
       style={
         {
-          "--border-width": `${borderWidth}px`,
+          "--border-width": `1px`,
           "--duration": `${duration}s`,
           backgroundImage: `radial-gradient(transparent,transparent, ${shineColor},transparent,transparent)`,
           backgroundSize: "300% 300%",
@@ -56,3 +56,4 @@ export function ShineBorder({
     />
   );
 }
+
