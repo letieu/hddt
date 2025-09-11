@@ -123,13 +123,13 @@ export function InputForm(props: {
           <div className="grid w-full items-center gap-4">
             <div className="flex space-x-4">
               <div className="flex w-1/2 flex-col space-y-1.5">
-                <Label htmlFor="username">
+                <Label htmlFor="hddt-username">
                   Tài khoản{" "}
                   <span className="text-accent hidden md:inline">hoadondientu.gdt.gov.vn</span>{" "}
                   <span className="text-destructive">*</span>
                 </Label>
                 <Input
-                  id="username"
+                  id="httd-username"
                   placeholder="Tên đăng nhập từ hoadondientu.gdt.gov.vn"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -139,11 +139,11 @@ export function InputForm(props: {
                 )}
               </div>
               <div className="flex w-1/2 flex-col space-y-1.5">
-                <Label htmlFor="password">
+                <Label htmlFor="hddt-password">
                   Mật khẩu <span className="text-destructive">*</span>
                 </Label>
                 <Input
-                  id="password"
+                  id="hddt-password"
                   type="password"
                   placeholder="Mật khẩu"
                   value={password}
