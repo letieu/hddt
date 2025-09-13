@@ -9,7 +9,7 @@ import { InstallExtensionBanner } from "@/components/install-extension-banner";
 
 const title = "Tải Hóa Đơn Điện Tử Hàng Loạt - Nhanh Chóng và Tự Động";
 const description =
-  "Xuất hóa đơn điện tử hang lóạt nhanh chóng và tự động, đầy đủ thông tin, kèo file XML bằng 1 click.";
+  "Xuất hóa đơn điện tử hang lóạt nhanh chóng và tự động, đầy đủ thông tin, kèo file XML bằng 1 click. Tải hóa đơn gốc.";
 const url = "https://taihoadon.online";
 const imageUrl = `${url}/og/tai-hoa-don.png`;
 
