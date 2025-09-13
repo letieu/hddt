@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { InstallExtensionBanner } from "@/components/install-extension-banner";
 
 const title = "Tải Hóa Đơn Điện Tử Hàng Loạt - Nhanh Chóng và Tự Động";
 const description =
@@ -53,6 +54,7 @@ export default function RootLayout({
       <head />
       <body className={`font-sans ${roboto.className}`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <InstallExtensionBanner />
           <Header />
           {children}
           <Footer />

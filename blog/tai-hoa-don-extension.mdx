@@ -1,0 +1,68 @@
+import { Steps, Step } from "@/components/ui/steps";
+
+export const metadata = {
+  title: "Hướng cài đặt extension tải hóa đơn gốc hoàn toàn mới",
+  description: "Hướng dẫn cài đặt extension tải hóa đơn gốc hoàn toàn mới",
+};
+
+
+# Tải Hóa Đơn An Toàn và Nhanh Chóng với Extension
+
+Bạn có lo ngại về việc nhập thông tin đăng nhập nhạy cảm vào một trang web của bên thứ ba không? Chúng tôi hiểu điều đó. Đó là lý do tại sao chúng tôi đã phát triển một extension cho trình duyệt Chrome giúp bạn tải hóa đơn trực tiếp từ trang web của chính phủ mà không cần chia sẻ thông tin đăng nhập của bạn với chúng tôi.
+
+## Tại sao nên sử dụng Extension?
+
+- **Bảo mật**: Thông tin đăng nhập của bạn không bao giờ rời khỏi máy tính của bạn. Mọi hoạt động đều diễn ra cục bộ trên trình duyệt của bạn.
+- **Tiện lợi**: Tải hóa đơn hàng loạt chỉ với vài cú nhấp chuột, ngay trên giao diện của trang web chính phủ.
+- **Nhanh chóng**: Extension của chúng tôi được tối ưu hóa để tải hóa đơn nhanh hơn so với việc thực hiện thủ công.
+
+## Hướng dẫn cài đặt
+
+<Steps>
+  <Step>
+    ### Bước 1: Tải file ZIP
+    <p>
+      Nhấp vào nút dưới đây để tải file ZIP chứa extension.
+    </p>
+    <a
+      href="https://drive.google.com/uc?export=download&id=1SwavnBQSv3lx3NzOhxIhsT1pbc09ary1"
+      target="_blank"
+      className="inline-block px-4 py-2 mt-4 text-base font-semibold text-white rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+    >
+      Tải Extension (ZIP)
+    </a>
+  </Step>
+  <Step>
+    ### Bước 2: Giải nén file
+    <p>
+      Sau khi tải về, giải nén file ZIP vào một thư mục bạn có thể dễ dàng tìm thấy.
+    </p>
+  </Step>
+  <Step>
+    ### Bước 3: Mở trang Extensions của Chrome
+    <p>
+      Mở một tab mới trong Chrome và truy cập <a href="chrome://extensions" target="_blank">chrome://extensions/</a>.
+    </p>
+  </Step>
+  <Step>
+    ### Bước 4: Bật chế độ "Developer mode"
+    <p>
+      Ở góc trên bên phải của trang Extensions, bật chế độ "Developer mode".
+    </p>
+    <img src="/developer-mode.png" alt="Developer mode" />
+  </Step>
+  <Step>
+    ### Bước 5: Cài extension đã giải nén
+    <p>
+      Nhấp vào nút "Load unpacked" và chọn thư mục ( **taihoadon** ) bạn đã giải nén extension ở Bước 2.
+     <img src="/unpkg.png" alt="Unpkg" />
+    </p>
+  </Step>
+</Steps>
+
+## Cách sử dụng
+
+Sau khi cài đặt, bạn chỉ cần truy cập trang web `hoadondientu.gdt.gov.vn`, đăng nhập. Mở extension đã cài đặt và bạn sẽ thấy một giao diện mới cho phép bạn tải hóa đơn hàng loạt.
+
+<img src="/ext-usage.png" alt="use" />
+

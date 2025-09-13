@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RainbowButton } from "./magicui/rainbow-button";
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { LoginButton } from "./login-button";
 import { ShineBorder } from "./magicui/shine-border";
 import { ExportInput } from "./app-section";
@@ -19,6 +20,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InvoiceType } from "@/lib/download/hoadon-api";
 import { Checkbox } from "./ui/checkbox";
 import { creditUsageEstimate } from "@/lib/credit";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ShieldCheck } from "lucide-react";
 
 function formatDateInput(date: Date) {
   const year = date.getFullYear();
@@ -116,6 +119,18 @@ export function InputForm(props: {
           >
             hoadondientu.gdt.gov.vn
           </a>
+          <Alert className="mt-2">
+            <ShieldCheck className="h-4 w-4" />
+            <AlertTitle>Lo ngại về bảo mật?</AlertTitle>
+            <AlertDescription>
+              <Link
+                href="/blog/tai-hoa-don-extension"
+                className="font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent"
+              >
+                Sử dụng extension của chúng tôi
+              </Link>{" "}
+            </AlertDescription>
+          </Alert>
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -125,7 +140,9 @@ export function InputForm(props: {
               <div className="flex w-1/2 flex-col space-y-1.5">
                 <Label htmlFor="hddt-username">
                   Tài khoản{" "}
-                  <span className="text-accent hidden md:inline">hoadondientu.gdt.gov.vn</span>{" "}
+                  <span className="text-accent hidden md:inline">
+                    hoadondientu.gdt.gov.vn
+                  </span>{" "}
                   <span className="text-destructive">*</span>
                 </Label>
                 <Input

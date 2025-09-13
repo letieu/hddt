@@ -6,6 +6,7 @@ export const blogPosts = [
   "huong-dan-tra-cuu-thong-tin-thue",
   "huong-dan-tra-cuu-hoa-don-dien-tu",
   "phat-trien-cong-cu-lap-to-khai-thue",
+  "tai-hoa-don-extension",
 ];
 
 export async function generateStaticParams() {
