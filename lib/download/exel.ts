@@ -105,7 +105,7 @@ function invoiceToRows(invoice: any, index: number, invoiceType: InvoiceType) {
 
   addTienThue(invoice);
 
-  invoice.detail.hdhhdvu?.forEach((item: any, itemIndex: number) => {
+  invoice.detail?.hdhhdvu?.forEach((item: any, itemIndex: number) => {
     const prefix = itemIndex === 0 ? mainRow : emptyPrefix;
 
     rows.push([
@@ -156,7 +156,7 @@ function mergeCells(ws: XLSX.WorkSheet, invoices: any[]) {
   const totalMainCols = mainSectionHeader.length;
   let currentRow = 1;
   for (let i = 0; i < invoices.length; i++) {
-    const totalDetailRows = invoices[i].detail.hdhhdvu?.length;
+    const totalDetailRows = invoices[i].detail?.hdhhdvu?.length ?? 0;
     for (let col = 0; col < totalMainCols; col++) {
       const start = { r: currentRow, c: col };
       const end = { r: currentRow + totalDetailRows - 1, c: col };
@@ -170,7 +170,7 @@ function mergeCells(ws: XLSX.WorkSheet, invoices: any[]) {
 
 function addTienThue(invoice: any) {
   // add calculated 'Tiền thuế'
-  invoice.detail.hdhhdvu?.forEach((item: any) => {
+  invoice.detail?.hdhhdvu?.forEach((item: any) => {
     item["tien_thue"] = item["thtien"] * item["tsuat"];
   });
 
