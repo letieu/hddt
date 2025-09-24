@@ -31,6 +31,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export function MstForm() {
   const [inputText, setInputText] = useState<string>("");
@@ -52,6 +53,7 @@ export function MstForm() {
       return;
     }
 
+    sendGAEvent("check_mst_start");
     setLoading(true);
     setResults([]); // Clear previous results
     try {
@@ -87,6 +89,7 @@ export function MstForm() {
       }
 
       setResults(allCrawlData);
+      sendGAEvent("check_mst_success");
     } catch (e: any) {
       console.error("Unexpected error:", e);
       setResults([

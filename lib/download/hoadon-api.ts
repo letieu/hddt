@@ -1,10 +1,13 @@
 import { endOfDay, endOfMonth, startOfDay } from "../utils";
 import { RateLimiter } from "./rate-limiter";
+import * as Sentry from "@sentry/nextjs";
 
 const rateLimiter = new RateLimiter(
   1, // 3 requests per second
-  5, // 5 retries (same as your original)
-  14_000, // 14 second timeout (same as your original)
+  10, // 5 retries (same as your original)
+  // 3, // 3 requests per second
+  // 1, // 5 retries (same as your original)
+  30_000, // 14 second timeout (same as your original)
 );
 
 function fetchWithTimeoutAndRetry(url: string, options = {}) {

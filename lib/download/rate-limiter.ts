@@ -89,7 +89,7 @@ export class RateLimiter {
         console.log(`Request fail. Retrying... (${i + 1}/${this.maxRetries})`);
 
         // ✅ Use your exponential backoff, but STILL respect rate limit on next attempt
-        await this.delay(10_000 * (i + 1)); // Wait from 10s to 100s
+        await this.delay(20_000 * (i + 1)); // Wait from 10s to 100s
         // Next iteration will call respectRateLimit() again
       }
     }

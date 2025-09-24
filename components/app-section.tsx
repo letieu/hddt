@@ -5,6 +5,8 @@ import { DotPattern } from "./magicui/dot-pattern";
 import { InputForm } from "./input-form";
 import { Terminal, TypingAnimation } from "./magicui/terminal";
 import { CaptchaDialog } from "./captcha-popup";
+import { ShimmerButton } from "./magicui/shimmer-button";
+import Link from "next/link";
 
 import {
   AlertDialog,
@@ -24,6 +26,7 @@ import {
   InvoiceExportManager,
   InvoiceExportLog,
   InvoiceExportResult,
+  InvoiceItem,
 } from "@/lib/download/invoice-export-manager";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -34,6 +37,8 @@ import {
   User,
 } from "@supabase/supabase-js";
 import { creditUsageEstimate } from "@/lib/credit";
+import { Button } from "./ui/button";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export type ExportInput = {
   credential: {
@@ -47,18 +52,33 @@ export type ExportInput = {
   downloadFiles?: boolean;
 };
 
+type ExportState =
+  | "idle"
+  | "fetching"
+  | "failed"
+  | "success"
+  | "building"
+  | "retrying";
+
+type FailedItems = {
+  failedDetails?: { invoice: InvoiceItem; queryType: string }[];
+  failedXmls?: { invoice: InvoiceItem; queryType: string }[];
+  failedFetches?: { queryType: string }[];
+};
+
 export function AppSection() {
   const [logs, setLogs] = useState<Map<string, InvoiceExportLog>>(new Map());
-  const [downloading, setDownloading] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<InvoiceExportResult | null>(null);
-
   const [openCaptcha, setOpenCaptcha] = useState(false);
   const [input, setInput] = useState<ExportInput>();
 
   const [user, setUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const supabase = createClient();
+
+  const [manager, setManager] = useState<InvoiceExportManager | null>(null);
+  const [failedItems, setFailedItems] = useState<FailedItems | null>(null);
+  const [exportState, setExportState] = useState<ExportState>("idle");
 
   useEffect(() => {
     const getUser = async () => {
@@ -110,60 +130,10 @@ export function AppSection() {
       return;
     }
 
-    setLoading(true);
+    setExportState("fetching");
     setLogs(new Map());
-
-    // Calculate creditsToDeduct
-    const fromDate = input.fromDate;
-    const toDate = input.toDate;
-    const downloadFiles = input.downloadFiles;
-
-    const creditsToDeduct = creditUsageEstimate(
-      fromDate,
-      toDate,
-      downloadFiles ?? false,
-    );
-
-    const errorMessage = await checkCredit(creditsToDeduct);
-    console.log("Error message:", errorMessage);
-    if (errorMessage) {
-      setLogs((prev) =>
-        new Map(prev).set("credit-error", {
-          status: "failed",
-          message: errorMessage,
-        }),
-      );
-      setLoading(false);
-      return;
-    }
-
-    // Credit check passed. Now do the export.
-    setInput(input);
-
-    let currentJwt = localStorage.getItem(`jwt_${input.credential.username}`);
-    if (currentJwt) {
-      try {
-        await fetchProfile(currentJwt);
-        await startExport(input); // Pass creditsToDeduct
-      } catch (e) {
-        setOpenCaptcha(true);
-      } finally {
-        setLoading(false);
-      }
-      return;
-    }
-
-    setOpenCaptcha(true);
-    setLoading(false); // if no jwt, open captcha and stop loading.
-  };
-
-  // Modify startExport signature to accept creditsToDeduct
-  async function startExport(input: ExportInput) {
-    let currentJwt = localStorage.getItem(`jwt_${input.credential?.username}`);
-    if (!currentJwt) {
-      alert("need token");
-      return;
-    }
+    setFailedItems(null);
+    setResult(null);
 
     const creditsToDeduct = creditUsageEstimate(
       input.fromDate,
@@ -171,77 +141,152 @@ export function AppSection() {
       input.downloadFiles ?? false,
     );
 
-    const manager = new InvoiceExportManager(currentJwt);
-    manager.on("log", (log: InvoiceExportLog) => {
+    const errorMessage = await checkCredit(creditsToDeduct);
+    if (errorMessage) {
+      setLogs((prev) =>
+        new Map(prev).set("credit-error", {
+          status: "failed",
+          message: errorMessage,
+        }),
+      );
+      setExportState("idle");
+      return;
+    }
+
+    setInput(input);
+
+    let currentJwt = localStorage.getItem(`jwt_${input.credential.username}`);
+    if (currentJwt) {
+      try {
+        await fetchProfile(currentJwt);
+        await startExport(input, currentJwt);
+      } catch (e) {
+        setOpenCaptcha(true);
+      }
+      return;
+    }
+
+    setOpenCaptcha(true);
+    setExportState("idle");
+  };
+
+  async function startExport(input: ExportInput, jwt: string) {
+    sendGAEvent("export_invoice_start", {
+      from_date: input.fromDate.toISOString(),
+      to_date: input.toDate.toISOString(),
+      download_files: input.downloadFiles ?? false,
+    });
+
+    const newManager = new InvoiceExportManager(jwt);
+    setManager(newManager);
+
+    newManager.on("log", (log: InvoiceExportLog) => {
       const logId = log.id ?? Date.now().toString();
       setLogs((prev) => new Map(prev).set(logId, log));
     });
-    manager.on("finish", async (result: InvoiceExportResult) => {
-      setResult(result);
-      if (result.excelFileName || result.zipFileName) {
-        // If the export was successful, deduct credit.
-        setLogs((prev) =>
-          new Map(prev).set("credit-deduction", {
-            status: "info",
-            message: "Đang trừ credit...",
-          }),
-        );
-        try {
-          // Pass creditsToDeduct to deduct-credit function
-          const { data, error } = await supabase.functions.invoke(
-            "deduct-credit",
-            {
-              body: { creditAmount: creditsToDeduct },
-            },
-          );
-          if (error) {
-            setLogs((prev) =>
-              new Map(prev).set("credit-deduction-error", {
-                status: "failed",
-                message: `Lỗi khi trừ credit: ${error.message}. Vui lòng liên hệ hỗ trợ.`,
-              }),
-            );
-          } else if (data.error) {
-            setLogs((prev) =>
-              new Map(prev).set("credit-deduction-error", {
-                status: "failed",
-                message: `Lỗi khi trừ credit: ${data.error}. Vui lòng liên hệ hỗ trợ.`,
-              }),
-            );
-          } else {
-            setLogs((prev) =>
-              new Map(prev).set("credit-deduction-success", {
-                status: "success",
-                message: "Đã trừ credit thành công.",
-              }),
-            );
-            window.dispatchEvent(new Event("credit-update"));
-          }
-        } catch (e: any) {
-          setLogs((prev) =>
-            new Map(prev).set("credit-deduction-error", {
-              status: "failed",
-              message: `Lỗi khi trừ credit: ${e.message}. Vui lòng liên hệ hỗ trợ.`,
-            }),
-          );
+
+    newManager.on(
+      "finish",
+      (result: {
+        failedDetails?: any;
+        failedXmls?: any;
+        failedFetches?: any;
+      }) => {
+        const hasFailures =
+          (result.failedDetails && result.failedDetails.length > 0) ||
+          (result.failedXmls && result.failedXmls.length > 0) ||
+          (result.failedFetches && result.failedFetches.length > 0);
+
+        if (hasFailures) {
+          setFailedItems({
+            failedDetails: result.failedDetails,
+            failedXmls: result.failedXmls,
+            failedFetches: result.failedFetches,
+          });
+          setExportState("failed");
+        } else {
+          setFailedItems(null);
+          setExportState("success");
+          // Automatically build if successful
+          newManager.build();
         }
-      }
+      },
+    );
+
+    newManager.on("build-finish", (result: InvoiceExportResult) => {
+      setResult(result);
+      setExportState("idle");
+      deductCredit(input);
+      sendGAEvent("export_invoice_success", {
+        from_date: input.fromDate.toISOString(),
+        to_date: input.toDate.toISOString(),
+        download_files: input.downloadFiles ?? false,
+      });
     });
 
     setLogs(new Map());
-    setDownloading(true);
-    await manager
-      .start({
-        fromDate: input.fromDate,
-        toDate: input.toDate,
-        filter: input.filter,
-        invoiceType: input.invoiceType,
-        downloadFiles: input.downloadFiles,
-      })
-      .finally(() => {
-        setDownloading(false);
-      });
+    setExportState("fetching");
+    await newManager.start(input);
   }
+
+  const handleRetry = () => {
+    if (manager) {
+      setExportState("retrying");
+      manager.retry();
+    }
+  };
+
+  const handleBuild = () => {
+    if (manager) {
+      setExportState("building");
+      manager.build();
+    }
+  };
+
+  const deductCredit = async (input: ExportInput) => {
+    const creditsToDeduct = creditUsageEstimate(
+      input.fromDate,
+      input.toDate,
+      input.downloadFiles ?? false,
+    );
+
+    setLogs((prev) =>
+      new Map(prev).set("credit-deduction", {
+        status: "info",
+        message: "Đang trừ credit...",
+      }),
+    );
+    try {
+      const { data, error } = await supabase.functions.invoke("deduct-credit", {
+        body: { creditAmount: creditsToDeduct },
+      });
+      if (error) {
+        throw error;
+      }
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      setLogs((prev) =>
+        new Map(prev).set("credit-deduction-success", {
+          status: "success",
+          message: "Đã trừ credit thành công.",
+        }),
+      );
+      window.dispatchEvent(new Event("credit-update"));
+    } catch (e: any) {
+      setLogs((prev) =>
+        new Map(prev).set("credit-deduction-error", {
+          status: "failed",
+          message: `Lỗi khi trừ credit: ${e.message}. Vui lòng liên hệ hỗ trợ.`,
+        }),
+      );
+    }
+  };
+
+  const isBusy =
+    exportState === "fetching" ||
+    exportState === "building" ||
+    exportState === "retrying";
 
   return (
     <section className="relative py-20 px-4 overflow-hidden" id="app">
@@ -255,46 +300,69 @@ export function AppSection() {
         </div>
 
         <div className="grid xl:grid-cols-2 gap-12 items-start">
-          {/* Input Form */}
           <div>
             <InputForm
               onStartClick={handleExport}
-              downloading={downloading || loading}
+              downloading={isBusy}
               isLoggedIn={isLoggedIn}
             />
           </div>
 
-          {/* Terminal */}
           <Terminal className="w-full">
             {logs.size === 0 && (
               <TypingAnimation className="text-muted-foreground">
                 Chưa có tiến trình nào...
               </TypingAnimation>
             )}
-            {Array.from(logs.entries()).map(([id, log]) => {
-              return (
-                <div key={id}>
-                  <span
-                    className={cn({
-                      "text-red-500": log.status === "failed",
-                      "text-green-500 font-bold": log.status === "success",
-                    })}
-                  >
-                    {log.message}
-                    {id === "credit-error" &&
-                      log?.message?.includes("Bạn không đủ Credit") && (
-                        <a
-                          href="/dashboard"
-                          className="underline ml-2 text-blue-500"
-                        >
-                          Nạp Credit
-                        </a>
-                      )}
-                  </span>
-                </div>
-              );
-            })}
+            {Array.from(logs.entries()).map(([id, log]) => (
+              <div key={id}>
+                <span
+                  className={cn({
+                    "text-red-500": log.status === "failed",
+                    "text-green-500 font-bold": log.status === "success",
+                  })}
+                >
+                  {log.message}
+                  {id === "credit-error" &&
+                    log?.message?.includes("Bạn không đủ Credit") && (
+                      <a
+                        href="/dashboard"
+                        className="underline ml-2 text-blue-500"
+                      >
+                        Nạp Credit
+                      </a>
+                    )}
+                </span>
+              </div>
+            ))}
+            {exportState === "failed" && (
+              <div className="mt-4 flex gap-2">
+                <Button onClick={handleRetry} disabled={isBusy}>
+                  Thử lại
+                </Button>
+                <Button
+                  onClick={handleBuild}
+                  disabled={isBusy}
+                  variant="secondary"
+                >
+                  Bỏ qua & Tải xuống
+                </Button>
+              </div>
+            )}
           </Terminal>
+        </div>
+
+        <div className="flex justify-center text-center mt-16">
+          <ShimmerButton className="shadow-2xl">
+            <Link
+              href="https://t.me/tieu_exe"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 whitespace-pre-wrap h-full w-full justify-center text-center text-white dark:text-black px-4 py-2"
+            >
+              Cần hỗ trợ -&gt; liên hệ ngay
+            </Link>
+          </ShimmerButton>
         </div>
       </div>
 
@@ -304,10 +372,11 @@ export function AppSection() {
           credential={input.credential}
           onClose={() => setOpenCaptcha(false)}
           onSuccess={(jwt) => {
-            console.log("Got token:", jwt);
             localStorage.setItem(`jwt_${input.credential?.username}`, jwt);
             setOpenCaptcha(false);
-            startExport(input);
+            if (input) {
+              startExport(input, jwt);
+            }
           }}
         />
       )}
@@ -347,3 +416,4 @@ export function AppSection() {
     </section>
   );
 }
+
