@@ -40,7 +40,7 @@ const creditOptions: CreditOption[] = [
     id: "a3",
     name: "Gói A3",
     credits: 1000000000,
-    price: 500_000,
+    price: 300000,
     description: "Trọn đời, không giới hạn số lần",
     isPopular: true,
   },
@@ -192,7 +192,7 @@ export function CreditSection() {
               >
                 {option.isPopular && (
                   <div className="absolute top-0 right-0 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
-                    Phổ biến nhất
+                    Giảm giá
                   </div>
                 )}
                 <CardHeader className="pb-2">

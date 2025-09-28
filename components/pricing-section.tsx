@@ -33,7 +33,7 @@ const plans = [
   },
   {
     name: "Gói A3",
-    price:500000,
+    price:300000,
     description: "Trọn đời, không giới hạn số lần",
     features: ["999999999999 credits", "Không giới hạn số lần", "Hỗ trợ ưu tiên"],
     popular: true,
@@ -77,7 +77,7 @@ export function PricingSection() {
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                   <span className="bg-accent text-accent-foreground px-3 py-1 rounded-full text-sm font-medium">
-                    Phổ biến nhất
+                    Giảm giá
                   </span>
                 </div>
               )}
