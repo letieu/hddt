@@ -38,7 +38,7 @@ import {
 } from "@supabase/supabase-js";
 import { creditUsageEstimate } from "@/lib/credit";
 import { Button } from "./ui/button";
-import { sendGAEvent } from "@next/third-parties/google";
+
 
 export type ExportInput = {
   credential: {
@@ -171,11 +171,7 @@ export function AppSection() {
   };
 
   async function startExport(input: ExportInput, jwt: string) {
-    sendGAEvent("export_invoice_start", {
-      from_date: input.fromDate.toISOString(),
-      to_date: input.toDate.toISOString(),
-      download_files: input.downloadFiles ?? false,
-    });
+    
 
     const newManager = new InvoiceExportManager(jwt);
     setManager(newManager);
@@ -217,11 +213,7 @@ export function AppSection() {
       setResult(result);
       setExportState("idle");
       deductCredit(input);
-      sendGAEvent("export_invoice_success", {
-        from_date: input.fromDate.toISOString(),
-        to_date: input.toDate.toISOString(),
-        download_files: input.downloadFiles ?? false,
-      });
+      
     });
 
     setLogs(new Map());

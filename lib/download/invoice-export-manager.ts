@@ -17,6 +17,7 @@ import {
   invoiceQueryTypeNames,
   invoiceTypeNames,
 } from "./format";
+import { sendGAEvent } from "../gtag";
 
 export type ExportInput = {
   fromDate: Date;
@@ -65,6 +66,10 @@ export class InvoiceExportManager extends EventEmitter {
   }
 
   async start(input: ExportInput) {
+    sendGAEvent("export_start", {
+      invoiceType: input.invoiceType,
+      downloadFiles: input.downloadFiles ? "true" : "false",
+    });
     this.lastInput = input;
     this.logs.clear();
     this.failedDetails = [];
@@ -90,14 +95,28 @@ export class InvoiceExportManager extends EventEmitter {
         message: "✅ Hoàn tất tải dữ liệu. Sẵn sàng để xuất file.",
       });
 
+      sendGAEvent("export_finish", {
+        invoiceType: input.invoiceType,
+        downloadFiles: input.downloadFiles ? "true" : "false",
+        totalInvoices: this.invoicesSheet1.length + this.invoicesSheet2.length,
+        failedDetails: this.failedDetails.length,
+        failedXmls: this.failedXmls.length,
+        failedFetches: this.failedFetches.length,
+      });
+
       this.emit("finish", {
         failedDetails: this.failedDetails,
         failedXmls: this.failedXmls,
         failedFetches: this.failedFetches,
       });
-    } catch (err) {
+    } catch (err: any) {
       Sentry.captureException(err);
       console.error("Export failed:", err);
+      sendGAEvent("export_failed", {
+        invoiceType: input.invoiceType,
+        downloadFiles: input.downloadFiles ? "true" : "false",
+        errorMessage: err.message,
+      });
       this._log({
         id: "result",
         message: "❌ Lỗi trong quá trình tải dữ liệu",
@@ -107,6 +126,7 @@ export class InvoiceExportManager extends EventEmitter {
   }
 
   async retry() {
+    sendGAEvent("export_retry");
     if (!this.lastInput) {
       this._log({ message: "❌ Không có tác vụ nào để thử lại.", status: "failed" });
       return;
@@ -172,6 +192,11 @@ export class InvoiceExportManager extends EventEmitter {
       return;
     }
     const input = this.lastInput;
+    sendGAEvent("export_build", {
+      invoiceType: input.invoiceType,
+      downloadFiles: input.downloadFiles ? "true" : "false",
+      totalInvoices: this.invoicesSheet1.length + this.invoicesSheet2.length,
+    });
 
     this._log({
       id: "list-tab1",
@@ -246,6 +271,14 @@ export class InvoiceExportManager extends EventEmitter {
     this._log({
       status: "success",
       message: "✅ 📥✨ Hoàn tất tải dữ liệu 🎉🎯🚀✅",
+    });
+
+    sendGAEvent("export_success", {
+      invoiceType: input.invoiceType,
+      downloadFiles: input.downloadFiles ? "true" : "false",
+      totalInvoices: this.invoicesSheet1.length + this.invoicesSheet2.length,
+      excelFileName,
+      zipFileName: zipFileName ?? "none",
     });
 
     this.emit("build-finish", {
