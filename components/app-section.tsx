@@ -6,7 +6,6 @@ import { InputForm } from "./input-form";
 import { Terminal, TypingAnimation } from "./magicui/terminal";
 import { CaptchaDialog } from "./captcha-popup";
 import { ShimmerButton } from "./magicui/shimmer-button";
-import Link from "next/link";
 
 import {
   AlertDialog,
@@ -38,7 +37,7 @@ import {
 } from "@supabase/supabase-js";
 import { creditUsageEstimate } from "@/lib/credit";
 import { Button } from "./ui/button";
-
+import { sendGAEvent } from "@next/third-parties/google";
 
 export type ExportInput = {
   credential: {
@@ -171,8 +170,6 @@ export function AppSection() {
   };
 
   async function startExport(input: ExportInput, jwt: string) {
-    
-
     const newManager = new InvoiceExportManager(jwt);
     setManager(newManager);
 
@@ -213,7 +210,6 @@ export function AppSection() {
       setResult(result);
       setExportState("idle");
       deductCredit(input);
-      
     });
 
     setLogs(new Map());
@@ -345,15 +341,13 @@ export function AppSection() {
         </div>
 
         <div className="flex justify-center text-center mt-16">
-          <ShimmerButton className="shadow-2xl">
-            <Link
-              href="https://t.me/tieu_exe"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 whitespace-pre-wrap h-full w-full justify-center text-center text-white dark:text-black px-4 py-2"
-            >
-              Cần hỗ trợ -&gt; liên hệ ngay
-            </Link>
+          <ShimmerButton
+            className="shadow-2xl"
+            onClick={() => {
+              sendGAEvent("event", "buttonClicked", { value: "xyz" });
+            }}
+          >
+            Cần hỗ trợ -&gt; liên hệ ngay
           </ShimmerButton>
         </div>
       </div>
@@ -408,4 +402,3 @@ export function AppSection() {
     </section>
   );
 }
-
