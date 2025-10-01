@@ -49,14 +49,12 @@ export function InputForm(props: {
   const [invoiceBuyer, setInvoiceBuyer] = useState("");
   const [invoiceSeller, setInvoiceSeller] = useState("");
   const [invoiceType, setInvoiceType] = useState<InvoiceType>("purchase");
-  const [queryTypes, setQueryTypes] = useState<InvoiceQueryType[]>([
-    "query",
-    "sco-query",
-  ]);
+  const [queryTypes, setQueryTypes] = useState<InvoiceQueryType[]>(["query"]);
   const [errors, setErrors] = useState({
     username: "",
     password: "",
     date: "",
+    queryTypes: "",
   });
 
   const validate = () => {
@@ -64,6 +62,7 @@ export function InputForm(props: {
       username: "",
       password: "",
       date: "",
+      queryTypes: "",
     };
 
     let isValid = true;
@@ -79,6 +78,11 @@ export function InputForm(props: {
       newErrors.date = "Vui lòng chọn khoảng ngày.";
       isValid = false;
     }
+    if (queryTypes.length === 0) {
+      newErrors.queryTypes = "Vui lòng chọn loại truy vấn.";
+      isValid = false;
+    }
+
     setErrors(newErrors);
     return isValid;
   };
@@ -242,6 +246,9 @@ export function InputForm(props: {
             </Tabs>
             <div className="space-y-2 pt-4">
               <Label>Loại truy vấn</Label>
+              {errors.queryTypes && (
+                <p className="text-sm text-destructive">{errors.queryTypes}</p>
+              )}
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="query-type-query"
