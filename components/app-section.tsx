@@ -39,6 +39,7 @@ import {
 import { creditUsageEstimate } from "@/lib/credit";
 import { Button } from "./ui/button";
 import { sendGAEvent } from "@next/third-parties/google";
+import Link from "next/link";
 
 export type ExportInput = {
   credential: {
@@ -343,14 +344,11 @@ export function AppSection() {
         </div>
 
         <div className="flex justify-center text-center mt-16">
-          <ShimmerButton
-            className="shadow-2xl"
-            onClick={() => {
-              sendGAEvent("event", "buttonClicked", { value: "xyz" });
-            }}
-          >
-            Cần hỗ trợ -&gt; liên hệ ngay
+          <Link href="#contact">
+          <ShimmerButton className="shadow-2xl text-white dark:text-accent-foreground">
+              Cần hỗ trợ -&gt; liên hệ ngay
           </ShimmerButton>
+          </Link>
         </div>
       </div>
 

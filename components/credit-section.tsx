@@ -39,7 +39,7 @@ const creditOptions: CreditOption[] = [
   {
     id: "a3",
     name: "Gói A3",
-    credits: 1000000000,
+    credits: 99999999,
     price: 300000,
     description: "Trọn đời, không giới hạn số lần",
     isPopular: true,
