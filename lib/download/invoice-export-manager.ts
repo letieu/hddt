@@ -24,6 +24,7 @@ export type ExportInput = {
   toDate: Date;
   invoiceType: InvoiceType;
   filter: FetchInvoiceOptions;
+  queryTypes: InvoiceQueryType[];
   downloadFiles?: boolean;
 };
 
@@ -79,8 +80,12 @@ export class InvoiceExportManager extends EventEmitter {
     this.invoicesSheet2 = [];
 
     try {
-      this.invoicesSheet1 = await this.fetchInvoices(input, "query");
-      this.invoicesSheet2 = await this.fetchInvoices(input, "sco-query");
+      if (input.queryTypes.includes("query")) {
+        this.invoicesSheet1 = await this.fetchInvoices(input, "query");
+      }
+      if (input.queryTypes.includes("sco-query")) {
+        this.invoicesSheet2 = await this.fetchInvoices(input, "sco-query");
+      }
 
       if (input.downloadFiles) {
         await this.handleDownloadXML(
@@ -128,7 +133,10 @@ export class InvoiceExportManager extends EventEmitter {
   async retry() {
     sendGAEvent("export_retry");
     if (!this.lastInput) {
-      this._log({ message: "❌ Không có tác vụ nào để thử lại.", status: "failed" });
+      this._log({
+        message: "❌ Không có tác vụ nào để thử lại.",
+        status: "failed",
+      });
       return;
     }
 
@@ -202,7 +210,10 @@ export class InvoiceExportManager extends EventEmitter {
       id: "list-tab1",
       message: `🔄  Tạo sheet hóa đơn điện tử`,
     });
-    const sheet1 = await createInvoicesSheet(this.invoicesSheet1, input.invoiceType);
+    const sheet1 = await createInvoicesSheet(
+      this.invoicesSheet1,
+      input.invoiceType,
+    );
     this._log({
       id: "list-tab1",
       message: "✅ Hoàn tất tạo sheet hóa đơn điện tử",
@@ -212,7 +223,10 @@ export class InvoiceExportManager extends EventEmitter {
       id: "list-tab2",
       message: `🔄  Tạo sheet hóa đơn có mã từ máy tính tiền`,
     });
-    const sheet2 = await createInvoicesSheet(this.invoicesSheet2, input.invoiceType);
+    const sheet2 = await createInvoicesSheet(
+      this.invoicesSheet2,
+      input.invoiceType,
+    );
     this._log({
       id: "list-tab2",
       message: "✅ Hoàn tất tạo sheet hóa đơn có mã từ máy tính tiền",
@@ -292,8 +306,12 @@ export class InvoiceExportManager extends EventEmitter {
     invoicesSheet1: any[],
     invoicesSheet2: any[],
   ): Promise<void> {
-    await this.downloadInvoiceFiles(invoicesSheet1, "query", null);
-    await this.downloadInvoiceFiles(invoicesSheet2, "sco-query", null);
+    if (input.queryTypes.includes("query")) {
+      await this.downloadInvoiceFiles(invoicesSheet1, "query", null);
+    }
+    if (input.queryTypes.includes("sco-query")) {
+      await this.downloadInvoiceFiles(invoicesSheet2, "sco-query", null);
+    }
   }
 
   private async downloadInvoiceFiles(

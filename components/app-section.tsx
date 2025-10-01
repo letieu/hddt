@@ -20,6 +20,7 @@ import {
   FetchInvoiceOptions,
   fetchProfile,
   InvoiceType,
+  InvoiceQueryType,
 } from "@/lib/download/hoadon-api";
 import {
   InvoiceExportManager,
@@ -48,6 +49,7 @@ export type ExportInput = {
   fromDate: Date;
   toDate: Date;
   filter: FetchInvoiceOptions;
+  queryTypes: InvoiceQueryType[];
   downloadFiles?: boolean;
 };
 

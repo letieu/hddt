@@ -17,7 +17,7 @@ import { LoginButton } from "./login-button";
 import { ShineBorder } from "./magicui/shine-border";
 import { ExportInput } from "./app-section";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { InvoiceType } from "@/lib/download/hoadon-api";
+import { InvoiceType, InvoiceQueryType } from "@/lib/download/hoadon-api";
 import { Checkbox } from "./ui/checkbox";
 import { creditUsageEstimate } from "@/lib/credit";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -49,6 +49,10 @@ export function InputForm(props: {
   const [invoiceBuyer, setInvoiceBuyer] = useState("");
   const [invoiceSeller, setInvoiceSeller] = useState("");
   const [invoiceType, setInvoiceType] = useState<InvoiceType>("purchase");
+  const [queryTypes, setQueryTypes] = useState<InvoiceQueryType[]>([
+    "query",
+    "sco-query",
+  ]);
   const [errors, setErrors] = useState({
     username: "",
     password: "",
@@ -96,6 +100,7 @@ export function InputForm(props: {
       },
       invoiceType: invoiceType,
       downloadFiles,
+      queryTypes,
     });
   };
 
@@ -235,6 +240,41 @@ export function InputForm(props: {
                 </div>
               </TabsContent>
             </Tabs>
+            <div className="space-y-2 pt-4">
+              <Label>Loại truy vấn</Label>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="query-type-query"
+                  checked={queryTypes.includes("query")}
+                  onCheckedChange={(checked) =>
+                    setQueryTypes((prev) =>
+                      checked
+                        ? [...prev, "query"]
+                        : prev.filter((t) => t !== "query"),
+                    )
+                  }
+                />
+                <Label htmlFor="query-type-query" className="font-normal">
+                  Hóa đơn điện tử
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="query-type-sco-query"
+                  checked={queryTypes.includes("sco-query")}
+                  onCheckedChange={(checked) =>
+                    setQueryTypes((prev) =>
+                      checked
+                        ? [...prev, "sco-query"]
+                        : prev.filter((t) => t !== "sco-query"),
+                    )
+                  }
+                />
+                <Label htmlFor="query-type-sco-query" className="font-normal">
+                  Hóa đơn có mã từ máy tính tiền
+                </Label>
+              </div>
+            </div>
             <div className="flex items-center space-x-2 pt-4">
               <Checkbox
                 id="download-files"
