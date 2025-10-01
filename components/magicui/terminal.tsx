@@ -251,7 +251,7 @@ export const Terminal = ({
         </div>
       </div>
       {/* 👇 attach ref here so we can scroll */}
-      <pre ref={scrollRef} className="p-4 overflow-auto h-[420px]">
+      <pre ref={scrollRef} className="p-4 overflow-auto h-full">
         <code className="grid gap-y-1">{wrappedChildren}</code>
       </pre>
     </div>

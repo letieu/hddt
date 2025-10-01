@@ -21,7 +21,14 @@ import { InvoiceType, InvoiceQueryType } from "@/lib/download/hoadon-api";
 import { Checkbox } from "./ui/checkbox";
 import { creditUsageEstimate } from "@/lib/credit";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { ShieldCheck } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ChevronRight, ShieldCheck } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { cn } from "@/lib/utils";
 
 function formatDateInput(date: Date) {
   const year = date.getFullYear();
@@ -38,7 +45,9 @@ export function InputForm(props: {
   const { isLoggedIn } = props;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [mergeDetails, setMergeDetails] = useState(true);
   const [downloadFiles, setDownloadFiles] = useState(false);
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
 
   const today = new Date();
   const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -105,6 +114,7 @@ export function InputForm(props: {
       invoiceType: invoiceType,
       downloadFiles,
       queryTypes,
+      mergeDetails,
     });
   };
 
@@ -244,52 +254,85 @@ export function InputForm(props: {
                 </div>
               </TabsContent>
             </Tabs>
-            <div className="space-y-2 pt-4">
-              <Label>Loại truy vấn</Label>
-              {errors.queryTypes && (
-                <p className="text-sm text-destructive">{errors.queryTypes}</p>
-              )}
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="query-type-query"
-                  checked={queryTypes.includes("query")}
-                  onCheckedChange={(checked) =>
-                    setQueryTypes((prev) =>
-                      checked
-                        ? [...prev, "query"]
-                        : prev.filter((t) => t !== "query"),
-                    )
-                  }
+            <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
+              <CollapsibleTrigger className="text-sm font-bold flex items-center gap-1">
+                <ChevronRight
+                  className={cn(
+                    "h-4 w-4 transition-transform transform",
+                    isAdvancedOpen && "rotate-90",
+                  )}
                 />
-                <Label htmlFor="query-type-query" className="font-normal">
-                  Hóa đơn điện tử
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="query-type-sco-query"
-                  checked={queryTypes.includes("sco-query")}
-                  onCheckedChange={(checked) =>
-                    setQueryTypes((prev) =>
-                      checked
-                        ? [...prev, "sco-query"]
-                        : prev.filter((t) => t !== "sco-query"),
-                    )
-                  }
-                />
-                <Label htmlFor="query-type-sco-query" className="font-normal">
-                  Hóa đơn có mã từ máy tính tiền
-                </Label>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 pt-4">
-              <Checkbox
-                id="download-files"
-                checked={downloadFiles}
-                onCheckedChange={(checked) => setDownloadFiles(!!checked)}
-              />
-              <Label htmlFor="download-files">Tải file XML, HTML hóa đơn</Label>
-            </div>
+                Tùy chọn nâng cao...
+              </CollapsibleTrigger>
+              <CollapsibleContent className="pt-4 space-y-4">
+                <div className="space-y-2">
+                  <Label>Loại truy vấn</Label>
+                  {errors.queryTypes && (
+                    <p className="text-sm text-destructive">{errors.queryTypes}</p>
+                  )}
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="query-type-query"
+                      checked={queryTypes.includes("query")}
+                      onCheckedChange={(checked) =>
+                        setQueryTypes((prev) =>
+                          checked
+                            ? [...prev, "query"]
+                            : prev.filter((t) => t !== "query"),
+                        )
+                      }
+                    />
+                    <Label htmlFor="query-type-query" className="font-normal">
+                      Hóa đơn điện tử
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="query-type-sco-query"
+                      checked={queryTypes.includes("sco-query")}
+                      onCheckedChange={(checked) =>
+                        setQueryTypes((prev) =>
+                          checked
+                            ? [...prev, "sco-query"]
+                            : prev.filter((t) => t !== "sco-query"),
+                        )
+                      }
+                    />
+                    <Label htmlFor="query-type-sco-query" className="font-normal">
+                      Hóa đơn có mã từ máy tính tiền
+                    </Label>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2 pt-4">
+                  <Label htmlFor="download-files">Tải file XML, HTML hóa đơn</Label>
+                  <Checkbox
+                    id="download-files"
+                    checked={downloadFiles}
+                    onCheckedChange={(checked) => setDownloadFiles(!!checked)}
+                  />
+                </div>
+                <div className="space-y-2 pt-4">
+                  <Label>Merge chi tiết sản phẩm</Label>
+                  <RadioGroup
+                    value={mergeDetails ? "yes" : "no"}
+                    onValueChange={(value) => setMergeDetails(value === "yes")}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="yes" id="merge-yes" />
+                      <Label htmlFor="merge-yes" className="font-normal">
+                        Gộp chi tiết sản phẩm vào sheet chính
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="no" id="merge-no" />
+                      <Label htmlFor="merge-no" className="font-normal">
+                        Tạo sheet "DS sản phẩm" riêng
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
           </div>
         </form>
       </CardContent>

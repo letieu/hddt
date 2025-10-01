@@ -39,19 +39,62 @@ const detailSectionHeader = [
 export async function createInvoicesSheet(
   invoices: any[],
   invoiceType: InvoiceType,
-) {
-  const sheetData = createSheetData(invoices, invoiceType);
-
-  /* Create sheet */
-  const ws = XLSX.utils.aoa_to_sheet(sheetData);
-  formatCells(ws, sheetData.length);
-
-  ws["!cols"] = fitToColumn(sheetData);
-  ws["!cols"]![4] = { wch: 12 };
-
-  mergeCells(ws, invoices);
-
-  return ws;
+  mergeDetails: boolean,
+): Promise<{ mainSheet: XLSX.WorkSheet; products?: any[] }> {
+  if (mergeDetails) {
+    const sheetData = createSheetData(invoices, invoiceType);
+    const ws = XLSX.utils.aoa_to_sheet(sheetData);
+    formatCells(ws, sheetData.length, true);
+    ws["!cols"] = fitToColumn(sheetData);
+    if (ws["!cols"]?.[4]) ws["!cols"]![4] = { wch: 12 };
+    mergeCells(ws, invoices);
+    return { mainSheet: ws };
+  } else {
+    const mainSheetData = [mainSectionHeader];
+    const products: any[] = [];
+    invoices.forEach((invoice, index) => {
+      const mainRow = [
+        index + 1,
+        invoice.hdon,
+        invoice.khhdon,
+        `${invoice.shdon}`,
+        new Date(invoice.tdlap),
+        invoiceType == "purchase" ? invoice.nbmst : invoice.nmmst,
+        invoiceType == "purchase" ? invoice.nbten : invoice.nmten,
+        invoice.tgtcthue,
+        invoice.tgtthue,
+        invoice.ttcktmai,
+        invoice.tgtphi,
+        invoice.tgtttbso,
+        invoice.dvtte,
+        invoice.tgia || 1,
+        invoiceStatusTitle[invoice.tthai] ?? invoice.tthai,
+        invoiceCheckResultTitlte[invoice.ttxly] ?? invoice.ttxly,
+      ];
+      mainSheetData.push(mainRow);
+      addTienThue(invoice);
+      invoice.detail?.hdhhdvu?.forEach((item: any) => {
+        products.push([
+          invoice.khhdon,
+          `${invoice.shdon}`,
+          new Date(invoice.tdlap),
+          invoiceItemTypeTitle[item["tchat"]],
+          item["ten"],
+          item["dvtinh"],
+          item["sluong"],
+          item["dgia"],
+          item["tsuat"],
+          item["thtien"],
+          item["tien_thue"],
+        ]);
+      });
+    });
+    const ws = XLSX.utils.aoa_to_sheet(mainSheetData);
+    formatCells(ws, mainSheetData.length, false); // This will only format the main sheet columns, which is fine.
+    ws["!cols"] = fitToColumn(mainSheetData);
+    if (ws["!cols"]?.[4]) ws["!cols"]![4] = { wch: 12 };
+    return { mainSheet: ws, products };
+  }
 }
 
 function createSheetData(invoices: any[], invoiceType: InvoiceType) {
@@ -135,7 +178,7 @@ function fitToColumn(arrayOfArray: any) {
   }));
 }
 
-function formatCells(ws: XLSX.WorkSheet, totalRows: number) {
+function formatCells(ws: XLSX.WorkSheet, totalRows: number, mergeDetails: boolean) {
   for (let i = 0; i < totalRows; i++) {
     const row = i + 2;
     if (ws[`E${row}`]) ws[`E${row}`].z = "dd/mm/yyyy";
@@ -144,10 +187,12 @@ function formatCells(ws: XLSX.WorkSheet, totalRows: number) {
     if (ws[`J${row}`]) ws[`J${row}`].z = `#,### "đ"`;
     if (ws[`K${row}`]) ws[`K${row}`].z = `#,### "đ"`;
     if (ws[`L${row}`]) ws[`L${row}`].z = `#,### "đ"`;
-    if (ws[`U${row}`]) ws[`U${row}`].z = `#,### "đ"`;
-    if (ws[`V${row}`]) ws[`V${row}`].z = `0.00%`;
-    if (ws[`W${row}`]) ws[`W${row}`].z = `#,### "đ"`;
-    if (ws[`X${row}`]) ws[`X${row}`].z = `#,##0.00 "đ"`;
+    if (mergeDetails) {
+      if (ws[`U${row}`]) ws[`U${row}`].z = `#,### "đ"`;
+      if (ws[`V${row}`]) ws[`V${row}`].z = `0.00%`;
+      if (ws[`W${row}`]) ws[`W${row}`].z = `#,### "đ"`;
+      if (ws[`X${row}`]) ws[`X${row}`].z = `#,##0.00 "đ"`;
+    }
   }
 }
 
@@ -194,4 +239,34 @@ function addTienThue(invoice: any) {
     console.log(`adjust index: ${adjustIndex}, diff: ${diff}`);
     invoice.detail.hdhhdvu[adjustIndex]["tien_thue"] += diff;
   }
+}
+
+export function createProductsSheet(products: any[]) {
+  const header = [
+    "Ký hiệu hóa đơn",
+    "Số hóa đơn",
+    "Ngày lập",
+    "Tính chất",
+    "Tên hàng hóa, dịch vụ",
+    "Đơn vị tính",
+    "Số lượng",
+    "Đơn giá",
+    "Thuế suất",
+    "Thành tiền",
+    "Tiền thuế",
+  ];
+  const sheetData = [header, ...products];
+  const ws = XLSX.utils.aoa_to_sheet(sheetData);
+  ws["!cols"] = fitToColumn(sheetData);
+  // Add formatting for product sheet
+  for (let i = 0; i < products.length; i++) {
+    const row = i + 2;
+    if (ws[`C${row}`]) ws[`C${row}`].z = "dd/mm/yyyy";
+    if (ws[`G${row}`]) ws[`G${row}`].z = `#,###`;
+    if (ws[`H${row}`]) ws[`H${row}`].z = `#,### "đ"`;
+    if (ws[`I${row}`]) ws[`I${row}`].z = `0.00%`;
+    if (ws[`J${row}`]) ws[`J${row}`].z = `#,### "đ"`;
+    if (ws[`K${row}`]) ws[`K${row}`].z = `#,##0.00 "đ"`;
+  }
+  return ws;
 }

@@ -10,7 +10,7 @@ import {
   fetchAllInvoices,
   fetchInvoiceDetail,
 } from "@/lib/download/hoadon-api";
-import { createInvoicesSheet } from "@/lib/download/exel";
+import { createInvoicesSheet, createProductsSheet } from "@/lib/download/exel";
 import { saveAs } from "file-saver";
 import {
   formatDateForFilename,
@@ -26,6 +26,7 @@ export type ExportInput = {
   filter: FetchInvoiceOptions;
   queryTypes: InvoiceQueryType[];
   downloadFiles?: boolean;
+  mergeDetails?: boolean;
 };
 
 export type InvoiceExportLog = {
@@ -206,14 +207,22 @@ export class InvoiceExportManager extends EventEmitter {
       totalInvoices: this.invoicesSheet1.length + this.invoicesSheet2.length,
     });
 
+    const wb = XLSX.utils.book_new();
+    let allProducts: any[] = [];
+
     this._log({
       id: "list-tab1",
       message: `🔄  Tạo sheet hóa đơn điện tử`,
     });
-    const sheet1 = await createInvoicesSheet(
+    const sheet1Result = await createInvoicesSheet(
       this.invoicesSheet1,
       input.invoiceType,
+      input.mergeDetails ?? true,
     );
+    XLSX.utils.book_append_sheet(wb, sheet1Result.mainSheet, "Hóa đơn điện tử");
+    if (sheet1Result.products) {
+      allProducts.push(...sheet1Result.products);
+    }
     this._log({
       id: "list-tab1",
       message: "✅ Hoàn tất tạo sheet hóa đơn điện tử",
@@ -223,22 +232,41 @@ export class InvoiceExportManager extends EventEmitter {
       id: "list-tab2",
       message: `🔄  Tạo sheet hóa đơn có mã từ máy tính tiền`,
     });
-    const sheet2 = await createInvoicesSheet(
+    const sheet2Result = await createInvoicesSheet(
       this.invoicesSheet2,
       input.invoiceType,
+      input.mergeDetails ?? true,
     );
+    XLSX.utils.book_append_sheet(
+      wb,
+      sheet2Result.mainSheet,
+      "HĐ có mã từ máy tính tiền",
+    );
+    if (sheet2Result.products) {
+      allProducts.push(...sheet2Result.products);
+    }
     this._log({
       id: "list-tab2",
       message: "✅ Hoàn tất tạo sheet hóa đơn có mã từ máy tính tiền",
     });
 
+    if (allProducts.length > 0) {
+      this._log({
+        message: "🔄 Đang tạo sheet DS sản phẩm...",
+        id: "product-sheet",
+      });
+      const productsSheet = createProductsSheet(allProducts);
+      XLSX.utils.book_append_sheet(wb, productsSheet, "DS sản phẩm");
+      this._log({
+        message: "✅ Hoàn tất tạo sheet DS sản phẩm",
+        id: "product-sheet",
+      });
+    }
+
     this._log({
       message: "🔄 Đang tạo file Excel...",
       id: "excel",
     });
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, sheet1, "Hóa đơn điện tử");
-    XLSX.utils.book_append_sheet(wb, sheet2, "HĐ có mã từ máy tính tiền");
 
     const excelFileName = getExcelFileName(input);
     XLSX.writeFile(wb, excelFileName);
