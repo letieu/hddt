@@ -8,32 +8,32 @@ import { InvoiceType } from "./hoadon-api";
 
 const mainSectionHeader = [
   "STT",
-  "Ký hiệu mẫu số",
-  "Ký hiệu hóa đơn",
-  "Số hóa đơn",
-  "Ngày lập",
-  "MST người mua/nhận",
-  "Tên người mua/nhận",
-  "Tổng tiền chưa thuế",
-  "Tổng tiền thuế",
-  "Tổng tiền chiết khấu thương mại",
-  "Tổng tiền phí",
-  "Tổng tiền thanh toán",
-  "Đơn vị tiền tệ",
-  "Tỷ giá",
-  "Trạng thái hóa đơn",
-  "Kết quả kiểm tra hóa đơn",
+  "KÝ HIỆU MẪU SỐ",
+  "KÝ HIỆU HÓA ĐƠN",
+  "SỐ HÓA ĐƠN",
+  "NGÀY LẬP",
+  "MST NGƯỜI MUA/NHẬN",
+  "TÊN NGƯỜI MUA/NHẬN",
+  "TỔNG TIỀN CHƯA THUẾ",
+  "TỔNG TIỀN THUẾ",
+  "TỔNG TIỀN CHIẾT KHẤU THƯƠNG MẠI",
+  "TỔNG TIỀN PHÍ",
+  "TỔNG TIỀN THANH TOÁN",
+  "ĐƠN VỊ TIỀN TỆ",
+  "TỶ GIÁ",
+  "TRẠNG THÁI HÓA ĐƠN",
+  "KẾT QUẢ KIỂM TRA HÓA ĐƠN",
 ];
 
 const detailSectionHeader = [
-  "Tính chất",
-  "Tên hàng hóa, dịch vụ",
-  "Đơn vị tính",
-  "Số lượng",
-  "Đơn giá",
-  "Thuế suất",
-  "Thành tiền",
-  "Tiền thuế",
+  "TÍNH CHẤT",
+  "TÊN HÀNG HÓA, DỊCH VỤ",
+  "ĐƠN VỊ TÍNH",
+  "SỐ LƯỢNG",
+  "ĐƠN GIÁ",
+  "THUẾ SUẤT",
+  "THÀNH TIỀN",
+  "TIỀN THUẾ",
 ];
 
 export async function createInvoicesSheet(
@@ -46,7 +46,8 @@ export async function createInvoicesSheet(
     const ws = XLSX.utils.aoa_to_sheet(sheetData);
     formatCells(ws, sheetData.length, true);
     ws["!cols"] = fitToColumn(sheetData);
-    if (ws["!cols"]?.[4]) ws["!cols"]![4] = { wch: 12 };
+    ws["!freeze"] = { x: 0, y: 1 }; // Freeze header row
+
     mergeCells(ws, invoices);
     return { mainSheet: ws };
   } else {
@@ -90,9 +91,9 @@ export async function createInvoicesSheet(
       });
     });
     const ws = XLSX.utils.aoa_to_sheet(mainSheetData);
-    formatCells(ws, mainSheetData.length, false); // This will only format the main sheet columns, which is fine.
+    formatCells(ws, mainSheetData.length, false);
     ws["!cols"] = fitToColumn(mainSheetData);
-    if (ws["!cols"]?.[4]) ws["!cols"]![4] = { wch: 12 };
+    ws["!freeze"] = { x: 0, y: 1 }; // Freeze header row
     return { mainSheet: ws, products };
   }
 }
@@ -243,21 +244,23 @@ function addTienThue(invoice: any) {
 
 export function createProductsSheet(products: any[]) {
   const header = [
-    "Ký hiệu hóa đơn",
-    "Số hóa đơn",
-    "Ngày lập",
-    "Tính chất",
-    "Tên hàng hóa, dịch vụ",
-    "Đơn vị tính",
-    "Số lượng",
-    "Đơn giá",
-    "Thuế suất",
-    "Thành tiền",
-    "Tiền thuế",
+    "KÝ HIỆU HÓA ĐƠN",
+    "SỐ HÓA ĐƠN",
+    "NGÀY LẬP",
+    "TÍNH CHẤT",
+    "TÊN HÀNG HÓA, DỊCH VỤ",
+    "ĐƠN VỊ TÍNH",
+    "SỐ LƯỢNG",
+    "ĐƠN GIÁ",
+    "THUẾ SUẤT",
+    "THÀNH TIỀN",
+    "TIỀN THUẾ",
   ];
   const sheetData = [header, ...products];
   const ws = XLSX.utils.aoa_to_sheet(sheetData);
   ws["!cols"] = fitToColumn(sheetData);
+  ws["!freeze"] = { x: 0, y: 1 }; // Freeze header row
+
   // Add formatting for product sheet
   for (let i = 0; i < products.length; i++) {
     const row = i + 2;
