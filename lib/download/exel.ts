@@ -76,9 +76,14 @@ export async function createInvoicesSheet(
       addTienThue(invoice);
       invoice.detail?.hdhhdvu?.forEach((item: any) => {
         products.push([
+          invoice.hdon,
           invoice.khhdon,
           `${invoice.shdon}`,
           new Date(invoice.tdlap),
+          invoiceType == "purchase" ? invoice.nbmst : invoice.nmmst,
+          invoiceType == "purchase" ? invoice.nbten : invoice.nmten,
+          invoice.dvtte,
+          invoice.tgia || 1,
           invoiceItemTypeTitle[item["tchat"]],
           item["ten"],
           item["dvtinh"],
@@ -244,9 +249,14 @@ function addTienThue(invoice: any) {
 
 export function createProductsSheet(products: any[]) {
   const header = [
+    "KÝ HIỆU MẪU SỐ",
     "KÝ HIỆU HÓA ĐƠN",
     "SỐ HÓA ĐƠN",
     "NGÀY LẬP",
+    "MST NGƯỜI MUA/NHẬN",
+    "TÊN NGƯỜI MUA/NHẬN",
+    "ĐƠN VỊ TIỀN TỆ",
+    "TỶ GIÁ",
     "TÍNH CHẤT",
     "TÊN HÀNG HÓA, DỊCH VỤ",
     "ĐƠN VỊ TÍNH",
@@ -264,12 +274,12 @@ export function createProductsSheet(products: any[]) {
   // Add formatting for product sheet
   for (let i = 0; i < products.length; i++) {
     const row = i + 2;
-    if (ws[`C${row}`]) ws[`C${row}`].z = "dd/mm/yyyy";
-    if (ws[`G${row}`]) ws[`G${row}`].z = `#,###`;
-    if (ws[`H${row}`]) ws[`H${row}`].z = `#,### "đ"`;
-    if (ws[`I${row}`]) ws[`I${row}`].z = `0.00%`;
-    if (ws[`J${row}`]) ws[`J${row}`].z = `#,### "đ"`;
-    if (ws[`K${row}`]) ws[`K${row}`].z = `#,##0.00 "đ"`;
+    if (ws[`D${row}`]) ws[`D${row}`].z = "dd/mm/yyyy"; // NGÀY LẬP
+    if (ws[`L${row}`]) ws[`L${row}`].z = `#,###`; // SỐ LƯỢNG
+    if (ws[`M${row}`]) ws[`M${row}`].z = `#,### "đ"`; // ĐƠN GIÁ
+    if (ws[`N${row}`]) ws[`N${row}`].z = `0.00%`; // THUẾ SUẤT
+    if (ws[`O${row}`]) ws[`O${row}`].z = `#,### "đ"`; // THÀNH TIỀN
+    if (ws[`P${row}`]) ws[`P${row}`].z = `#,##0.00 "đ"`; // TIỀN THUẾ
   }
   return ws;
 }
