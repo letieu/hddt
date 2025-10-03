@@ -304,15 +304,15 @@ export class InvoiceExportManager extends EventEmitter {
                 const file = zip.files[filename];
                 if (!file.dir) {
                   const content = await file.async("blob");
-                  const invoicePrefix = `${invoice.nbmst}__${invoice.shdon}`;
+                  // Use khhdon (Ký hiệu hóa đơn) + shdon (Số hóa đơn) for unique and readable filenames
+                  const invoicePrefix = `${invoice.khhdon}_${invoice.shdon}`;
                   
-                  if (filename.toLowerCase().endsWith('.html')) {
-                    htmlFolder?.file(`${invoicePrefix}__${filename}`, content);
-                  } else if (filename.toLowerCase().endsWith('.xml')) {
+                  if (filename.toLowerCase().endsWith('.xml')) {
+                    // XML files go to xml folder
                     xmlFolder?.file(`${invoicePrefix}__${filename}`, content);
                   } else {
-                    // For other file types, put them in xml folder
-                    xmlFolder?.file(`${invoicePrefix}__${filename}`, content);
+                    // All other files (HTML, JS, images, etc.) go to html folder
+                    htmlFolder?.file(`${invoicePrefix}__${filename}`, content);
                   }
                 }
               }
@@ -322,7 +322,8 @@ export class InvoiceExportManager extends EventEmitter {
           // Original logic: separate folder for each invoice
           for (const invoice of allInvoices) {
             if (invoice.xmlBlob) {
-              const folderName = `${invoice.nbmst}__${invoice.shdon}`;
+              // Use khhdon (Ký hiệu hóa đơn) + shdon (Số hóa đơn) for unique and readable folder names
+              const folderName = `${invoice.khhdon}_${invoice.shdon}`;
               const invoiceFolder = rootFolder.folder(folderName);
               await invoiceFolder?.loadAsync(invoice.xmlBlob);
             }
