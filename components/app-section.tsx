@@ -53,6 +53,7 @@ export type ExportInput = {
   queryTypes: InvoiceQueryType[];
   downloadFiles?: boolean;
   mergeDetails?: boolean;
+  groupByFileType?: boolean;
 };
 
 type ExportState =

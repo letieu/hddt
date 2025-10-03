@@ -27,6 +27,7 @@ export type ExportInput = {
   queryTypes: InvoiceQueryType[];
   downloadFiles?: boolean;
   mergeDetails?: boolean;
+  groupByFileType?: boolean;
 };
 
 export type InvoiceExportLog = {
@@ -287,13 +288,47 @@ export class InvoiceExportManager extends EventEmitter {
       const rootFolder = rootZip.folder(getZipRootFolderName(input));
       if (rootFolder) {
         const allInvoices = [...this.invoicesSheet1, ...this.invoicesSheet2];
-        for (const invoice of allInvoices) {
-          if (invoice.xmlBlob) {
-            const folderName = `${invoice.nbmst}__${invoice.shdon}`;
-            const invoiceFolder = rootFolder.folder(folderName);
-            await invoiceFolder?.loadAsync(invoice.xmlBlob);
+        
+        if (input.groupByFileType) {
+          // Group files by type (xml/html folders)
+          const xmlFolder = rootFolder.folder("xml");
+          const htmlFolder = rootFolder.folder("html");
+          
+          for (const invoice of allInvoices) {
+            if (invoice.xmlBlob) {
+              // Load the zip blob and extract files
+              const zip = await JSZip.loadAsync(invoice.xmlBlob);
+              const files = Object.keys(zip.files);
+              
+              for (const filename of files) {
+                const file = zip.files[filename];
+                if (!file.dir) {
+                  const content = await file.async("blob");
+                  const invoicePrefix = `${invoice.nbmst}__${invoice.shdon}`;
+                  
+                  if (filename.toLowerCase().endsWith('.html')) {
+                    htmlFolder?.file(`${invoicePrefix}__${filename}`, content);
+                  } else if (filename.toLowerCase().endsWith('.xml')) {
+                    xmlFolder?.file(`${invoicePrefix}__${filename}`, content);
+                  } else {
+                    // For other file types, put them in xml folder
+                    xmlFolder?.file(`${invoicePrefix}__${filename}`, content);
+                  }
+                }
+              }
+            }
+          }
+        } else {
+          // Original logic: separate folder for each invoice
+          for (const invoice of allInvoices) {
+            if (invoice.xmlBlob) {
+              const folderName = `${invoice.nbmst}__${invoice.shdon}`;
+              const invoiceFolder = rootFolder.folder(folderName);
+              await invoiceFolder?.loadAsync(invoice.xmlBlob);
+            }
           }
         }
+        
         const resultZip = await rootFolder.generateAsync({ type: "blob" });
         zipFileName = getZipFileName(input);
         saveAs(resultZip, zipFileName);
