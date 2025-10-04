@@ -47,7 +47,7 @@ export function InputForm(props: {
   const [password, setPassword] = useState("");
   const [mergeDetails, setMergeDetails] = useState(true);
   const [downloadFiles, setDownloadFiles] = useState(false);
-  const [groupByFileType, setGroupByFileType] = useState(false);
+  const [groupByFileType, setGroupByFileType] = useState(true);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
 
   const today = new Date();
@@ -306,21 +306,21 @@ export function InputForm(props: {
                   </div>
                 </div>
                 <div className="flex items-center space-x-2 pt-4">
-                  <Label htmlFor="download-files">Tải file XML, HTML hóa đơn</Label>
                   <Checkbox
                     id="download-files"
                     checked={downloadFiles}
                     onCheckedChange={(checked) => setDownloadFiles(!!checked)}
                   />
+                  <Label htmlFor="download-files">Tải file XML, HTML hóa đơn</Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Label htmlFor="group-by-file-type" className="font-normal">Gộp chia folder theo loại file</Label>
                   <Checkbox
                     id="group-by-file-type"
                     checked={groupByFileType}
                     disabled={!downloadFiles}
                     onCheckedChange={(checked) => setGroupByFileType(!!checked)}
                   />
+                  <Label htmlFor="group-by-file-type" className="font-normal">Chia folder theo loại file (XML, HTML)</Label>
                 </div>
                 <div className="space-y-2 pt-4">
                   <Label>Merge chi tiết sản phẩm</Label>
