@@ -15,9 +15,8 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { LoginButton } from "./login-button";
 import { ShineBorder } from "./magicui/shine-border";
-import { ExportInput } from "./app-section";
+import { ExportInput, InvoiceQueryType, InvoiceType } from "./app-section";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { InvoiceType, InvoiceQueryType } from "@/lib/download/hoadon-api";
 import { Checkbox } from "./ui/checkbox";
 import { creditUsageEstimate } from "@/lib/credit";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -47,6 +46,7 @@ export function InputForm(props: {
   const [password, setPassword] = useState("");
   const [mergeDetails, setMergeDetails] = useState(true);
   const [downloadFiles, setDownloadFiles] = useState(false);
+  const [downloadPdf, setDownloadPdf] = useState(false);
   const [groupByFileType, setGroupByFileType] = useState(true);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
 
@@ -114,6 +114,7 @@ export function InputForm(props: {
       },
       invoiceType: invoiceType,
       downloadFiles,
+      downloadPdf,
       queryTypes,
       mergeDetails,
       groupByFileType,
@@ -309,9 +310,31 @@ export function InputForm(props: {
                   <Checkbox
                     id="download-files"
                     checked={downloadFiles}
-                    onCheckedChange={(checked) => setDownloadFiles(!!checked)}
+                    onCheckedChange={(checked) => {
+                      const isChecked = !!checked;
+                      setDownloadFiles(isChecked);
+                      if (!isChecked) {
+                        setDownloadPdf(false);
+                      }
+                    }}
                   />
                   <Label htmlFor="download-files">Tải file XML, HTML hóa đơn</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="download-pdf"
+                    checked={downloadPdf}
+                    disabled={!downloadFiles}
+                    onCheckedChange={(checked) => {
+                      setDownloadPdf(!!checked);
+                    }}
+                  />
+                  <Label
+                    htmlFor="download-pdf"
+                    className={cn("font-normal", !downloadFiles && "text-muted-foreground")}
+                  >
+                    Tải file hóa đơn dưới dạng PDF (thay cho HTML)
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox

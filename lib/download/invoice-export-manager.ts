@@ -1,5 +1,7 @@
 import { EventEmitter } from "events";
 import * as Sentry from "@sentry/nextjs";
+import { convertHtmlToPdf } from "./pdf";
+import * as Sentry from "@sentry/nextjs";
 import * as XLSX from "xlsx";
 import JSZip from "jszip";
 import {
@@ -26,6 +28,7 @@ export type ExportInput = {
   filter: FetchInvoiceOptions;
   queryTypes: InvoiceQueryType[];
   downloadFiles?: boolean;
+  downloadPdf?: boolean;
   mergeDetails?: boolean;
   groupByFileType?: boolean;
 };
@@ -290,30 +293,53 @@ export class InvoiceExportManager extends EventEmitter {
         const allInvoices = [...this.invoicesSheet1, ...this.invoicesSheet2];
         
         if (input.groupByFileType) {
-          // Group files by type (xml/html folders)
           const xmlFolder = rootFolder.folder("xml");
-          const htmlFolder = rootFolder.folder("html");
-          
+          const htmlFolder = !input.downloadPdf ? rootFolder.folder("html") : undefined;
+          const pdfFolder = input.downloadPdf ? rootFolder.folder("pdf") : undefined;
+
           for (const invoice of allInvoices) {
             if (invoice.xmlBlob) {
-              // Load the zip blob and extract files
               const zip = await JSZip.loadAsync(invoice.xmlBlob);
               const files = Object.keys(zip.files);
-              
+              const invoicePrefix = `${invoice.khhdon}_${invoice.shdon}`;
+
               for (const filename of files) {
                 const file = zip.files[filename];
-                if (!file.dir) {
+                if (file.dir) continue;
+
+                const lowerFilename = filename.toLowerCase();
+
+                if (lowerFilename.endsWith(".xml")) {
                   const content = await file.async("blob");
-                  // Use khhdon (Ký hiệu hóa đơn) + shdon (Số hóa đơn) for unique and readable filenames
-                  const invoicePrefix = `${invoice.khhdon}_${invoice.shdon}`;
-                  
-                  if (filename.toLowerCase().endsWith('.xml')) {
-                    // XML files go to xml folder
-                    xmlFolder?.file(`${invoicePrefix}__${filename}`, content);
-                  } else {
-                    // All other files (HTML, JS, images, etc.) go to html folder
-                    htmlFolder?.file(`${invoicePrefix}__${filename}`, content);
+                  xmlFolder?.file(`${invoicePrefix}__${filename}`, content);
+                } else if (input.downloadPdf && lowerFilename.endsWith(".html")) {
+                  const htmlContent = await file.async("string");
+                  try {
+                    this._log({
+                      id: `pdf-${invoice.id}`,
+                      message: `🔄 Đang chuyển đổi hóa đơn ${invoicePrefix} sang PDF...`,
+                    });
+                    const pdfBlob = await convertHtmlToPdf(htmlContent);
+                    pdfFolder?.file(`${invoicePrefix}.pdf`, pdfBlob);
+                    this._log({
+                      id: `pdf-${invoice.id}`,
+                      message: `✅ Chuyển đổi PDF cho hóa đơn ${invoicePrefix} thành công.`,
+                    });
+                  } catch (e: any) {
+                    Sentry.captureException(e);
+                    this._log({
+                      id: `pdf-error-${invoice.id}`,
+                      message: `❌ Lỗi chuyển đổi PDF cho hóa đơn ${invoicePrefix}. File HTML sẽ được giữ lại. Lỗi: ${e.message}`,
+                      status: "failed",
+                    });
+                    // Fallback to saving the HTML file
+                    const content = await file.async("blob");
+                    const fallbackHtmlFolder = rootFolder.folder("html_fallback");
+                    fallbackHtmlFolder?.file(`${invoicePrefix}__${filename}`, content);
                   }
+                } else if (htmlFolder) {
+                  const content = await file.async("blob");
+                  htmlFolder.file(`${invoicePrefix}__${filename}`, content);
                 }
               }
             }
@@ -322,10 +348,46 @@ export class InvoiceExportManager extends EventEmitter {
           // Original logic: separate folder for each invoice
           for (const invoice of allInvoices) {
             if (invoice.xmlBlob) {
-              // Use khhdon (Ký hiệu hóa đơn) + shdon (Số hóa đơn) for unique and readable folder names
               const folderName = `${invoice.khhdon}_${invoice.shdon}`;
               const invoiceFolder = rootFolder.folder(folderName);
-              await invoiceFolder?.loadAsync(invoice.xmlBlob);
+              if (input.downloadPdf) {
+                const zip = await JSZip.loadAsync(invoice.xmlBlob);
+                const files = Object.keys(zip.files);
+                for (const filename of files) {
+                  const file = zip.files[filename];
+                  if (file.dir) continue;
+                  const lowerFilename = filename.toLowerCase();
+                  if (lowerFilename.endsWith(".html")) {
+                    const htmlContent = await file.async("string");
+                    try {
+                      this._log({
+                        id: `pdf-${invoice.id}`,
+                        message: `🔄 Đang chuyển đổi hóa đơn ${folderName} sang PDF...`,
+                      });
+                      const pdfBlob = await convertHtmlToPdf(htmlContent);
+                      invoiceFolder?.file(`${folderName}.pdf`, pdfBlob);
+                      this._log({
+                        id: `pdf-${invoice.id}`,
+                        message: `✅ Chuyển đổi PDF cho hóa đơn ${folderName} thành công.`,
+                      });
+                    } catch (e: any) {
+                      Sentry.captureException(e);
+                      this._log({
+                        id: `pdf-error-${invoice.id}`,
+                        message: `❌ Lỗi chuyển đổi PDF cho hóa đơn ${folderName}. File HTML sẽ được giữ lại. Lỗi: ${e.message}`,
+                        status: "failed",
+                      });
+                      const content = await file.async("blob");
+                      invoiceFolder?.file(filename, content);
+                    }
+                  } else {
+                    const content = await file.async("blob");
+                    invoiceFolder?.file(filename, content);
+                  }
+                }
+              } else {
+                await invoiceFolder?.loadAsync(invoice.xmlBlob);
+              }
             }
           }
         }

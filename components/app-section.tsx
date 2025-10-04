@@ -22,6 +22,7 @@ import {
   InvoiceType,
   InvoiceQueryType,
 } from "@/lib/download/hoadon-api";
+export type { InvoiceType, InvoiceQueryType };
 import {
   InvoiceExportManager,
   InvoiceExportLog,
@@ -52,6 +53,7 @@ export type ExportInput = {
   filter: FetchInvoiceOptions;
   queryTypes: InvoiceQueryType[];
   downloadFiles?: boolean;
+  downloadPdf?: boolean;
   mergeDetails?: boolean;
   groupByFileType?: boolean;
 };
