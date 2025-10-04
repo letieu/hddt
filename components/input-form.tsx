@@ -1,20 +1,11 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RainbowButton } from "./magicui/rainbow-button";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { LoginButton } from "./login-button";
-import { ShineBorder } from "./magicui/shine-border";
 import { ExportInput } from "./app-section";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InvoiceType, InvoiceQueryType } from "@/lib/download/hoadon-api";
@@ -128,10 +119,12 @@ export function InputForm(props: {
   }, [fromDate, toDate, downloadFiles]);
 
   return (
-    <Card className="relative overflow-hidden">
-      <CardHeader>
-        <CardTitle>Nhập thông tin</CardTitle>
-        <CardDescription>
+    <div className="relative rounded-xl border border-blue-200/30 dark:border-blue-400/20 bg-gradient-to-br from-blue-50/20 to-purple-50/20 dark:from-blue-950/10 dark:to-purple-950/10 backdrop-blur-xl p-6 shadow-lg transition-all duration-200">
+      <div className="mb-6">
+        <h3 className="text-xl font-semibold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 dark:from-blue-300 dark:to-purple-300 bg-clip-text text-transparent">
+          Nhập thông tin
+        </h3>
+        <p className="text-sm text-muted-foreground">
           Sử dụng thông tin đăng nhập từ trang{" "}
           <a
             href="https://hoadondientu.gdt.gov.vn/"
@@ -140,21 +133,21 @@ export function InputForm(props: {
           >
             hoadondientu.gdt.gov.vn
           </a>
-          <Alert className="mt-2">
-            <ShieldCheck className="h-4 w-4" />
-            <AlertTitle>Lo ngại về bảo mật?</AlertTitle>
-            <AlertDescription>
-              <Link
-                href="/blog/tai-hoa-don-extension"
-                className="font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent"
-              >
-                Sử dụng extension của chúng tôi
-              </Link>{" "}
-            </AlertDescription>
-          </Alert>
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        </p>
+        <Alert className="mt-3">
+          <ShieldCheck className="h-4 w-4" />
+          <AlertTitle>Lo ngại về bảo mật?</AlertTitle>
+          <AlertDescription>
+            <Link
+              href="/blog/tai-hoa-don-extension"
+              className="font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent"
+            >
+              Sử dụng extension của chúng tôi
+            </Link>{" "}
+          </AlertDescription>
+        </Alert>
+      </div>
+      <div>
         <form>
           <div className="grid w-full items-center gap-4">
             <div className="flex space-x-4">
@@ -346,8 +339,8 @@ export function InputForm(props: {
             </Collapsible>
           </div>
         </form>
-      </CardContent>
-      <CardFooter className="flex justify-between">
+      </div>
+      <div className="flex justify-between mt-6 pt-6 border-t border-border">
         {isLoggedIn ? (
           <RainbowButton
             className="w-full"
@@ -363,8 +356,7 @@ export function InputForm(props: {
         ) : (
           <LoginButton className="w-full" text="Đăng nhập để tải file" />
         )}
-      </CardFooter>
-      <ShineBorder />
-    </Card>
+      </div>
+    </div>
   );
 }
