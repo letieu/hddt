@@ -1,5 +1,9 @@
-import {withSentryConfig} from "@sentry/nextjs";
+import { withSentryConfig } from "@sentry/nextjs";
 import createMDX from "@next/mdx";
+import path from "path";
+
+import { fileURLToPath } from "url";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -12,6 +16,20 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+  },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      html2canvas: path.resolve(__dirname, "./node_modules/html2canvas-pro"),
+    };
+    return config;
+  },
+  experimental: {
+    turbo: {
+      resolveAlias: {
+        html2canvas: "html2canvas-pro",
+      },
+    },
   },
 };
 
@@ -54,3 +72,4 @@ export default withSentryConfig(withMDX(nextConfig), {
   // https://vercel.com/docs/cron-jobs
   automaticVercelMonitors: true,
 });
+

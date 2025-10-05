@@ -1,7 +1,6 @@
 import { EventEmitter } from "events";
 import * as Sentry from "@sentry/nextjs";
 import { convertHtmlToPdf } from "./pdf";
-import * as Sentry from "@sentry/nextjs";
 import * as XLSX from "xlsx";
 import JSZip from "jszip";
 import {
@@ -291,107 +290,115 @@ export class InvoiceExportManager extends EventEmitter {
       const rootFolder = rootZip.folder(getZipRootFolderName(input));
       if (rootFolder) {
         const allInvoices = [...this.invoicesSheet1, ...this.invoicesSheet2];
-        
-        if (input.groupByFileType) {
-          const xmlFolder = rootFolder.folder("xml");
-          const htmlFolder = !input.downloadPdf ? rootFolder.folder("html") : undefined;
-          const pdfFolder = input.downloadPdf ? rootFolder.folder("pdf") : undefined;
 
-          for (const invoice of allInvoices) {
-            if (invoice.xmlBlob) {
-              const zip = await JSZip.loadAsync(invoice.xmlBlob);
-              const files = Object.keys(zip.files);
-              const invoicePrefix = `${invoice.khhdon}_${invoice.shdon}`;
+        for (const invoice of allInvoices) {
+          if (!invoice.xmlBlob) continue;
 
-              for (const filename of files) {
-                const file = zip.files[filename];
-                if (file.dir) continue;
+          const invoicePrefix = `${invoice.khhdon}_${invoice.shdon}`;
 
-                const lowerFilename = filename.toLowerCase();
+          // Shortcut for the simple case that avoids unzipping/rezipping
+          if (!input.groupByFileType && !input.downloadPdf) {
+            const invoiceFolder = rootFolder.folder(invoicePrefix);
+            await invoiceFolder?.loadAsync(invoice.xmlBlob);
+            continue;
+          }
 
-                if (lowerFilename.endsWith(".xml")) {
-                  const content = await file.async("blob");
-                  xmlFolder?.file(`${invoicePrefix}__${filename}`, content);
-                } else if (input.downloadPdf && lowerFilename.endsWith(".html")) {
-                  const htmlContent = await file.async("string");
-                  try {
-                    this._log({
-                      id: `pdf-${invoice.id}`,
-                      message: `🔄 Đang chuyển đổi hóa đơn ${invoicePrefix} sang PDF...`,
-                    });
-                    const pdfBlob = await convertHtmlToPdf(htmlContent);
-                    pdfFolder?.file(`${invoicePrefix}.pdf`, pdfBlob);
-                    this._log({
-                      id: `pdf-${invoice.id}`,
-                      message: `✅ Chuyển đổi PDF cho hóa đơn ${invoicePrefix} thành công.`,
-                    });
-                  } catch (e: any) {
-                    Sentry.captureException(e);
-                    this._log({
-                      id: `pdf-error-${invoice.id}`,
-                      message: `❌ Lỗi chuyển đổi PDF cho hóa đơn ${invoicePrefix}. File HTML sẽ được giữ lại. Lỗi: ${e.message}`,
-                      status: "failed",
-                    });
-                    // Fallback to saving the HTML file
-                    const content = await file.async("blob");
-                    const fallbackHtmlFolder = rootFolder.folder("html_fallback");
-                    fallbackHtmlFolder?.file(`${invoicePrefix}__${filename}`, content);
-                  }
-                } else if (htmlFolder) {
-                  const content = await file.async("blob");
-                  htmlFolder.file(`${invoicePrefix}__${filename}`, content);
-                }
+          const zip = await JSZip.loadAsync(invoice.xmlBlob);
+          const files = Object.keys(zip.files);
+          let pdfBlob: Blob | null = null;
+          let pdfError: Error | null = null;
+
+          if (input.downloadPdf) {
+            const htmlFile = files.find(
+              (f) => !zip.files[f].dir && f.toLowerCase().endsWith(".html"),
+            );
+            const detailsJsFile = files.find(
+              (f) => !zip.files[f].dir && f.toLowerCase().endsWith("details.js"),
+            );
+
+            if (htmlFile) {
+              const file = zip.files[htmlFile];
+              const htmlContent = await file.async("string");
+
+              let detailsJsContent: string | undefined;
+              if (detailsJsFile) {
+                detailsJsContent = await zip.files[detailsJsFile].async(
+                  "string",
+                );
+              }
+
+              try {
+                this._log({
+                  id: `pdf-${invoice.id}`,
+                  message: `🔄 Đang chuyển đổi hóa đơn ${invoicePrefix} sang PDF...`,
+                });
+                pdfBlob = await convertHtmlToPdf(htmlContent, detailsJsContent);
+                this._log({
+                  id: `pdf-${invoice.id}`,
+                  message: `✅ Chuyển đổi PDF cho hóa đơn ${invoicePrefix} thành công.`,
+                });
+              } catch (e: any) {
+                pdfError = e;
+                Sentry.captureException(e);
+                console.error(e);
+                this._log({
+                  id: `pdf-error-${invoice.id}`,
+                  message: `❌ Lỗi chuyển đổi PDF cho hóa đơn ${invoicePrefix}. File HTML sẽ được giữ lại. Lỗi: ${e.message}`,
+                  status: "failed",
+                });
               }
             }
           }
-        } else {
-          // Original logic: separate folder for each invoice
-          for (const invoice of allInvoices) {
-            if (invoice.xmlBlob) {
-              const folderName = `${invoice.khhdon}_${invoice.shdon}`;
-              const invoiceFolder = rootFolder.folder(folderName);
-              if (input.downloadPdf) {
-                const zip = await JSZip.loadAsync(invoice.xmlBlob);
-                const files = Object.keys(zip.files);
-                for (const filename of files) {
-                  const file = zip.files[filename];
-                  if (file.dir) continue;
-                  const lowerFilename = filename.toLowerCase();
-                  if (lowerFilename.endsWith(".html")) {
-                    const htmlContent = await file.async("string");
-                    try {
-                      this._log({
-                        id: `pdf-${invoice.id}`,
-                        message: `🔄 Đang chuyển đổi hóa đơn ${folderName} sang PDF...`,
-                      });
-                      const pdfBlob = await convertHtmlToPdf(htmlContent);
-                      invoiceFolder?.file(`${folderName}.pdf`, pdfBlob);
-                      this._log({
-                        id: `pdf-${invoice.id}`,
-                        message: `✅ Chuyển đổi PDF cho hóa đơn ${folderName} thành công.`,
-                      });
-                    } catch (e: any) {
-                      Sentry.captureException(e);
-                      this._log({
-                        id: `pdf-error-${invoice.id}`,
-                        message: `❌ Lỗi chuyển đổi PDF cho hóa đơn ${folderName}. File HTML sẽ được giữ lại. Lỗi: ${e.message}`,
-                        status: "failed",
-                      });
-                      const content = await file.async("blob");
-                      invoiceFolder?.file(filename, content);
-                    }
-                  } else {
-                    const content = await file.async("blob");
-                    invoiceFolder?.file(filename, content);
-                  }
-                }
-              } else {
-                await invoiceFolder?.loadAsync(invoice.xmlBlob);
-              }
+
+          // Add the successfully generated PDF
+          if (pdfBlob) {
+            const pdfFileName = `${invoicePrefix}.pdf`;
+            let pdfDestFolder: JSZip | null = rootFolder;
+            if (input.groupByFileType) {
+              pdfDestFolder = rootFolder.folder("pdf");
+            } else {
+              pdfDestFolder = rootFolder.folder(invoicePrefix);
             }
+            pdfDestFolder?.file(pdfFileName, pdfBlob);
+          }
+
+          // Add all other files from the original invoice zip
+          for (const filename of files) {
+            const file = zip.files[filename];
+            if (file.dir) continue;
+
+            const lowerFilename = filename.toLowerCase();
+
+            // Skip original HTML file if PDF conversion was successful
+            if (pdfBlob && lowerFilename.endsWith(".html")) {
+              continue;
+            }
+
+            const content = await file.async("blob");
+            let destFolder: JSZip | null = null;
+            let destFilename = filename;
+
+            if (input.groupByFileType) {
+              destFilename = `${invoicePrefix}__${filename}`;
+              if (lowerFilename.endsWith(".xml")) {
+                destFolder = rootFolder.folder("xml");
+              } else if (pdfError) {
+                destFolder = rootFolder.folder("html_fallback");
+              } else if (!input.downloadPdf) {
+                destFolder = rootFolder.folder("html");
+              } else {
+                // downloadPdf is true and there was no error, so we drop non-xml, non-html files
+                // as per original logic.
+                continue;
+              }
+            } else {
+              // Not grouping by file type
+              destFolder = rootFolder.folder(invoicePrefix);
+            }
+            destFolder?.file(destFilename, content);
           }
         }
-        
+
         const resultZip = await rootFolder.generateAsync({ type: "blob" });
         zipFileName = getZipFileName(input);
         saveAs(resultZip, zipFileName);
