@@ -45,9 +45,9 @@ export function InputForm(props: {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [mergeDetails, setMergeDetails] = useState(true);
-  const [downloadFiles, setDownloadFiles] = useState(false);
+  const [downloadXml, setDownloadXml] = useState(true);
+  const [downloadHtml, setDownloadHtml] = useState(true);
   const [downloadPdf, setDownloadPdf] = useState(false);
-  const [groupByFileType, setGroupByFileType] = useState(true);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
 
   const today = new Date();
@@ -113,20 +113,20 @@ export function InputForm(props: {
         nmmst: invoiceBuyer,
       },
       invoiceType: invoiceType,
-      downloadFiles,
+      downloadXml,
+      downloadHtml,
       downloadPdf,
       queryTypes,
       mergeDetails,
-      groupByFileType,
     });
   };
 
   const estimateCreditUsage = useMemo(() => {
     const from = new Date(fromDate);
     const to = new Date(toDate);
-    const isDownloadFiles = downloadFiles;
+    const isDownloadFiles = downloadXml || downloadHtml || downloadPdf;
     return creditUsageEstimate(from, to, isDownloadFiles);
-  }, [fromDate, toDate, downloadFiles]);
+  }, [fromDate, toDate, downloadXml, downloadHtml, downloadPdf]);
 
   return (
     <Card className="relative overflow-hidden">
@@ -306,44 +306,38 @@ export function InputForm(props: {
                     </Label>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2 pt-4">
-                  <Checkbox
-                    id="download-files"
-                    checked={downloadFiles}
-                    onCheckedChange={(checked) => {
-                      const isChecked = !!checked;
-                      setDownloadFiles(isChecked);
-                      if (!isChecked) {
-                        setDownloadPdf(false);
-                      }
-                    }}
-                  />
-                  <Label htmlFor="download-files">Tải file XML, HTML hóa đơn</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="download-pdf"
-                    checked={downloadPdf}
-                    disabled={!downloadFiles}
-                    onCheckedChange={(checked) => {
-                      setDownloadPdf(!!checked);
-                    }}
-                  />
-                  <Label
-                    htmlFor="download-pdf"
-                    className={cn("font-normal", !downloadFiles && "text-muted-foreground")}
-                  >
-                    Tải file hóa đơn dưới dạng PDF (thay cho HTML)
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="group-by-file-type"
-                    checked={groupByFileType}
-                    disabled={!downloadFiles}
-                    onCheckedChange={(checked) => setGroupByFileType(!!checked)}
-                  />
-                  <Label htmlFor="group-by-file-type" className="font-normal">Chia folder theo loại file (XML, HTML)</Label>
+                <div className="space-y-2 pt-4">
+                  <Label>Loại file tải về</Label>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="download-xml"
+                      checked={downloadXml}
+                      onCheckedChange={(checked) => setDownloadXml(!!checked)}
+                    />
+                    <Label htmlFor="download-xml" className="font-normal">
+                      Tải file XML
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="download-html"
+                      checked={downloadHtml}
+                      onCheckedChange={(checked) => setDownloadHtml(!!checked)}
+                    />
+                    <Label htmlFor="download-html" className="font-normal">
+                      Tải file HTML
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="download-pdf"
+                      checked={downloadPdf}
+                      onCheckedChange={(checked) => setDownloadPdf(!!checked)}
+                    />
+                    <Label htmlFor="download-pdf" className="font-normal">
+                      Tải file PDF
+                    </Label>
+                  </div>
                 </div>
                 <div className="space-y-2 pt-4">
                   <Label>Merge chi tiết sản phẩm</Label>

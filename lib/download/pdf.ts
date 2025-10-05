@@ -2,10 +2,8 @@ export async function convertHtmlToPdf(
   htmlContent: string,
   detailsJsContent?: string,
 ): Promise<Blob> {
-  // const workerUrl =
-  //   process.env.NEXT_PUBLIC_PDF_WORKER_URL ??
-  //   "https://prawn-worker.tieu.dev";
-  const workerUrl = "http://localhost:3001/generate-pdf";
+  const workerUrl =
+    process.env.NEXT_PUBLIC_PDF_WORKER_URL!
 
   let finalHtmlContent = htmlContent;
   if (detailsJsContent) {

@@ -52,10 +52,10 @@ export type ExportInput = {
   toDate: Date;
   filter: FetchInvoiceOptions;
   queryTypes: InvoiceQueryType[];
-  downloadFiles?: boolean;
+  downloadXml?: boolean;
+  downloadHtml?: boolean;
   downloadPdf?: boolean;
   mergeDetails?: boolean;
-  groupByFileType?: boolean;
 };
 
 type ExportState =
@@ -144,7 +144,7 @@ export function AppSection() {
     const creditsToDeduct = creditUsageEstimate(
       input.fromDate,
       input.toDate,
-      input.downloadFiles ?? false,
+      input.downloadXml || input.downloadHtml || input.downloadPdf || false,
     );
 
     const errorMessage = await checkCredit(creditsToDeduct);
@@ -242,7 +242,7 @@ export function AppSection() {
     const creditsToDeduct = creditUsageEstimate(
       input.fromDate,
       input.toDate,
-      input.downloadFiles ?? false,
+      input.downloadXml || input.downloadHtml || input.downloadPdf || false,
     );
 
     setLogs((prev) =>

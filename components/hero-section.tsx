@@ -41,7 +41,7 @@ export function HeroSection() {
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto text-pretty">
             Xuất hàng nghìn hóa đơn điện tử trong khoảng thời gian rộng chỉ
             trong một cú nhấp chuột. Nhận gói dữ liệu hoàn chỉnh với file{" "}
-            <strong>Excel</strong> và <strong>XML</strong>
+            <strong>Excel</strong> và <strong>XML</strong>, <strong>PDF</strong>
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
