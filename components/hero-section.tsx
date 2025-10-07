@@ -35,11 +35,11 @@ export function HeroSection() {
       <div className="container mx-auto max-w-6xl text-center">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 text-balance">
-            Xuất Dữ Liệu Hóa Đơn Điện Tử{" "}
+            Tải Hóa Đơn Điện Tử{" "}
             <span className="text-accent">Hàng Loạt</span>
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto text-pretty">
-            Xuất hàng nghìn hóa đơn điện tử trong khoảng thời gian rộng chỉ
+            Tải hàng nghìn hóa đơn điện tử chỉ
             trong một cú nhấp chuột. Nhận gói dữ liệu hoàn chỉnh với file{" "}
             <strong>Excel</strong> và <strong>XML</strong>, <strong>PDF</strong>
           </p>
@@ -50,7 +50,7 @@ export function HeroSection() {
                 size="lg"
                 className="bg-primary text-primary-foreground hover:bg-primary/90 group cursor-pointer"
               >
-                Bắt Đầu Xuất Dữ Liệu
+                Bắt Đầu Tải Dữ Liệu
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
@@ -72,7 +72,7 @@ export function HeroSection() {
             </div>
             <div className="flex items-center gap-2">
               <Zap className="h-5 w-5 text-primary" />
-              <span>Xuất toàn bộ hóa đơn, không giới hạn ngày</span>
+              <span>Tải toàn bộ hóa đơn, không giới hạn ngày</span>
             </div>
             <div className="flex items-center gap-2">
               <FileOutput className="h-5 w-5 text-primary" />

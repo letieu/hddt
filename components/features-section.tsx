@@ -10,9 +10,9 @@ import { Download, Calendar, FileSpreadsheet, Zap, Box } from "lucide-react";
 const features = [
   {
     icon: Download,
-    title: "Xuất hàng loạt chỉ với một cú nhấp chuột",
+    title: "Tải hàng loạt chỉ với một cú nhấp chuột",
     description:
-      "Xuất hàng nghìn hoá đơn điện tử trong khoảng thời gian rộng ngay lập tức. Không còn phải tải từng hoá đơn một - nhận tất cả trong một gói duy nhất.",
+      "Tải hàng nghìn hoá đơn điện tử hàng loạt. Không còn phải tải từng hoá đơn một - nhận tất cả trong một gói duy nhất.",
   },
   {
     icon: FileSpreadsheet,
@@ -24,7 +24,7 @@ const features = [
     icon: Calendar,
     title: "Lọc ngày linh hoạt",
     description:
-      "Xuất dữ liệu từ bất kỳ khoảng thời gian nào - ngày, tháng hoặc cả năm. Lọc theo số hoá đơn của người bán/người mua để trích xuất dữ liệu chính xác.",
+      "Tải dữ liệu từ bất kỳ khoảng thời gian nào - ngày, tháng hoặc cả năm. Lọc theo số hoá đơn của người bán/người mua để trích xuất dữ liệu chính xác.",
   },
   {
     icon: Box,

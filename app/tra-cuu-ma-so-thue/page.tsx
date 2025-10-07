@@ -18,7 +18,7 @@ const features = [
   },
   {
     icon: FileDown,
-    title: "Xuất kết quả ra Excel",
+    title: "Tải kết quả ra Excel",
     description:
       "Dễ dàng xuất danh sách kết quả tra cứu ra file Excel để lưu trữ, báo cáo hoặc sử dụng cho các công việc kế toán khác.",
   },
