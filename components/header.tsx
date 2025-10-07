@@ -11,6 +11,7 @@ import { ThemeToggle } from "./theme-toggle";
 const links = [
   { href: "/", label: "Tải hóa đơn" },
   { href: "/tra-cuu-ma-so-thue", label: "Tra mã số thuế" },
+  { href: "/tai-hoa-don-goc", label: "Tải hóa đơn gốc" },
   // { href: "/lap-to-khai-thue", label: "Lập tờ khai" },
 ];
 

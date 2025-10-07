@@ -167,7 +167,7 @@ export function HeroSection() {
                 </a>
                 <br />
                 <a
-                  href="https://drive.google.com/file/d/1HFNYuayV-sD859gFHslkct2stsU9-ALF/view?usp=drive_link"
+                  href="https://drive.google.com/drive/folders/1E_JWnm7GR1xPyVgXlo6IZldz6XAKdJMc?usp=sharing"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 hover:underline"

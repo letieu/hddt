@@ -54,6 +54,14 @@ export async function Footer() {
                   Lập tờ khai thuế
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/tai-hoa-don-goc"
+                  className="text-muted-foreground hover:text-accent transition-colors"
+                >
+                  Tải hóa đơn gốc
+                </Link>
+              </li>
             </ul>
           </div>
 

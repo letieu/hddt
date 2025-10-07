@@ -18,7 +18,7 @@ const features = [
     icon: FileSpreadsheet,
     title: "Gói dữ liệu hoàn chỉnh",
     description:
-      "Nhận cả tệp tóm tắt Excel và tệp hoá đơn XML gốc trong một lần tải xuống. Hoàn hảo cho việc kế toán, phân tích và lưu trữ hồ sơ.",
+      "Nhận cả tệp tóm tắt Excel và tệp hoá đơn XML trong một lần tải xuống. Hoàn hảo cho việc kế toán, phân tích và lưu trữ hồ sơ.",
   },
   {
     icon: Calendar,
