@@ -1,6 +1,7 @@
 import { RainbowButton } from "@/components/magicui/rainbow-button";
 import { ArrowRight, Bot, Cloud, Smile } from "lucide-react";
 import Link from "next/link";
+import Downloader from "./downloader";
 
 export const metadata = {
   title: "Tải hóa đơn gốc hàng loạt",
@@ -52,6 +53,8 @@ export default function TaiHoaDonGocPage() {
             </div>
           </div>
         </section>
+
+        <Downloader />
       </main>
     </div>
   );
