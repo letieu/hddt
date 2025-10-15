@@ -1,5 +1,5 @@
-import { Bot, Search, Smile, Table } from "lucide-react";
-import { Downloader } from "./downloader";
+import { Search, Smile, Table } from "lucide-react";
+import { Downloader } from "../../components/hoadongoc/downloader";
 
 export const metadata = {
   title: "Tra cứu hoá đơn điện tử",

@@ -1,0 +1,107 @@
+## Provider list
+- [ ] 0314743623:Công ty TNHH Công nghệ Vĩnh Hy
+- [ ] 0104128565:Công ty TNHH Hệ thống thông tin FPT
+- [ ] 0102519041:Công ty Cổ phần Công nghệ tin học EFY Việt Nam
+- [ ] 0105987432:Công ty Cổ phần Đầu tư công nghệ và thương mại Softdreams
+- [ ] 0302999571:Công ty TNHH L.C.S
+- [ ] 0313963672:Công ty TNHH Soft Ware KK VAT
+- [ ] 0105232093:Công ty Cổ phần CyberLotus
+- [ ] 0311942758:Công ty TNHH Giải pháp công nghệ Ngô Gia Phát
+- [ ] 0302712571:Công ty Cổ phần Mắt Bão
+- [ ] 0103930279:Công ty Cổ phần công nghệ thẻ Nacencomm
+- [ ] 0105844836:Công ty Cổ phần Megabiz Việt Nam
+- [ ] 0312483391:Công ty TNHH Công nghệ LCD Việt Nam
+- [x] 0101243150:Công ty Cổ phần MISA
+- [ ] 0106026495:Công ty TNHH Hóa đơn điện tử M-INVOICE
+- [ ] 0313906508:Công ty Cổ phần Phát triển công nghệ Nguyễn Minh
+- [ ] 0101300842:Công ty TNHH Phát triển công nghệ Thái Sơn
+- [ ] 0306784030:Công ty TNHH Máy tính và truyền thông công nghệ kết nối
+- [ ] 0200638946:Công ty Cổ phần công nghệ số và in đồ họa
+- [ ] 0312303803:Công ty TNHH Win Tech Solution
+- [ ] 0100109106:Tập đoàn Công nghiệp - Viễn thông quân đội
+- [ ] 0102454468:Công ty Cổ phần Công nghệ thông tin Đông Nam Á
+- [ ] 0105937449:Công ty Cổ phần hóa đơn điện tử New-Invoice
+- [ ] 0108516079:Công ty Cổ phần Giải pháp phần mềm 3A
+- [ ] 0100686209:Tổng công ty Viễn thông Mobifone
+- [ ] 0101360697:Công ty Cổ phần BKAV
+- [ ] 0101162173:Công ty Cổ phần phát triển phần mềm ASIA
+- [ ] 0401486901:Công ty Cổ phần thương mại Visnam
+- [ ] 0200784873:Công ty Cổ phần Thiết bị điện - Điện tử Bách Khoa
+- [ ] 0100684378:Tập Đoàn Bưu chính viễn thông Việt Nam
+- [ ] 0106713804:Công ty Cổ phần dịch vụ T-VAN HILO
+- [ ] 0314209362:Công ty Cổ phần Minh Khang Group
+- [ ] 0101352495:Công ty Cổ phần Giải pháp hóa đơn điện tử Việt Nam
+- [ ] 0102182292:Công ty Cổ phần giải pháp thanh toán Việt Nam
+- [ ] 0106870211:Công ty Cổ phần ICORP
+- [ ] 0104614692:Công ty Cổ phần đầu tư và công nghệ idocNet
+- [ ] 0309612872:Công ty Cổ phần chữ ký số VI NA
+- [ ] 0309478306:Công ty Cổ phần TS24
+- [ ] 0315298333:Công ty TNHH Hóa đơn điện tử TCT
+- [ ] 0303609305:Công ty TNHH Tin học Tia lửa Việt
+- [ ] 0100727825:Công ty Cổ phần phần mềm quản lý doanh nghiệp
+- [ ] 0315467091:Công ty TNHH ACCONLINE.VN
+- [ ] 0315638251:Công ty Cổ phần công nghệ hóa đơn điện tử HT
+- [ ] 0105958921:Công ty Cổ phần công nghệ ITT
+- [ ] 0302431595:Công ty TNHH PA Việt Nam
+- [ ] 0103018807:Công ty Cổ phần tích hợp công nghệ VNISC
+- [ ] 0106820789:Công ty TNHH Giải pháp hóa đơn điện tử My – Invoice
+- [ ] 0310151055:Công ty Cổ phần Chứng số An toàn
+- [ ] 0303430876:Công ty Cổ phần công nghệ San Phú
+- [ ] 0301452923:Công ty TNHH Giấy vi tính Liên Sơn
+- [ ] 0314185087:Công ty TNHH Thương Mại dịch vụ Online VI NA
+- [ ] 0100687474:Công ty Cổ phần dịch vụ viễn thông và in Bưu điện
+- [ ] 0400462489:Công ty TNHH Tuần Châu
+- [ ] 3500456910:Công ty TNHH Minh Thư
+- [ ] 0104908371:Công ty Cổ phần phát triển công nghệ ACMAN
+- [ ] 0315191291:Công ty TNHH Tư vấn thương mại Trí Việt Luật
+- [ ] 0313844107:Công ty TNHH Đầu tư Hòn Ngọc Việt
+- [ ] 0311622035:Công ty TNHH Dịch vụ Trí Việt Luật
+- [ ] 0106361479:Công ty Cổ phần truyền số liệu Việt Nam
+- [ ] 0312270160:Công ty TNHH NC9 Việt Nam
+- [ ] 0104493085:Công ty Cổ phần giải pháp First Trust
+- [ ] 0101289966:Công ty TNHH Phần mềm Nhân Hòa
+- [ ] 0303211948:Công ty TNHH Kế toán và tư vấn V.L.C
+- [ ] 0101622374:Công ty Cổ phần Công nghệ và giải pháp Tâm Việt
+- [ ] 0310768095:Công ty TNHH Dịch vụ phần mềm AVSE
+- [ ] 0312961577:Công ty TNHH MTV in Bến Thành
+- [ ] 0313950909:Công ty TNHH ZAMO
+- [ ] 0311928954:Công ty Cổ phần công nghệ VIETINFO
+- [ ] 0103770970:Công ty Cổ phần phát triển phần mềm và công nghệ Bitware
+- [ ] 0305142231:Công ty Cổ phần phần mềm Rosy
+- [ ] 3702037020:Công ty TNHH MTV thương mại dịch vụ Trần Đình Tùng
+- [ ] 0101925883:Công ty TNHH Tổng công ty Công nghệ và Giải pháp CMC
+- [ ] 0316642395:Công ty TNHH Công nghệ và tư vấn Phương Nam
+- [ ] 0315194912:Công ty TNHH Dịch vụ kế toán - Tư vấn thuế TTL
+- [ ] 0315983667:Công ty Cô phần Công nghệ Phát triển hóa đơn điện tử Việt Nam
+- [ ] 0310926922:Công ty TNHH Phần mềm kế toán và dịch vụ thủ tục thuế Sài Gòn
+- [ ] 0101010702:Công ty Cổ phần Phần mềm Thăng Long
+- [ ] 0102720409:Công ty Cổ phần Hóa đơn điện tử TIG Thăng Long
+- [ ] 0314058603:Công ty TNHH Viễn thông Đông Sài Gòn
+- [ ] 0301448733:Công ty Cổ phần Tin học Lạc Việt
+- [ ] 0313253288:Công ty Cổ phần Công nghệ TADU
+- [ ] 0309889835:Công ty Cổ phần Công nghệ UNIT
+- [ ] 0202029650:Công ty Cổ phần phát triển và ứng dụng phần mềm Bách Khoa
+- [ ] 0108971656:Công ty Cổ phần My Software
+- [ ] 0312942260:Công ty TNHH Công nghệ HT Sài Gòn
+- [ ] 1201496252:Công ty TNHH WEBCASH Việt Nam
+- [ ] 0303549303:Công ty TNHH Phần mềm và Tư vấn Kim Tự Tháp
+- [ ] 0311914694:Công ty TNHH Phần mềm BRB
+- [ ] 0312617990:Công ty TNHH Nhóm Mây
+- [ ] 0109282176:Công ty Cổ phần Hóa đơn điện tử VININVOICE
+- [ ] 0102723181:Trung tâm Tin học và Công nghệ số
+- [ ] 0106858609:Công ty Cổ phần VETC
+- [ ] 0315151651:Công ty TNHH Phần mềm PVS
+- [ ] 0310151739:Công ty Cổ phần Dịch vụ Thương mại Việt Nam trực tuyến
+- [ ] 0312575123:Công ty TNHH Ecount Việt Nam
+- [ ] 0107732197:Công ty Cổ phần ATIS
+- [ ] 0101659906:Công ty Cổ phần GMO-Z.com RUNSYSTEM
+- [ ] 0103019524:Công ty Cổ phần Tin học - Viễn thông Hàng không
+- [ ] 0316114998:Công ty TNHH Bizzi VietNam
+- [ ] 0316636497:Công ty Cổ phần Công nghệ BEE
+- [ ] 0106249501:Công ty Cổ phần MONT-E
+- [ ] 0201802839:Công ty TNHH Tư vấn và Dịch vụ Home Casta
+- [ ] 4601328480:Công ty CP Tư vấn và Chuyển giao công nghệ Sơn Phát
+- [ ] 0104359717:Công ty Cổ phần công nghệ KIOTVIE
+
+## Custom by nb
+- [x] 0109266456 - CÔNG TY CỔ PHẦN GIAO THÔNG SỐ VIỆT NAM

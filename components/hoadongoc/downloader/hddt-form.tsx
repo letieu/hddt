@@ -7,12 +7,10 @@ import {
   InvoiceQueryType,
   InvoiceType,
 } from "@/lib/download/hoadon-api";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/lib/supabase/client";
-import { User } from "@supabase/supabase-js";
 
 function formatDateInput(date: Date) {
   const year = date.getFullYear();
@@ -59,32 +57,6 @@ export function HoadonGocForm({ onSearch, isBusy }: HoadonGocFormProps) {
     queryTypes: "",
   });
 
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const supabase = createClient();
-
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-      setIsLoggedIn(!!user);
-    };
-    getUser();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ?? null);
-        setIsLoggedIn(!!session?.user);
-      },
-    );
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, [supabase.auth]);
-
   const validate = () => {
     const newErrors = {
       username: "",
@@ -116,13 +88,7 @@ export function HoadonGocForm({ onSearch, isBusy }: HoadonGocFormProps) {
   };
 
   const handleSearchClick = () => {
-    if (!validate()) {
-      return;
-    }
-    if (!isLoggedIn) {
-      alert("Bạn cần đăng nhập để thực hiện chức năng này.");
-      return;
-    }
+    if (!validate()) return;
 
     onSearch({
       credential: { username, password },
@@ -291,3 +257,4 @@ export function HoadonGocForm({ onSearch, isBusy }: HoadonGocFormProps) {
     </form>
   );
 }
+
