@@ -53,6 +53,7 @@ type FailedXml = { invoice: InvoiceItem; queryType: InvoiceQueryType };
 export class InvoiceExportManager extends EventEmitter {
   private logs = new Map<string, InvoiceExportLog>();
   private lastInput: ExportInput | null = null;
+  private sharedAssetsAdded = new Set<string>();
 
   public invoicesSheet1: InvoiceItem[] = [];
   public invoicesSheet2: InvoiceItem[] = [];
@@ -205,6 +206,7 @@ export class InvoiceExportManager extends EventEmitter {
       this._log({ message: "❌ Không có dữ liệu để xuất.", status: "failed" });
       return;
     }
+    this.sharedAssetsAdded.clear();
     const input = this.lastInput;
     const downloadFiles = input.downloadXml || input.downloadHtml || input.downloadPdf;
     sendGAEvent("export_build", {
@@ -610,17 +612,14 @@ export class InvoiceExportManager extends EventEmitter {
       pdfDestFolder?.file(pdfFileName, pdfBlob);
     }
 
-    // Determine if we need to create HTML subfolder
-    // HTML should be downloaded if user checked the HTML option
     const shouldDownloadHtml = input.downloadHtml;
 
-    let htmlSubfolder: JSZip | null = null;
+    let htmlRootFolder: JSZip | null = null;
     if (shouldDownloadHtml) {
-      // If PDF conversion failed, put in html_fallback, otherwise in html folder
-      const htmlRootFolder = (pdfError && input.downloadPdf)
-        ? rootFolder.folder("html_fallback") 
-        : rootFolder.folder("html");
-      htmlSubfolder = htmlRootFolder?.folder(invoicePrefix) || null;
+      htmlRootFolder =
+        pdfError && input.downloadPdf
+          ? rootFolder.folder("html_fallback")
+          : rootFolder.folder("html");
     }
 
     // Add all other files from the original invoice zip
@@ -638,12 +637,19 @@ export class InvoiceExportManager extends EventEmitter {
           const xmlFilename = `${invoicePrefix}__${filename}`;
           xmlFolder?.file(xmlFilename, content);
         }
-      } else {
-        // Handle HTML, JS, images, and other files
-        // These should be kept in subfolder structure for each invoice
-        if (shouldDownloadHtml && htmlSubfolder) {
-          // Keep original filename structure in the subfolder
-          htmlSubfolder.file(filename, content);
+      } else if (shouldDownloadHtml && htmlRootFolder) {
+        if (lowerFilename.endsWith(".html")) {
+          // This is the main HTML file for the invoice.
+          // Rename it and place it in the htmlRootFolder.
+          const htmlFilename = `${invoicePrefix}.html`;
+          htmlRootFolder.file(htmlFilename, content);
+        } else {
+          // These are shared assets (JS, images, etc.)
+          // Add them to the htmlRootFolder only if they haven't been added before.
+          if (!this.sharedAssetsAdded.has(filename)) {
+            htmlRootFolder.file(filename, content);
+            this.sharedAssetsAdded.add(filename);
+          }
         }
       }
     }
