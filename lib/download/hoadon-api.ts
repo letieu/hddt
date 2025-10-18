@@ -1,6 +1,5 @@
 import { endOfDay, endOfMonth, startOfDay } from "../utils";
 import { RateLimiter } from "./rate-limiter";
-import * as Sentry from "@sentry/nextjs";
 
 const rateLimiter = new RateLimiter(
   1, // 3 requests per second
