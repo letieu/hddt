@@ -1,5 +1,4 @@
 import { EventEmitter } from "events";
-import * as Sentry from "@sentry/nextjs";
 import { convertHtmlToPdf } from "./pdf";
 import * as XLSX from "xlsx";
 import JSZip from "jszip";
@@ -47,7 +46,7 @@ export type InvoiceExportResult = {
 
 export type InvoiceItem = any;
 
-type FailedDetail = { invoice: InvoiceItem; queryType: InvoiceQueryType };
+type FailedDetail = { invoice: InvoiceItem; queryType: InvoiceItem };
 type FailedXml = { invoice: InvoiceItem; queryType: InvoiceQueryType };
 
 export class InvoiceExportManager extends EventEmitter {
@@ -121,7 +120,6 @@ export class InvoiceExportManager extends EventEmitter {
         failedFetches: this.failedFetches,
       });
     } catch (err: any) {
-      Sentry.captureException(err);
       console.error("Export failed:", err);
       sendGAEvent("export_failed", {
         invoiceType: input.invoiceType,
@@ -401,7 +399,6 @@ export class InvoiceExportManager extends EventEmitter {
         });
         invoice.xmlBlob = blob; // Attach blob to invoice object
       } catch (error: any) {
-        Sentry.captureException(error);
         if (error?.message?.includes("Không tồn tại")) {
           continue;
         }
@@ -445,7 +442,6 @@ export class InvoiceExportManager extends EventEmitter {
       await this._attachInvoiceDetails(invoices, queryType);
       return invoices;
     } catch (err) {
-      Sentry.captureException(err);
       this._log({
         id: `list-${queryType}`,
         message: `❌ Lỗi khi tải danh sách ${invoiceQueryTypeNames[queryType]}...`,
@@ -488,7 +484,6 @@ export class InvoiceExportManager extends EventEmitter {
             message: `✅ Chi tiết SP hóa đơn ${invoice.khhdon}/${invoice.shdon} (${i + 1}/${total})`,
           });
         } catch (err) {
-          Sentry.captureException(err);
           console.error(
             `Failed to fetch detail for invoice ${invoice.id}`,
             err,
@@ -560,7 +555,6 @@ export class InvoiceExportManager extends EventEmitter {
               });
             } catch (e: any) {
               pdfError = e;
-              Sentry.captureException(e);
               console.error(e);
               this._log({
                 id: `pdf-error-${invoice.id}`,
@@ -579,7 +573,6 @@ export class InvoiceExportManager extends EventEmitter {
             pdfError,
           );
         } catch (err) {
-          Sentry.captureException(err);
           console.error(`Failed to process invoice ${invoicePrefix}`, err);
           this._log({
             id: `process-error-${invoice.id}`,
