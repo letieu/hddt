@@ -39,8 +39,6 @@ export default function TaiHoaDonGocPage() {
             </div>
           </div>
         </section>
-
-        <Downloader />
       </main>
     </div>
   );

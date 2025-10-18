@@ -1,4 +1,5 @@
 "use client";
+import { Downloader } from "@/components/hoadongoc/downloader";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
@@ -43,6 +44,7 @@ export default function TestPage() {
         onChange={(e) => setInvoiceDetail(e.target.value)}
       />
       <Button onClick={handleDownloadPdf}>Download</Button>
+      <Downloader />
     </div>
   );
 }
