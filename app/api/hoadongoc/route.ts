@@ -1,8 +1,8 @@
-import { getDownloadProvider } from "@/lib/hoadongoc/hoadongoc-downloader";
+import { getDownloadProvider } from "@/lib/hoadongoc/downloader";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const { msttcgp, nbmst, id, ttkhac, cttkhac, khhdon, shdon } =
+  const { msttcgp, nbmst, id, ttkhac, cttkhac, khhdon, shdon, nbcks } =
     await req.json();
   const params = {
     msttcgp,
@@ -12,6 +12,7 @@ export async function POST(req: NextRequest) {
     cttkhac,
     khhdon,
     shdon,
+    nbcks,
   };
 
   const downloadProvider = getDownloadProvider(params);

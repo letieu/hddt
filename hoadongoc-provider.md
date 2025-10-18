@@ -1,38 +1,42 @@
 ## Provider list
-- [ ] 0314743623:Công ty TNHH Công nghệ Vĩnh Hy
-- [ ] 0104128565:Công ty TNHH Hệ thống thông tin FPT
-- [ ] 0102519041:Công ty Cổ phần Công nghệ tin học EFY Việt Nam
-- [ ] 0105987432:Công ty Cổ phần Đầu tư công nghệ và thương mại Softdreams
-- [ ] 0302999571:Công ty TNHH L.C.S
-- [ ] 0313963672:Công ty TNHH Soft Ware KK VAT
-- [ ] 0105232093:Công ty Cổ phần CyberLotus
-- [ ] 0311942758:Công ty TNHH Giải pháp công nghệ Ngô Gia Phát
-- [ ] 0302712571:Công ty Cổ phần Mắt Bão
-- [ ] 0103930279:Công ty Cổ phần công nghệ thẻ Nacencomm
-- [ ] 0105844836:Công ty Cổ phần Megabiz Việt Nam
-- [ ] 0312483391:Công ty TNHH Công nghệ LCD Việt Nam
+- [-] 0314743623:Công ty TNHH Công nghệ Vĩnh Hy
+- [-] 0104128565:Công ty TNHH Hệ thống thông tin FPT
+- [?] 0102519041:Công ty Cổ phần Công nghệ tin học EFY Việt Nam
+    - secret code unknown
+- [-] 0105987432:Công ty Cổ phần Đầu tư công nghệ và thương mại Softdreams
+- [-] 0302999571:Công ty TNHH L.C.S
+- [-] 0313963672:Công ty TNHH Soft Ware KK VAT
+- [-] 0105232093:Công ty Cổ phần CyberLotus
+- [-] 0311942758:Công ty TNHH Giải pháp công nghệ Ngô Gia Phát
+- [-] 0302712571:Công ty Cổ phần Mắt Bão
+- [-] 0103930279:Công ty Cổ phần công nghệ thẻ Nacencomm
+- [-] 0105844836:Công ty Cổ phần Megabiz Việt Nam
+- [-] 0312483391:Công ty TNHH Công nghệ LCD Việt Nam
 - [x] 0101243150:Công ty Cổ phần MISA
-- [ ] 0106026495:Công ty TNHH Hóa đơn điện tử M-INVOICE
-- [ ] 0313906508:Công ty Cổ phần Phát triển công nghệ Nguyễn Minh
-- [ ] 0101300842:Công ty TNHH Phát triển công nghệ Thái Sơn
-- [ ] 0306784030:Công ty TNHH Máy tính và truyền thông công nghệ kết nối
-- [ ] 0200638946:Công ty Cổ phần công nghệ số và in đồ họa
-- [ ] 0312303803:Công ty TNHH Win Tech Solution
-- [ ] 0100109106:Tập đoàn Công nghiệp - Viễn thông quân đội
-- [ ] 0102454468:Công ty Cổ phần Công nghệ thông tin Đông Nam Á
-- [ ] 0105937449:Công ty Cổ phần hóa đơn điện tử New-Invoice
-- [ ] 0108516079:Công ty Cổ phần Giải pháp phần mềm 3A
-- [ ] 0100686209:Tổng công ty Viễn thông Mobifone
-- [ ] 0101360697:Công ty Cổ phần BKAV
-- [ ] 0101162173:Công ty Cổ phần phát triển phần mềm ASIA
-- [ ] 0401486901:Công ty Cổ phần thương mại Visnam
-- [ ] 0200784873:Công ty Cổ phần Thiết bị điện - Điện tử Bách Khoa
-- [ ] 0100684378:Tập Đoàn Bưu chính viễn thông Việt Nam
+- [x] 0106026495:Công ty TNHH Hóa đơn điện tử M-INVOICE
+- [-] 0313906508:Công ty Cổ phần Phát triển công nghệ Nguyễn Minh
+- [-] 0101300842:Công ty TNHH Phát triển công nghệ Thái Sơn
+- [-] 0306784030:Công ty TNHH Máy tính và truyền thông công nghệ kết nối
+- [-] 0200638946:Công ty Cổ phần công nghệ số và in đồ họa
+- [-] 0312303803:Công ty TNHH Win Tech Solution
+- [?] 0100109106:Tập đoàn Công nghiệp - Viễn thông quân đội
+    - Re-Captcha
+- [-] 0102454468:Công ty Cổ phần Công nghệ thông tin Đông Nam Á
+- [-] 0105937449:Công ty Cổ phần hóa đơn điện tử New-Invoice
+- [-] 0108516079:Công ty Cổ phần Giải pháp phần mềm 3A
+- [-] 0100686209:Tổng công ty Viễn thông Mobifone
+- [?] 0101360697:Công ty Cổ phần BKAV
+    - Không có mã bí mật
+    - XML báo lỗi đã chỉnh sửa
+- [-] 0101162173:Công ty Cổ phần phát triển phần mềm ASIA
+- [-] 0401486901:Công ty Cổ phần thương mại Visnam
+- [-] 0200784873:Công ty Cổ phần Thiết bị điện - Điện tử Bách Khoa
+- [.] 0100684378:Tập Đoàn Bưu chính viễn thông Việt Nam
 - [ ] 0106713804:Công ty Cổ phần dịch vụ T-VAN HILO
 - [ ] 0314209362:Công ty Cổ phần Minh Khang Group
 - [ ] 0101352495:Công ty Cổ phần Giải pháp hóa đơn điện tử Việt Nam
 - [ ] 0102182292:Công ty Cổ phần giải pháp thanh toán Việt Nam
-- [ ] 0106870211:Công ty Cổ phần ICORP
+- [-] 0106870211:Công ty Cổ phần ICORP
 - [ ] 0104614692:Công ty Cổ phần đầu tư và công nghệ idocNet
 - [ ] 0309612872:Công ty Cổ phần chữ ký số VI NA
 - [ ] 0309478306:Công ty Cổ phần TS24
@@ -105,3 +109,4 @@
 
 ## Custom by nb
 - [x] 0109266456 - CÔNG TY CỔ PHẦN GIAO THÔNG SỐ VIỆT NAM
+- [ ] 4200240380 - Petrolimex - https://hoadon.petrolimex.com.vn

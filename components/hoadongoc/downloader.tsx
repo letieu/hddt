@@ -52,6 +52,7 @@ export function Downloader() {
           id: invoice.id,
           ttkhac: invoice.ttkhac,
           cttkhac: invoice.cttkhac,
+          nbcks: invoice.nbcks,
         }),
       });
 

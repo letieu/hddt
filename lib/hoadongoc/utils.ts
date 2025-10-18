@@ -1,4 +1,4 @@
-import { getDownloadProvider } from "./hoadongoc-downloader";
+import { getDownloadProvider } from "./downloader";
 import { getProviderDetail } from "./hoadongoc-provider-list";
 import { Invoice, InvoiceWithProvider } from "./types";
 

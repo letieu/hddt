@@ -1,4 +1,4 @@
-import { DownloadParams } from "./hoadongoc-downloader";
+import { DownloadParams } from "./downloader";
 
 export type ProviderInfo = {
   MST: string;
@@ -105,7 +105,7 @@ const providerList = [
     name: "Công ty TNHH Hóa đơn điện tử M-INVOICE",
     MST: "0106026495",
     homePage: "https://minvoice.vn/",
-    lookup: "https://tracuuhoadon.minvoice.com.vn/single/invoice",
+    lookup: "https://tracuuhoadon.minvoice.com.vn/tra-cuu-hoa-don",
   },
   {
     STT: "15",

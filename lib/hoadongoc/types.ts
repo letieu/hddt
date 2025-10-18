@@ -21,6 +21,7 @@ export type Invoice = {
     kdlieu: string;
     dlieu: string;
   }[];
+  nbcks: string;
 };
 
 export type InvoiceWithProvider = Invoice & {
