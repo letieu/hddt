@@ -236,7 +236,7 @@ export function InputForm(props: {
               </TabsList>
               <TabsContent value="purchase">
                 <div className="flex flex-col space-y-1.5 pt-4">
-                  <Label htmlFor="invoice-seller">Mã số thuế người bán</Label>
+                  <Label htmlFor="invoice-seller">MST người bán (không bắt buộc)</Label>
                   <Input
                     id="invoice-seller"
                     placeholder="Nhập mã số thuế người bán"
@@ -247,7 +247,7 @@ export function InputForm(props: {
               </TabsContent>
               <TabsContent value="sold">
                 <div className="flex flex-col space-y-1.5 pt-4">
-                  <Label htmlFor="invoice-buyer">Mã số thuế người mua</Label>
+                  <Label htmlFor="invoice-buyer">MST người mua (không bắt buộc)</Label>
                   <Input
                     id="invoice-buyer"
                     placeholder="Nhập mã số thuế người mua"
