@@ -48,7 +48,7 @@ export function InputForm(props: {
   const [downloadXml, setDownloadXml] = useState(true);
   const [downloadHtml, setDownloadHtml] = useState(true);
   const [downloadPdf, setDownloadPdf] = useState(false);
-  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(true);
 
   const today = new Date();
   const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
