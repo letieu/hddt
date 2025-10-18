@@ -133,26 +133,15 @@ export function InputForm(props: {
       <CardHeader>
         <CardTitle>Nhập thông tin</CardTitle>
         <CardDescription>
-          Sử dụng thông tin đăng nhập từ trang{" "}
-          <a
-            href="https://hoadondientu.gdt.gov.vn/"
-            target="_blank"
-            className="text-accent underline"
-          >
-            hoadondientu.gdt.gov.vn
-          </a>
-          <Alert className="mt-2">
-            <ShieldCheck className="h-4 w-4" />
-            <AlertTitle>Lo ngại về bảo mật?</AlertTitle>
-            <AlertDescription>
+            <div className="flex items-center gap-2">
+              <span>Lo ngại về bảo mật? </span>
               <Link
                 href="/blog/tai-hoa-don-extension"
                 className="font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent"
               >
-                Sử dụng extension của chúng tôi
+                Sử dụng Chrome extension
               </Link>{" "}
-            </AlertDescription>
-          </Alert>
+            </div>
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -236,7 +225,9 @@ export function InputForm(props: {
               </TabsList>
               <TabsContent value="purchase">
                 <div className="flex flex-col space-y-1.5 pt-4">
-                  <Label htmlFor="invoice-seller">MST người bán (không bắt buộc)</Label>
+                  <Label htmlFor="invoice-seller">
+                    MST người bán (không bắt buộc)
+                  </Label>
                   <Input
                     id="invoice-seller"
                     placeholder="Nhập mã số thuế người bán"
@@ -247,7 +238,9 @@ export function InputForm(props: {
               </TabsContent>
               <TabsContent value="sold">
                 <div className="flex flex-col space-y-1.5 pt-4">
-                  <Label htmlFor="invoice-buyer">MST người mua (không bắt buộc)</Label>
+                  <Label htmlFor="invoice-buyer">
+                    MST người mua (không bắt buộc)
+                  </Label>
                   <Input
                     id="invoice-buyer"
                     placeholder="Nhập mã số thuế người mua"
@@ -257,110 +250,98 @@ export function InputForm(props: {
                 </div>
               </TabsContent>
             </Tabs>
-            <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
-              <CollapsibleTrigger className="text-sm font-bold flex items-center gap-1">
-                <ChevronRight
-                  className={cn(
-                    "h-4 w-4 transition-transform transform",
-                    isAdvancedOpen && "rotate-90",
-                  )}
+
+            <div className="space-y-2">
+              <Label>Loại truy vấn</Label>
+              {errors.queryTypes && (
+                <p className="text-sm text-destructive">{errors.queryTypes}</p>
+              )}
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="query-type-query"
+                  checked={queryTypes.includes("query")}
+                  onCheckedChange={(checked) =>
+                    setQueryTypes((prev) =>
+                      checked
+                        ? [...prev, "query"]
+                        : prev.filter((t) => t !== "query"),
+                    )
+                  }
                 />
-                Tùy chọn nâng cao...
-              </CollapsibleTrigger>
-              <CollapsibleContent className="pt-4 space-y-4">
-                <div className="space-y-2">
-                  <Label>Loại truy vấn</Label>
-                  {errors.queryTypes && (
-                    <p className="text-sm text-destructive">{errors.queryTypes}</p>
-                  )}
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="query-type-query"
-                      checked={queryTypes.includes("query")}
-                      onCheckedChange={(checked) =>
-                        setQueryTypes((prev) =>
-                          checked
-                            ? [...prev, "query"]
-                            : prev.filter((t) => t !== "query"),
-                        )
-                      }
-                    />
-                    <Label htmlFor="query-type-query" className="font-normal">
-                      Hóa đơn điện tử
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="query-type-sco-query"
-                      checked={queryTypes.includes("sco-query")}
-                      onCheckedChange={(checked) =>
-                        setQueryTypes((prev) =>
-                          checked
-                            ? [...prev, "sco-query"]
-                            : prev.filter((t) => t !== "sco-query"),
-                        )
-                      }
-                    />
-                    <Label htmlFor="query-type-sco-query" className="font-normal">
-                      Hóa đơn có mã từ máy tính tiền
-                    </Label>
-                  </div>
+                <Label htmlFor="query-type-query" className="font-normal">
+                  Hóa đơn điện tử
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="query-type-sco-query"
+                  checked={queryTypes.includes("sco-query")}
+                  onCheckedChange={(checked) =>
+                    setQueryTypes((prev) =>
+                      checked
+                        ? [...prev, "sco-query"]
+                        : prev.filter((t) => t !== "sco-query"),
+                    )
+                  }
+                />
+                <Label htmlFor="query-type-sco-query" className="font-normal">
+                  Hóa đơn có mã từ máy tính tiền
+                </Label>
+              </div>
+            </div>
+            <div className="space-y-2 pt-4">
+              <Label>Loại file tải về</Label>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="download-xml"
+                  checked={downloadXml}
+                  onCheckedChange={(checked) => setDownloadXml(!!checked)}
+                />
+                <Label htmlFor="download-xml" className="font-normal">
+                  Tải file XML
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="download-html"
+                  checked={downloadHtml}
+                  onCheckedChange={(checked) => setDownloadHtml(!!checked)}
+                />
+                <Label htmlFor="download-html" className="font-normal">
+                  Tải file HTML
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="download-pdf"
+                  checked={downloadPdf}
+                  onCheckedChange={(checked) => setDownloadPdf(!!checked)}
+                />
+                <Label htmlFor="download-pdf" className="font-normal">
+                  Tải file PDF
+                </Label>
+              </div>
+            </div>
+            <div className="space-y-2 pt-4">
+              <Label>Merge chi tiết sản phẩm</Label>
+              <RadioGroup
+                value={mergeDetails ? "yes" : "no"}
+                onValueChange={(value) => setMergeDetails(value === "yes")}
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="yes" id="merge-yes" />
+                  <Label htmlFor="merge-yes" className="font-normal">
+                    Gộp chi tiết sản phẩm vào sheet chính
+                  </Label>
                 </div>
-                <div className="space-y-2 pt-4">
-                  <Label>Loại file tải về</Label>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="download-xml"
-                      checked={downloadXml}
-                      onCheckedChange={(checked) => setDownloadXml(!!checked)}
-                    />
-                    <Label htmlFor="download-xml" className="font-normal">
-                      Tải file XML
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="download-html"
-                      checked={downloadHtml}
-                      onCheckedChange={(checked) => setDownloadHtml(!!checked)}
-                    />
-                    <Label htmlFor="download-html" className="font-normal">
-                      Tải file HTML
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="download-pdf"
-                      checked={downloadPdf}
-                      onCheckedChange={(checked) => setDownloadPdf(!!checked)}
-                    />
-                    <Label htmlFor="download-pdf" className="font-normal">
-                      Tải file PDF
-                    </Label>
-                  </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="no" id="merge-no" />
+                  <Label htmlFor="merge-no" className="font-normal">
+                    Tạo sheet "DS sản phẩm" riêng
+                  </Label>
                 </div>
-                <div className="space-y-2 pt-4">
-                  <Label>Merge chi tiết sản phẩm</Label>
-                  <RadioGroup
-                    value={mergeDetails ? "yes" : "no"}
-                    onValueChange={(value) => setMergeDetails(value === "yes")}
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="yes" id="merge-yes" />
-                      <Label htmlFor="merge-yes" className="font-normal">
-                        Gộp chi tiết sản phẩm vào sheet chính
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="no" id="merge-no" />
-                      <Label htmlFor="merge-no" className="font-normal">
-                        Tạo sheet "DS sản phẩm" riêng
-                      </Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
+              </RadioGroup>
+            </div>
           </div>
         </form>
       </CardContent>

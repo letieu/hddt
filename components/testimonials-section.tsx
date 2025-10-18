@@ -1,67 +1,62 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Star } from "lucide-react"
+import Image from "next/image";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
-const testimonials = [
-  {
-    name: "David Kim",
-    role: "Finance Director",
-    company: "RetailMax Corp",
-    content:
-      "This tool saved us 40+ hours per month. We can now export entire year's worth of e-invoice data in minutes instead of days.",
-    rating: 5,
-  },
-  {
-    name: "Lisa Martinez",
-    role: "Accounting Manager",
-    company: "GlobalTrade Ltd",
-    content:
-      "The Excel + XML bundle format is perfect for our audits. Having both summary data and original files in one download is a game-changer.",
-    rating: 5,
-  },
-  {
-    name: "Ahmed Hassan",
-    role: "Operations Head",
-    company: "TechSupply Inc",
-    content:
-      "We process thousands of invoices monthly. This bulk export tool eliminated our biggest data management bottleneck completely.",
-    rating: 5,
-  },
-]
-
-export function TestimonialsSection() {
+export default function TestimonialsSection() {
   return (
-    <section id="testimonials" className="py-20 px-4 bg-card">
+    <section
+      id="testimonials"
+      className="py-24 px-4 bg-gradient-to-b from-background to-muted/30"
+    >
       <div className="container mx-auto max-w-6xl">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-card-foreground mb-4 text-balance">
-            Trusted by finance teams worldwide
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
-            See how our e-invoice export tool is helping businesses streamline their data management.
-          </p>
-        </div>
+        <h2 className="text-center text-4xl font-extrabold tracking-tight text-foreground md:text-5xl">
+          Khách hàng nói gì về chúng tôi
+        </h2>
+        <p className="mt-4 text-center text-lg text-muted-foreground max-w-2xl mx-auto">
+          Cảm ơn Khách hàng đã tin tưởng và sử dụng sản phẩm của chúng tôi.
+        </p>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <Card key={index} className="bg-background border-border">
-              <CardContent className="p-6">
-                <div className="flex mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-accent text-accent" />
-                  ))}
-                </div>
-                <blockquote className="text-card-foreground mb-4 text-pretty">&quot;{testimonial.content}&quot;</blockquote>
-                <div className="border-t pt-4">
-                  <div className="font-semibold text-card-foreground">{testimonial.name}</div>
-                  <div className="text-sm text-muted-foreground">
-                    {testimonial.role} at {testimonial.company}
-                  </div>
-                </div>
+        <div className="mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            {
+              name: "Anh Nguyên",
+              text: "Phần mềm rất ngon, mà giá rẻ hơn hẳn các bên khác.",
+              img: "/testimonial/01.jpg",
+            },
+            {
+              name: "Anh Minh",
+              text: "Phần mềm tải số lượng lớn rất ổn định.",
+              img: "/testimonial/02.jpg",
+            },
+            {
+              name: "Anh Tuân",
+              text: "Phần mềm dùng OK, hỗ trợ quá OK.",
+              img: "/testimonial/03.jpg",
+            },
+          ].map((testimonial, i) => (
+            <Card
+              key={i}
+              className="overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 bg-card border border-border/40 py-0"
+            >
+              <CardHeader className="relative h-[432px] w-full">
+                <Image
+                  src={testimonial.img}
+                  alt={testimonial.name}
+                  fill
+                  className="object-cover object-center rounded-t-2xl"
+                />
+              </CardHeader>
+              <CardContent className="text-center pb-1">
+                <CardTitle className="text-lg font-semibold">
+                  {testimonial.name}
+                </CardTitle>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+                  “{testimonial.text}”
+                </p>
               </CardContent>
             </Card>
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }

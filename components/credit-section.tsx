@@ -21,14 +21,6 @@ type CreditOption = {
 };
 const creditOptions: CreditOption[] = [
   {
-    id: "a1",
-    name: "Gói A1",
-    credits: 50,
-    price: 30_000,
-    description: "(≈) 20 lượt xuất file",
-    isPopular: false,
-  },
-  {
     id: "a2",
     name: "Gói A2",
     credits: 100,
@@ -40,7 +32,7 @@ const creditOptions: CreditOption[] = [
     id: "a3",
     name: "Gói A3",
     credits: 99999999,
-    price: 300000,
+    price: 500000,
     description: "Trọn đời, không giới hạn số lần",
     isPopular: true,
   },
@@ -183,7 +175,7 @@ export function CreditSection() {
             Số credit phụ thuộc vào tổng số ngày trong khoảng thời gian xuất hóa
             đơn
           </p>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
             {creditOptions.map((option) => (
               <Card
                 key={option.id}

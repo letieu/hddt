@@ -18,13 +18,13 @@ const features = [
     icon: FileSpreadsheet,
     title: "Gói dữ liệu hoàn chỉnh",
     description:
-      "Nhận cả tệp tóm tắt Excel và tệp hoá đơn XML trong một lần tải xuống. Hoàn hảo cho việc kế toán, phân tích và lưu trữ hồ sơ.",
+      "Nhận cả tệp tóm tắt Excel và XML, HTML, PDF trong một lần tải xuống. Hoàn hảo cho việc kế toán, phân tích và lưu trữ hồ sơ.",
   },
   {
     icon: Calendar,
     title: "Lọc ngày linh hoạt",
     description:
-      "Tải dữ liệu từ bất kỳ khoảng thời gian nào - ngày, tháng hoặc cả năm. Lọc theo số hoá đơn của người bán/người mua để trích xuất dữ liệu chính xác.",
+      "Tải dữ liệu từ bất kỳ khoảng thời gian nào - tháng hoặc cả năm.",
   },
   {
     icon: Box,
@@ -32,6 +32,13 @@ const features = [
     description:
       "File Excel đã bao gồm thông tin chi tiết về sản phẩm, đơn giá, số lượng, thành tiền, ...",
   },
+];
+
+const featureColors = [
+  "bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400",
+  "bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-400",
+  "bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400",
+  "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-400",
 ];
 
 export function FeaturesSection() {
@@ -43,7 +50,8 @@ export function FeaturesSection() {
             Tại sao chọn công cụ tải hoá đơn điện tử của chúng tôi?
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
-            Tải hóa đơn điện tử, hóa đơn khởi tạo từ máy tính tiền hàng loạt, hỗ trợ file excel, PD, XML, HTML
+            Tải hóa đơn điện tử, hóa đơn khởi tạo từ máy tính tiền hàng loạt, hỗ
+            trợ file excel, PDF, XML, HTML
           </p>
         </div>
 
@@ -54,8 +62,10 @@ export function FeaturesSection() {
               className="border-border hover:shadow-lg transition-shadow"
             >
               <CardHeader>
-                <div className="h-12 w-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
-                  <feature.icon className="h-6 w-6 text-accent" />
+                <div
+                  className={`h-12 w-12 rounded-lg ${featureColors[index % featureColors.length]} flex items-center justify-center mb-4`}
+                >
+                  <feature.icon className="h-6 w-6" />
                 </div>
                 <CardTitle className="text-xl text-card-foreground">
                   {feature.title}

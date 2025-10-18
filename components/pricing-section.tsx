@@ -18,13 +18,6 @@ const formatPrice = (price: number) => {
 
 const plans = [
   {
-    name: "Gói A1",
-    price: 30000,
-    description: "Gói nhỏ cho nhu cầu không thường xuyên.",
-    features: ["50 credits", "(≈) 20 lượt xuất file", "Hỗ trợ qua email"],
-    popular: false,
-  },
-  {
     name: "Gói A2",
     price: 50000,
     description: "Gói phổ biến, phù hợp cho hầu hết người dùng.",
@@ -33,27 +26,16 @@ const plans = [
   },
   {
     name: "Gói A3",
-    price:300000,
+    price:500000,
     description: "Trọn đời, không giới hạn số lần",
     features: ["999999999999 credits", "Không giới hạn số lần", "Hỗ trợ ưu tiên"],
     popular: true,
-  },
-  {
-    name: "Doanh nghiệp",
-    price: "Custom",
-    description: "Giải pháp linh hoạt cho các doanh nghiệp lớn.",
-    features: [
-      "Số credit không giới hạn",
-      "Tích hợp theo yêu cầu",
-      "Hỗ trợ chuyên sâu",
-    ],
-    popular: false,
   },
 ];
 
 export function PricingSection() {
   return (
-    <section id="pricing" className="py-20 px-4 bg-card">
+    <section id="pricing" className="py-20 px-4 bg-background">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-balance">
@@ -64,7 +46,7 @@ export function PricingSection() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
           {plans.map((plan, index) => (
             <Card
               key={index}
@@ -107,7 +89,7 @@ export function PricingSection() {
                 </ul>
                 <PricingButton
                   planName={plan.name}
-                  isCustom={plan.price === "Custom"}
+                  isCustom={false}
                   isPopular={plan.popular}
                 />
               </CardContent>
