@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Toaster } from "@/components/ui/sonner";
 import { Check, Search, FileDown, Users } from "lucide-react";
 import { Metadata } from "next";
 
@@ -66,6 +67,7 @@ export const metadata: Metadata = {
 export default function MstPage() {
   return (
     <div className="min-h-screen bg-background">
+      <Toaster />
       <main>
         <section className="py-20 px-4 bg-gradient-to-b from-background to-card">
           <div className="container mx-auto max-w-6xl text-center">

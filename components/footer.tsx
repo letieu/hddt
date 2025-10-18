@@ -38,14 +38,7 @@ export async function Footer() {
                   Tải hóa đơn điện tử
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/tra-cuu-ma-so-thue"
-                  className="text-muted-foreground hover:text-accent transition-colors"
-                >
-                  Tra mã số thuế
-                </Link>
-              </li>
+
               <li>
                 <Link
                   href="/lap-to-khai-thue"

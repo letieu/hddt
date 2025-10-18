@@ -9,12 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 1,
     },
-    {
-      url: "https://taihoadon.online/tra-cuu-ma-so-thue",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
+
     {
       url: "https://taihoadon.online/lap-to-khai-thue",
       lastModified: new Date(),

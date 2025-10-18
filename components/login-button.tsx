@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,6 +21,11 @@ export function LoginButton({
   className?: string;
 }) {
   const supabase = createClient();
+  const [redirectTo, setRedirectTo] = useState("");
+
+  useEffect(() => {
+    setRedirectTo(window.location.href);
+  }, []);
 
   return (
     <Dialog>
@@ -77,6 +83,7 @@ export function LoginButton({
           appearance={{ theme: ThemeSupa }}
           providers={["google"]}
           socialLayout="vertical"
+          redirectTo={redirectTo}
         />
       </DialogContent>
     </Dialog>

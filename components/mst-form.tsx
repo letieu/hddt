@@ -1,6 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  FunctionsFetchError,
+  FunctionsHttpError,
+  FunctionsRelayError,
+  User,
+} from "@supabase/supabase-js";
 import { Loader2 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "./ui/label";
@@ -31,6 +37,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { toast } from "sonner";
 import { sendGAEvent } from "@next/third-parties/google";
 
 export function MstForm() {
@@ -38,24 +45,114 @@ export function MstForm() {
   const [results, setResults] = useState<any[]>([]);
   const [selectedType, setSelectedType] = useState<string>("cn");
   const [loading, setLoading] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const supabase = createClient();
 
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user);
+      setIsLoggedIn(!!user);
+    };
+    getUser();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+        setIsLoggedIn(!!session?.user);
+      },
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [supabase.auth]);
+
+  const checkCredit = async (creditsToDeduct: number) => {
+    const { error } = await supabase.functions.invoke("check-credit", {
+      body: { creditAmount: creditsToDeduct },
+    });
+
+    if (!error) {
+      return;
+    }
+
+    let errorMessage;
+    if (error instanceof FunctionsHttpError) {
+      const errorResponse = await error.context.json();
+      errorMessage = errorResponse?.error ?? error.message;
+    } else if (error instanceof FunctionsRelayError) {
+      errorMessage = error.message;
+    } else if (error instanceof FunctionsFetchError) {
+      errorMessage = error.message;
+    }
+
+    return errorMessage;
+  };
+
+  const deductCredit = async (creditsToDeduct: number) => {
+    toast("Đang trừ credit...");
+    try {
+      const { data, error } = await supabase.functions.invoke("deduct-credit", {
+        body: { creditAmount: creditsToDeduct },
+      });
+      if (error) {
+        throw error;
+      }
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      toast.success("Thành công", {
+        description: "Đã trừ credit thành công.",
+      });
+      window.dispatchEvent(new Event("credit-update"));
+    } catch (e: any) {
+      toast.error("Lỗi", {
+        description: `Lỗi khi trừ credit: ${e.message}. Vui lòng liên hệ hỗ trợ.`,
+      });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isLoggedIn || !user) {
+      toast.error("Yêu cầu đăng nhập", {
+        description: "Bạn cần đăng nhập để thực hiện chức năng này.",
+      });
+      return;
+    }
     const taxIds = inputText
       .split("\n")
       .map((id) => id.trim())
       .filter((id) => id.length > 0);
 
     if (taxIds.length === 0) {
-      alert("Vui lòng nhập mã số thuế");
+      toast.error("Lỗi", {
+        description: "Vui lòng nhập mã số thuế",
+      });
+      return;
+    }
+
+    const creditsToDeduct = taxIds.length;
+    const errorMessage = await checkCredit(creditsToDeduct);
+    if (errorMessage) {
+      setResults([
+        {
+          MST: "ERROR",
+          "Tên người nộp thuế": errorMessage,
+        },
+      ]);
       return;
     }
 
     sendGAEvent("check_mst_start");
     setLoading(true);
     setResults([]); // Clear previous results
+    let successfulLookups = 0;
     try {
       const allCrawlData: any[] = [];
       for (const mst of taxIds) {
@@ -77,6 +174,7 @@ export function MstForm() {
 
         if (data?.data && data.data.length > 0) {
           allCrawlData.push(...data.data);
+          successfulLookups++;
         } else {
           allCrawlData.push({
             MST: mst,
@@ -89,6 +187,9 @@ export function MstForm() {
       }
 
       setResults(allCrawlData);
+      if (successfulLookups > 0) {
+        await deductCredit(successfulLookups);
+      }
       sendGAEvent("check_mst_success");
     } catch (e: any) {
       console.error("Unexpected error:", e);
@@ -150,12 +251,8 @@ export function MstForm() {
             <div className="space-y-4 mb-4">
               <div className="grid w-full items-center gap-1.5">
                 <Label htmlFor="input-tax-ids">
-                  Nhập danh sách MST/Căn cước (mỗi mã một dòng)
+                  Nhập danh sách MST/Căn cước (mỗi mã một dòng) (1 credit/MST)
                 </Label>
-                <div className="flex text-muted-foreground text-sm">
-                  Tra cứu mã số thuế online hoàn toàn miễn phí và không cần đăng
-                  ký
-                </div>
                 <Textarea
                   id="input-tax-ids"
                   placeholder={`1234567890

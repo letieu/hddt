@@ -184,3 +184,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+[data-sonner-toast][data-type="success"] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+[data-sonner-toast][data-type="error"] {
+  background: var(--destructive);
+  color: var(--destructive-foreground);
+}
