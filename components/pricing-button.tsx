@@ -4,6 +4,10 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
 
 interface PricingButtonProps {
   planName: string;
@@ -20,6 +24,9 @@ export function PricingButton({
   const supabase = createClient();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [redirectTo, setRedirectTo] = useState("");
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -31,6 +38,7 @@ export function PricingButton({
     };
 
     fetchUser();
+    setRedirectTo(window.location.href);
   }, [supabase]);
 
   const handlePurchaseClick = () => {
@@ -46,21 +54,76 @@ export function PricingButton({
     if (user) {
       router.push("/dashboard");
     } else {
-      alert("Vui lòng đăng nhập để mua credit.");
+      setShowLoginPopup(true);
     }
   };
 
   return (
-    <Button
-      onClick={handlePurchaseClick}
-      className={`w-full mt-auto ${
-        isPopular
-          ? "bg-accent text-accent-foreground hover:bg-accent/90"
-          : "bg-primary text-primary-foreground hover:bg-primary/90"
-      }`}
-    >
-      {isCustom ? "Liên hệ" : "Mua ngay"}
-    </Button>
+    <Dialog open={showLoginPopup} onOpenChange={setShowLoginPopup}>
+      <DialogTrigger asChild>
+        <Button
+          onClick={handlePurchaseClick}
+          className={`w-full mt-auto ${
+            isPopular
+              ? "bg-accent text-accent-foreground hover:bg-accent/90"
+              : "bg-primary text-primary-foreground hover:bg-primary/90"
+          }`}
+        >
+          {isCustom ? "Liên hệ" : "Mua ngay"}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Đăng nhập/đăng ký</DialogTitle>
+        </DialogHeader>
+        <Auth
+          localization={{
+            variables: {
+              sign_in: {
+                email_label: "Emal",
+                password_label: "Mật khẩu",
+                email_input_placeholder: "Email",
+                password_input_placeholder: "Mật khẩu",
+                button_label: "Đăng nhập",
+                loading_button_label: "Đăng nhập ...",
+                social_provider_text: "Đăng nhập với google",
+                link_text: "Đã có tài khỏan?, đăng nhập",
+              },
+              sign_up: {
+                email_label: "Emal",
+                password_label: "Mật khẩu",
+                email_input_placeholder: "Email",
+                password_input_placeholder: "Mật khẩu",
+                button_label: "Đăng ký",
+                loading_button_label: "Đăng ký ...",
+                social_provider_text: "Đăng nhập với google",
+                link_text: "Chưa có tài khỏan, đăng ký",
+                confirmation_text: "Kiểm tra email để lấy link xác nhận",
+              },
+              forgotten_password: {
+                email_label: "Emal",
+                password_label: "Mật khẩu",
+                email_input_placeholder: "Email",
+                button_label: "Xác nhận",
+                loading_button_label: "Xác nhận ...",
+                link_text: "Quên mật khẩu",
+                confirmation_text: "Kiểm tra email để lấy link xác nhận",
+              },
+              update_password: {
+                password_label: "Mật khẩu",
+                button_label: "Xác nhận",
+                loading_button_label: "Xác nhận ...",
+                confirmation_text: "Kiểm tra email để lấy link xác nhận",
+              },
+            },
+          }}
+          supabaseClient={supabase}
+          appearance={{ theme: ThemeSupa }}
+          providers={["google"]}
+          socialLayout="vertical"
+          redirectTo={redirectTo}
+        />
+      </DialogContent>
+    </Dialog>
   );
 }
-

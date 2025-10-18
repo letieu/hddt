@@ -36,7 +36,7 @@ export function LoginButton({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Đăng nhập</DialogTitle>
+          <DialogTitle>Đăng nhập/đăng ký</DialogTitle>
         </DialogHeader>
         <Auth
           localization={{

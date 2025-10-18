@@ -35,13 +35,12 @@ export function HeroSection() {
       <div className="container mx-auto max-w-6xl text-center">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 text-balance">
-            Tải Hóa Đơn Điện Tử{" "}
-            <span className="text-accent">Hàng Loạt</span>
+            Tải Hóa Đơn Điện Tử <span className="text-accent">Hàng Loạt</span>
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto text-pretty">
-            Tải hàng nghìn hóa đơn điện tử chỉ
-            trong một cú nhấp chuột. Nhận gói dữ liệu hoàn chỉnh với file{" "}
-            <strong>Excel</strong> và <strong>XML</strong>, <strong>PDF</strong>
+            Tải hàng nghìn hóa đơn điện tử chỉ trong một cú nhấp chuột. Nhận gói
+            dữ liệu hoàn chỉnh với file <strong>Excel</strong> và{" "}
+            <strong>XML</strong>, <strong>PDF</strong>
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -97,7 +96,7 @@ export function HeroSection() {
                       Danh sách hóa đơn
                     </p>
                     <p className="text-muted-foreground">
-                      File excel danh sách hóa đơn bán ra, mua vào
+                      File excel list hóa đơn bán ra, mua vào, bảng kê sản phẩm
                     </p>
                   </div>
                 </div>
@@ -120,10 +119,10 @@ export function HeroSection() {
                   </div>
                   <div>
                     <p className="font-semibold text-foreground">
-                      File XML theo hóa đơn
+                      File XML, HTML, PDF theo hóa đơn
                     </p>
                     <p className="text-muted-foreground">
-                      Toàn bộ file XML kèm theo danh sách hóa đơn
+                      Toàn bộ file kèm theo danh sách hóa đơn
                     </p>
                   </div>
                 </div>
@@ -133,10 +132,11 @@ export function HeroSection() {
                   </div>
                   <div>
                     <p className="font-semibold text-foreground">
-                      File HTML theo hóa đơn
+                      Định dạng để dễ dàng nhập vào các phần mềm kế toán như Misa
                     </p>
                     <p className="text-muted-foreground">
-                      Toàn bộ file HTML kèm theo, dễ dàng để in hoặc xuất <strong>PDF</strong>
+                      File Excel được định dạng để dễ dàng nhập vào các phần mềm kế
+                      toán như Misa hoặc Tạo bảng kê, tờ khai thuế.
                     </p>
                   </div>
                 </div>
@@ -153,9 +153,7 @@ export function HeroSection() {
               File demo
             </AlertDialogTitle>
             <div>
-              <p>
-                Dưới đây là các file demo để bạn có thể xem trước kết quả.
-              </p>
+              <p>Dưới đây là các file demo để bạn có thể xem trước kết quả.</p>
               <div className="mt-4 space-y-2 text-sm">
                 <a
                   href="https://docs.google.com/spreadsheets/d/1blcRYKM6-ZT0YU0vLSGm2zYGhECQPGFAIVtDSa4j-Nk/edit?usp=sharing"
@@ -207,9 +205,7 @@ export function HeroSection() {
               Liên hệ hỗ trợ
             </AlertDialogTitle>
             <div className="text-center">
-              <p className="mb-4">
-                Quét mã QR để liên hệ qua Zalo
-              </p>
+              <p className="mb-4">Quét mã QR để liên hệ qua Zalo</p>
               <div className="flex justify-center">
                 <div className="flex flex-col items-center p-4 border rounded-lg bg-background shadow-sm">
                   <p className="text-sm font-semibold text-foreground mb-2">
