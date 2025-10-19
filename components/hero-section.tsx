@@ -81,8 +81,8 @@ export function HeroSection() {
         </div>
 
         <div className="mt-16 relative">
-          <div className="rounded-lg shadow-2xl p-8 max-w-4xl mx-auto">
-            <div className="bg-muted/30 rounded-lg p-8 text-left">
+          <div className="rounded-lg shadow-2xl max-w-4xl mx-auto">
+            <div className="bg-background dark:bg-card rounded-lg p-8 text-left">
               <h3 className="text-xl font-bold text-foreground mb-6 text-center">
                 Kết quả bao gồm
               </h3>
