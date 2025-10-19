@@ -1,3 +1,4 @@
+import { ExcelDemoSection } from "@/components/excel-demo-section";
 import { FeaturesSection } from "@/components/features-section";
 import { HeroSection } from "@/components/hero-section";
 import { PricingSection } from "@/components/pricing-section";
@@ -14,6 +15,7 @@ export default function HomePage() {
       <HeroSection />
       <AppSection />
       <FeaturesSection />
+      <ExcelDemoSection />
       <TestimonialsSection />
       <PricingSection />
     </main>
