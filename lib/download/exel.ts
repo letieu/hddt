@@ -235,7 +235,7 @@ export function createProductsSheet(
 
 // Bảng kê hóa, chứng từ hàng hóa, dịch vụ mua vào. (01-1/HT TT80)
 export function createBK011Sheet(workbook: ExcelJS.Workbook, products: any[]) {
-  const ws = workbook.addWorksheet("BK_01-1_HT");
+  const ws = workbook.addWorksheet("BK_mua_vào_TT80");
   //
   // ===== HEADER SECTION =====
   //
@@ -280,7 +280,7 @@ export function createBK011Sheet(workbook: ExcelJS.Workbook, products: any[]) {
       i + 1,
       p.invoice.hdon,
       p.invoice.khhdon,
-      p.invoice.shdon,
+      p.invoice.shdon + "",
       new Date(p.invoice.tdlap),
       p.invoice.nbten,
       p.invoice.nbmst,

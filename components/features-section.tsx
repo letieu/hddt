@@ -28,9 +28,9 @@ const features = [
   },
   {
     icon: Box,
-    title: "Kèm theo chi tiết sản phẩm",
+    title: "Kèm theo chi tiết sản phẩm, Bảng kê",
     description:
-      "File Excel đã bao gồm thông tin chi tiết về sản phẩm, đơn giá, số lượng, thành tiền, ...",
+      "File Excel đã bao gồm thông tin chi tiết về sản phẩm, đơn giá, số lượng, thành tiền, bảng kê mua vào, bán ra",
   },
 ];
 

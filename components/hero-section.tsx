@@ -124,7 +124,7 @@ export function HeroSection() {
                     </p>
                     <p className="text-muted-foreground">
                       Kèm theo danh sách sản phẩm trong file excel, bảng kê hoá
-                      đơn, chứng từ hàng hoá, dịch vụ mua vào
+                      đơn, chứng từ hàng hoá, dịch vụ mua vào, bán ra
                     </p>
                   </div>
                 </div>
