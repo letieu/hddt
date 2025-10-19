@@ -1,24 +1,15 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RainbowButton } from "./magicui/rainbow-button";
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import { LoginButton } from "./login-button";
 import { ExportInput, InvoiceQueryType, InvoiceType } from "./app-section";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "./ui/checkbox";
 import { creditUsageEstimate } from "@/lib/credit";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 function formatDateInput(date: Date) {
   const year = date.getFullYear();
@@ -35,7 +26,6 @@ export function InputForm(props: {
   const { isLoggedIn } = props;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [mergeDetails, setMergeDetails] = useState(true);
   const [downloadXml, setDownloadXml] = useState(true);
   const [downloadHtml, setDownloadHtml] = useState(true);
   const [downloadPdf, setDownloadPdf] = useState(false);
@@ -107,7 +97,6 @@ export function InputForm(props: {
       downloadHtml,
       downloadPdf,
       queryTypes,
-      mergeDetails,
     });
   };
 
@@ -297,26 +286,6 @@ export function InputForm(props: {
                   Tải file PDF
                 </Label>
               </div>
-            </div>
-            <div className="space-y-2 pt-4">
-              <Label>Merge chi tiết sản phẩm</Label>
-              <RadioGroup
-                value={mergeDetails ? "yes" : "no"}
-                onValueChange={(value) => setMergeDetails(value === "yes")}
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="yes" id="merge-yes" />
-                  <Label htmlFor="merge-yes" className="font-normal">
-                    Gộp chi tiết sản phẩm vào sheet chính
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="no" id="merge-no" />
-                  <Label htmlFor="merge-no" className="font-normal">
-                    Tạo sheet "DS sản phẩm" riêng
-                  </Label>
-                </div>
-              </RadioGroup>
             </div>
           </div>
         </form>

@@ -10,14 +10,17 @@ import {
   fetchAllInvoices,
   fetchInvoiceDetail,
 } from "@/lib/download/hoadon-api";
-import { createInvoicesSheet, createProductsSheet, excelToBlob } from "@/lib/download/exel";
+import {
+  createInvoicesSheet,
+  createProductsSheet,
+  excelToBlob,
+} from "@/lib/download/exel";
 import { saveAs } from "file-saver";
 import {
   formatDateForFilename,
   invoiceQueryTypeNames,
   invoiceTypeNames,
 } from "./format";
-import { sendGAEvent } from "../gtag";
 
 export type ExportInput = {
   fromDate: Date;
@@ -72,10 +75,6 @@ export class InvoiceExportManager extends EventEmitter {
   async start(input: ExportInput) {
     const downloadFiles =
       input.downloadXml || input.downloadHtml || input.downloadPdf;
-    sendGAEvent("export_start", {
-      invoiceType: input.invoiceType,
-      downloadFiles: downloadFiles ? "true" : "false",
-    });
     this.lastInput = input;
     this.logs.clear();
     this.failedDetails = [];
@@ -105,15 +104,6 @@ export class InvoiceExportManager extends EventEmitter {
         message: "✅ Hoàn tất tải dữ liệu. Sẵn sàng để xuất file.",
       });
 
-      sendGAEvent("export_finish", {
-        invoiceType: input.invoiceType,
-        downloadFiles: downloadFiles ? "true" : "false",
-        totalInvoices: this.invoicesSheet1.length + this.invoicesSheet2.length,
-        failedDetails: this.failedDetails.length,
-        failedXmls: this.failedXmls.length,
-        failedFetches: this.failedFetches.length,
-      });
-
       this.emit("finish", {
         failedDetails: this.failedDetails,
         failedXmls: this.failedXmls,
@@ -121,11 +111,6 @@ export class InvoiceExportManager extends EventEmitter {
       });
     } catch (err: any) {
       console.error("Export failed:", err);
-      sendGAEvent("export_failed", {
-        invoiceType: input.invoiceType,
-        downloadFiles: downloadFiles ? "true" : "false",
-        errorMessage: err.message,
-      });
       this._log({
         id: "result",
         message: "❌ Lỗi trong quá trình tải dữ liệu",
@@ -135,7 +120,6 @@ export class InvoiceExportManager extends EventEmitter {
   }
 
   async retry() {
-    sendGAEvent("export_retry");
     if (!this.lastInput) {
       this._log({
         message: "❌ Không có tác vụ nào để thử lại.",
@@ -211,65 +195,58 @@ export class InvoiceExportManager extends EventEmitter {
     const input = this.lastInput;
     const downloadFiles =
       input.downloadXml || input.downloadHtml || input.downloadPdf;
-    sendGAEvent("export_build", {
-      invoiceType: input.invoiceType,
-      downloadFiles: downloadFiles ? "true" : "false",
-      totalInvoices: this.invoicesSheet1.length + this.invoicesSheet2.length,
-    });
 
     const wb = new ExcelJS.Workbook();
-    let allProducts: any[] = [];
 
+    // sheet 1
     this._log({
-      id: "list-tab1",
+      id: "excel",
       message: `🔄  Tạo sheet hóa đơn điện tử`,
     });
-    const sheet1Result = createInvoicesSheet(
+    createInvoicesSheet(
       wb,
       "Hóa đơn điện tử",
       this.invoicesSheet1,
       input.invoiceType,
     );
-    if (sheet1Result.products) {
-      allProducts.push(...sheet1Result.products);
-    }
-    this._log({
-      id: "list-tab1",
-      message: "✅ Hoàn tất tạo sheet hóa đơn điện tử",
-    });
 
+    // sheet 2
     this._log({
-      id: "list-tab2",
+      id: "excel",
       message: `🔄  Tạo sheet hóa đơn có mã từ máy tính tiền`,
     });
-    const sheet2Result = createInvoicesSheet(
+    createInvoicesSheet(
       wb,
       "HĐ có mã từ máy tính tiền",
       this.invoicesSheet2,
       input.invoiceType,
     );
-    if (sheet2Result.products) {
-      allProducts.push(...sheet2Result.products);
-    }
-    this._log({
-      id: "list-tab2",
-      message: "✅ Hoàn tất tạo sheet hóa đơn có mã từ máy tính tiền",
-    });
+
+    // sheet 3: DS sản phẩm
+    const allProducts = [
+      ...this.invoicesSheet1,
+      ...this.invoicesSheet2,
+    ].flatMap(
+      (invoice) =>
+        invoice.detail?.hdhhdvu?.map((product: any) => ({
+          ...product,
+          invoice: {
+            ...invoice,
+            detail: null,
+          },
+        })) ?? [],
+    );
 
     if (allProducts.length > 0) {
       this._log({
         message: "🔄 Đang tạo sheet DS sản phẩm...",
-        id: "product-sheet",
+        id: "excel",
       });
       createProductsSheet(wb, "DS sản phẩm", allProducts);
-      this._log({
-        message: "✅ Hoàn tất tạo sheet DS sản phẩm",
-        id: "product-sheet",
-      });
     }
 
     this._log({
-      message: "🔄 Đang tạo file Excel...",
+      message: "🔄 Hoàn tất tạo file Excel ...",
       id: "excel",
     });
 
@@ -368,14 +345,6 @@ export class InvoiceExportManager extends EventEmitter {
     this._log({
       status: "success",
       message: "✅ 📥✨ Hoàn tất tải dữ liệu 🎉🎯🚀✅",
-    });
-
-    sendGAEvent("export_success", {
-      invoiceType: input.invoiceType,
-      downloadFiles: downloadFiles ? "true" : "false",
-      totalInvoices: this.invoicesSheet1.length + this.invoicesSheet2.length,
-      excelFileName,
-      zipFileName: zipFileName ?? "none",
     });
 
     this.emit("build-finish", {

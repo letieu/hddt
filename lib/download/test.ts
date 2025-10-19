@@ -1,7 +1,7 @@
 import { createBK011Sheet } from "./exel";
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 
-const sheet = createBK011Sheet([]);
-const ws = XLSX.utils.book_new();
-XLSX.utils.book_append_sheet(ws, sheet, "Sheet1");
-XLSX.writeFile(ws, "test.xlsx");
+const workbook = new ExcelJS.Workbook();
+createBK011Sheet(workbook, []);
+
+workbook.xlsx.writeFile("test.xlsx");

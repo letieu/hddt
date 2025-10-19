@@ -53,7 +53,6 @@ export type ExportInput = {
   downloadXml?: boolean;
   downloadHtml?: boolean;
   downloadPdf?: boolean;
-  mergeDetails?: boolean;
 };
 
 type ExportState =

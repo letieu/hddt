@@ -41,7 +41,7 @@ export function createInvoicesSheet(
   sheetName: string,
   invoices: any[],
   invoiceType: InvoiceType,
-): { products?: any[] } {
+) {
   const mainSheet = workbook.addWorksheet(sheetName);
 
   // Add headers
@@ -142,8 +142,6 @@ export function createInvoicesSheet(
   mainSheet.getColumn(22).numFmt = "0.00%";
   mainSheet.getColumn(23).numFmt = '#,##0 "đ"';
   mainSheet.getColumn(24).numFmt = '#,##0.00 "đ"';
-
-  return {};
 }
 
 export async function excelToBlob(workbook: ExcelJS.Workbook): Promise<Blob> {
@@ -171,12 +169,13 @@ export function createProductsSheet(
   const productsSheet = workbook.addWorksheet(sheetName);
 
   const header = [
+    "STT",
     "KÝ HIỆU MẪU SỐ",
     "KÝ HIỆU HÓA ĐƠN",
     "SỐ HÓA ĐƠN",
     "NGÀY LẬP",
-    "MST NGƯỜI MUA/NHẬN",
-    "TÊN NGƯỜI MUA/NHẬN",
+    "MST NGƯỜI MUA",
+    "TÊN NGƯỜI MUA",
     "ĐƠN VỊ TIỀN TỆ",
     "TỶ GIÁ",
     "TÍNH CHẤT",
@@ -191,8 +190,26 @@ export function createProductsSheet(
 
   productsSheet.addRow(header).font = { bold: true };
 
-  products.forEach((product) => {
-    productsSheet.addRow(product);
+  products.forEach((product, i) => {
+    productsSheet.addRow([
+      i + 1,
+      product.invoice.hdon,
+      product.invoice.khhdon,
+      product.invoice.shdon,
+      product.invoice.tdlap,
+      product.invoice.nmmst,
+      product.invoice.nmten,
+      product.invoice.dvtte,
+      product.invoice.tgia,
+      product.tchat,
+      product.ten,
+      product.dvtinh,
+      product.sluong,
+      product.dgia,
+      product.tsuat,
+      product.thtien,
+      product.tien_thue,
+    ]);
   });
 
   productsSheet.columns.forEach((column, i) => {
@@ -206,12 +223,12 @@ export function createProductsSheet(
     column.width = maxLength < 10 ? 10 : maxLength > 60 ? 60 : maxLength;
   });
 
-  productsSheet.getColumn(4).numFmt = "dd/mm/yyyy";
-  productsSheet.getColumn(12).numFmt = "#,##0";
-  productsSheet.getColumn(13).numFmt = '#,##0 "đ"';
-  productsSheet.getColumn(14).numFmt = "0.00%";
-  productsSheet.getColumn(15).numFmt = '#,##0 "đ"';
-  productsSheet.getColumn(16).numFmt = '#,##0.00 "đ"';
+  productsSheet.getColumn("E").numFmt = "dd/mm/yyyy";
+  productsSheet.getColumn("L").numFmt = "#,##0";
+  productsSheet.getColumn("P").numFmt = '#,##0 "đ"';
+  productsSheet.getColumn("Q").numFmt = '#,##0.00 "đ"';
+
+  productsSheet.getColumn("O").numFmt = "0.00%";
 
   productsSheet.views = [{ state: "frozen", ySplit: 1 }];
 }
