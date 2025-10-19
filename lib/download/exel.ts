@@ -196,7 +196,7 @@ export function createProductsSheet(
       product.invoice.hdon,
       product.invoice.khhdon,
       product.invoice.shdon,
-      product.invoice.tdlap,
+      new Date(product.invoice.tdlap),
       product.invoice.nmmst,
       product.invoice.nmten,
       product.invoice.dvtte,
@@ -234,18 +234,85 @@ export function createProductsSheet(
 }
 
 // Bảng kê hóa, chứng từ hàng hóa, dịch vụ mua vào. (01-1/HT TT80)
-export function createBK011Sheet(workbook: ExcelJS.Workbook, invoices: any[]) {
-  const ws = workbook.addWorksheet("01-1/HT");
+export function createBK011Sheet(workbook: ExcelJS.Workbook, products: any[]) {
+  const ws = workbook.addWorksheet("BK_01-1_HT");
+  //
+  // ===== HEADER SECTION =====
+  //
+  ws.addRow([]);
+  ws.mergeCells("A2:O2");
+  ws.getCell("A2").value =
+    "BẢNG KÊ HOÁ ĐƠN, CHỨNG TỪ HÀNG HOÁ, DỊCH VỤ MUA VÀO";
+  ws.getCell("A2").font = { bold: true, size: 14 };
+  ws.getCell("A2").alignment = { horizontal: "center" };
 
-  ws.addRow([""]);
-  ws.addRow(["BẢNG KÊ HOÁ ĐƠN, CHỨNG TỪ HÀNG HOÁ, DỊCH VỤ MUA VÀO"]);
-  ws.addRow([
-    "(Kèm theo Giấy đề nghị hoàn trả khoản thu NSNN số ... ngày ... tháng... năm...)",
-  ]);
-  ws.addRow(["[01] Kỳ đề nghị hoàn thuế: Từ kỳ...... đến kỳ......"]);
-  ws.addRow(["[02] Mã số thuế:"]);
-  ws.addRow(["[04] Tên đại lý nộp thuế:"]);
-  ws.addRow(["[05] Mã số thuế:"]);
+  //
+  // ===== TABLE SECTION =====
+  //
+  const tableStartRow = (ws.lastRow?.number ?? 0) + 1;
 
-  ws.getCell("A2").font = { bold: true };
+  ws.addTable({
+    name: "Products",
+    ref: `A${tableStartRow}`,
+    headerRow: true,
+    totalsRow: true,
+    style: {
+      theme: "TableStyleLight1",
+    },
+    columns: [
+      { name: "STT", totalsRowLabel: "Tổng" },
+      { name: "Mẫu số" },
+      { name: "Ký hiệu" },
+      { name: "Số" },
+      { name: "Ngày, tháng, năm" },
+      { name: "Tên người bán" },
+      { name: "Mã số thuế người bán" },
+      { name: "Tên hàng hóa, dịch vụ" },
+      { name: "Đơn vị tính" },
+      { name: "Số lượng" },
+      { name: "Đơn giá" },
+      { name: "Giá trị HHDV mua vào chưa có thuế GTGT" },
+      { name: "Thuế suất (%)" },
+      { name: "Tiền thuế GTGT", totalsRowFunction: "sum" },
+      { name: "Ghi chú" },
+    ],
+    rows: products.map((p, i) => [
+      i + 1,
+      p.invoice.hdon,
+      p.invoice.khhdon,
+      p.invoice.shdon,
+      new Date(p.invoice.tdlap),
+      p.invoice.nbten,
+      p.invoice.nbmst,
+      //
+      p.ten,
+      p.dvtinh,
+      p.sluong,
+      p.dgia,
+      p.thtien,
+      p.tsuat,
+      p.tien_thue,
+      "",
+    ]),
+  });
+
+  //
+  // ===== COLUMN WIDTHS (aligned with table width) =====
+  //
+  const colWidths = [6, 10, 10, 8, 14, 25, 18, 25, 10, 10, 12, 18, 10, 14, 10];
+  colWidths.forEach((w, i) => (ws.getColumn(i + 1).width = w));
+
+  //
+  // ===== FORMATTING CELLS =====
+  //
+  const firstDataRow = tableStartRow + 1;
+  const lastDataRow = firstDataRow + products.length - 1;
+
+  for (let i = firstDataRow; i <= lastDataRow; i++) {
+    ws.getCell(`K${i}`).numFmt = '#,##0.00 "đ"';
+    ws.getCell(`L${i}`).numFmt = '#,##0.00 "đ"';
+    ws.getCell(`M${i}`).numFmt = "0.00%";
+    ws.getCell(`N${i}`).numFmt = '#,##0.00 "đ"';
+  }
+  ws.getCell(`N${lastDataRow + 1}`).numFmt = '#,##0.00 "đ"'; // total row
 }

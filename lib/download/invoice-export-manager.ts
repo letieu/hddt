@@ -11,6 +11,7 @@ import {
   fetchInvoiceDetail,
 } from "@/lib/download/hoadon-api";
 import {
+    createBK011Sheet,
   createInvoicesSheet,
   createProductsSheet,
   excelToBlob,
@@ -243,6 +244,14 @@ export class InvoiceExportManager extends EventEmitter {
         id: "excel",
       });
       createProductsSheet(wb, "DS sản phẩm", allProducts);
+
+      if (input.invoiceType === "purchase") {
+        this._log({
+          message: "🔄 Đang tạo sheet BẢNG KÊ HOÁ ĐƠN...",
+          id: "excel",
+        });
+        createBK011Sheet(wb, allProducts);
+      }
     }
 
     this._log({
