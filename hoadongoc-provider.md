@@ -32,6 +32,7 @@
 - [-] 0401486901:Công ty Cổ phần thương mại Visnam
 - [-] 0200784873:Công ty Cổ phần Thiết bị điện - Điện tử Bách Khoa
 - [.] 0100684378:Tập Đoàn Bưu chính viễn thông Việt Nam
+
 - [ ] 0106713804:Công ty Cổ phần dịch vụ T-VAN HILO
 - [ ] 0314209362:Công ty Cổ phần Minh Khang Group
 - [ ] 0101352495:Công ty Cổ phần Giải pháp hóa đơn điện tử Việt Nam
@@ -109,4 +110,4 @@
 
 ## Custom by nb
 - [x] 0109266456 - CÔNG TY CỔ PHẦN GIAO THÔNG SỐ VIỆT NAM
-- [ ] 4200240380 - Petrolimex - https://hoadon.petrolimex.com.vn
+- [x] 4200240380 - Petrolimex - https://hoadon.petrolimex.com.vn

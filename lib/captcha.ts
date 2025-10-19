@@ -1,4 +1,3 @@
-
 const CAP_SOLVER_KEY = process.env.CAP_SOLVER_KEY;
 
 export async function resolveCaptcha(imageBase64: string) {
@@ -26,4 +25,16 @@ export async function resolveCaptcha(imageBase64: string) {
   const data = await res.json();
   if (!data?.solution?.text) throw new Error("No solution from CapSolver");
   return data.solution.text;
+}
+
+export async function tryResolveCaptcha(imageBase64: string, tries = 3) {
+  try {
+    return await resolveCaptcha(imageBase64);
+  } catch (err) {
+    if (tries > 0) {
+      return tryResolveCaptcha(imageBase64, tries - 1);
+    } else {
+      throw err;
+    }
+  }
 }

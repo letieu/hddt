@@ -2,8 +2,9 @@ import axios from "axios";
 import { CookieJar } from "tough-cookie";
 import { wrapper } from "axios-cookiejar-support";
 import * as cheerio from "cheerio";
-import { resolveCaptcha } from "@/lib/captcha";
+import { tryResolveCaptcha } from "@/lib/captcha";
 import { DownloadParams, HoadongocDownloadProvider } from ".";
+import { convertHtmlToPdf } from "@/lib/download/pdf";
 
 /**
  * Petrolimex - https://hoadon.petrolimex.com.vn
@@ -26,19 +27,18 @@ export class PetrolimexProvider implements HoadongocDownloadProvider {
   }
 
   async download(params: DownloadParams): Promise<ArrayBuffer> {
-    const invoiceNumber = params.cttkhac.find((t) => t.ttruong === "Fkey")?.dlieu;
+    const invoiceNumber = params.cttkhac.find(
+      (t) => t.ttruong === "Fkey",
+    )?.dlieu;
     if (!invoiceNumber) {
       throw new Error("Invoice number not found");
     }
-    return this._getInvoicePdf(invoiceNumber);
+    const pdfBlob = await this._getInvoicePdf(invoiceNumber);
+    const arrayBuffer = await pdfBlob.arrayBuffer();
+    return arrayBuffer;
   }
 
-  /**
-   * Fetches an invoice PDF from Petrolimex site.
-   * @param {string} invoiceNumber - Invoice number to search
-   * @returns {Promise<ArrayBuffer>} - PDF file as ArrayBuffer
-   */
-  async _getInvoicePdf(invoiceNumber: string) {
+  async _getInvoicePdf(invoiceNumber: string): Promise<Blob> {
     const jar = new CookieJar();
     const client = wrapper(
       axios.create({
@@ -54,7 +54,9 @@ export class PetrolimexProvider implements HoadongocDownloadProvider {
     );
 
     // Step 1: visit page to set cookies and get CSRF token
-    const pageResp = await client.get(`${this.BASE_URL}/SearchInvoicebycode/Index`);
+    const pageResp = await client.get(
+      `${this.BASE_URL}/SearchInvoicebycode/Index`,
+    );
     const $ = cheerio.load(pageResp.data);
     const token = $('input[name="__RequestVerificationToken"]').val();
     if (!token || typeof token !== "string")
@@ -67,7 +69,7 @@ export class PetrolimexProvider implements HoadongocDownloadProvider {
     const captchaBase64 = Buffer.from(captchaResp.data).toString("base64");
 
     // Step 3: resolve captcha (user-provided)
-    const captchaText = await resolveCaptcha(captchaBase64);
+    const captchaText = await tryResolveCaptcha(captchaBase64);
     if (!captchaText) throw new Error("Captcha could not be solved");
 
     // Step 4: submit search form
@@ -91,19 +93,34 @@ export class PetrolimexProvider implements HoadongocDownloadProvider {
     );
 
     // Step 5: extract the PDF link
-    const $$ = cheerio.load(searchResp.data);
-    const pdfLink =
-      $$("a[href*='Download'], a[href*='DownloadInvoice']").attr("href");
+    const checkCode = extractCheckCode(searchResp.data);
+    if (!checkCode) throw new Error("Check code not found");
 
-    if (!pdfLink) throw new Error("PDF link not found (captcha may be wrong)");
+    const getPdfStrFormData = new FormData();
+    getPdfStrFormData.append("checkCode", checkCode);
+    const pdfStrRes = await client.post(
+      `${this.BASE_URL}/SearchInvoicebycode/ajxPreview`,
+      getPdfStrFormData,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Referer: `${this.BASE_URL}/SearchInvoicebycode/Index`,
+        },
+      },
+    );
+    const pdfStr = pdfStrRes.data.str;
+    const pdfBlob = await convertHtmlToPdf(pdfStr);
 
-    const fullPdfUrl = pdfLink.startsWith("http")
-      ? pdfLink
-      : `${this.BASE_URL}${pdfLink}`;
-
-    // Step 6: download PDF
-    const pdfResp = await client.get(fullPdfUrl, { responseType: "arraybuffer" });
-
-    return pdfResp.data; // ArrayBuffer
+    return pdfBlob;
   }
 }
+
+function extractCheckCode(html: string) {
+  const $ = cheerio.load(html);
+  const link = $('a[href*="checkCode="]').attr("href");
+  if (!link) return null;
+
+  const url = new URL(link, "https://example.com"); // base URL to make URL() work
+  return url.searchParams.get("checkCode");
+}
+
