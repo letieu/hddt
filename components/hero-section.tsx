@@ -93,10 +93,10 @@ export function HeroSection() {
                   </div>
                   <div>
                     <p className="font-semibold text-foreground">
-                      Danh sách hóa đơn
+                      File XML, HTML, PDF theo hóa đơn
                     </p>
                     <p className="text-muted-foreground">
-                      File excel list hóa đơn bán ra, mua vào, bảng kê sản phẩm
+                      Toàn bộ file kèm theo danh sách hóa đơn
                     </p>
                   </div>
                 </div>
@@ -106,10 +106,11 @@ export function HeroSection() {
                   </div>
                   <div>
                     <p className="font-semibold text-foreground">
-                      Chi tiết sản phẩm theo hóa đơn
+                      Danh sách sản phẩm, bảng kê hoá đơn
                     </p>
                     <p className="text-muted-foreground">
-                      Kèm theo danh sách sản phẩm trong file excel
+                      Kèm theo danh sách sản phẩm trong file excel, bảng kê hoá
+                      đơn, chứng từ hàng hoá, dịch vụ mua vào
                     </p>
                   </div>
                 </div>
@@ -119,10 +120,11 @@ export function HeroSection() {
                   </div>
                   <div>
                     <p className="font-semibold text-foreground">
-                      File XML, HTML, PDF theo hóa đơn
+                      Danh sách hóa đơn
                     </p>
                     <p className="text-muted-foreground">
-                      Toàn bộ file kèm theo danh sách hóa đơn
+                      File excel list hóa đơn bán ra, mua vào, hóa đơn có mã từ
+                      máy tính tiền
                     </p>
                   </div>
                 </div>
@@ -132,11 +134,12 @@ export function HeroSection() {
                   </div>
                   <div>
                     <p className="font-semibold text-foreground">
-                      Định dạng để dễ dàng nhập vào các phần mềm kế toán như Misa
+                      Định dạng để dễ dàng nhập vào các phần mềm kế toán như
+                      Misa
                     </p>
                     <p className="text-muted-foreground">
-                      File Excel được định dạng để dễ dàng nhập vào các phần mềm kế
-                      toán như Misa hoặc Tạo bảng kê, tờ khai thuế.
+                      File Excel được định dạng để dễ dàng nhập vào các phần mềm
+                      kế toán như Misa hoặc Tạo bảng kê, tờ khai thuế.
                     </p>
                   </div>
                 </div>
