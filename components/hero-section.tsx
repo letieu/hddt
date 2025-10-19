@@ -93,6 +93,20 @@ export function HeroSection() {
                   </div>
                   <div>
                     <p className="font-semibold text-foreground">
+                      Danh sách hóa đơn
+                    </p>
+                    <p className="text-muted-foreground">
+                      File excel list hóa đơn bán ra, mua vào, hóa đơn có mã từ
+                      máy tính tiền
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="p-2 bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-400 rounded-full">
+                    <FileX className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">
                       File XML, HTML, PDF theo hóa đơn
                     </p>
                     <p className="text-muted-foreground">
@@ -111,20 +125,6 @@ export function HeroSection() {
                     <p className="text-muted-foreground">
                       Kèm theo danh sách sản phẩm trong file excel, bảng kê hoá
                       đơn, chứng từ hàng hoá, dịch vụ mua vào
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="p-2 bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-400 rounded-full">
-                    <FileX className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-foreground">
-                      Danh sách hóa đơn
-                    </p>
-                    <p className="text-muted-foreground">
-                      File excel list hóa đơn bán ra, mua vào, hóa đơn có mã từ
-                      máy tính tiền
                     </p>
                   </div>
                 </div>
