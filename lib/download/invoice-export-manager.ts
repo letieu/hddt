@@ -1,6 +1,6 @@
 import { EventEmitter } from "events";
 import { convertHtmlToPdf } from "./pdf";
-import * as XLSX from "xlsx";
+import * as ExcelJS from "exceljs";
 import JSZip from "jszip";
 import {
   FetchInvoiceOptions,
@@ -10,7 +10,7 @@ import {
   fetchAllInvoices,
   fetchInvoiceDetail,
 } from "@/lib/download/hoadon-api";
-import { createInvoicesSheet, createProductsSheet } from "@/lib/download/exel";
+import { createInvoicesSheet, createProductsSheet, excelToBlob } from "@/lib/download/exel";
 import { saveAs } from "file-saver";
 import {
   formatDateForFilename,
@@ -28,7 +28,6 @@ export type ExportInput = {
   downloadXml?: boolean;
   downloadHtml?: boolean;
   downloadPdf?: boolean;
-  mergeDetails?: boolean;
 };
 
 export type InvoiceExportLog = {
@@ -71,7 +70,8 @@ export class InvoiceExportManager extends EventEmitter {
   }
 
   async start(input: ExportInput) {
-    const downloadFiles = input.downloadXml || input.downloadHtml || input.downloadPdf;
+    const downloadFiles =
+      input.downloadXml || input.downloadHtml || input.downloadPdf;
     sendGAEvent("export_start", {
       invoiceType: input.invoiceType,
       downloadFiles: downloadFiles ? "true" : "false",
@@ -158,7 +158,10 @@ export class InvoiceExportManager extends EventEmitter {
     );
     await Promise.all(detailPromises);
 
-    const downloadFiles = this.lastInput.downloadXml || this.lastInput.downloadHtml || this.lastInput.downloadPdf;
+    const downloadFiles =
+      this.lastInput.downloadXml ||
+      this.lastInput.downloadHtml ||
+      this.lastInput.downloadPdf;
     if (downloadFiles) {
       const xmlsToRetryByQueryType: Record<string, FailedXml[]> = {};
       for (const failed of xmlsToRetry) {
@@ -206,26 +209,27 @@ export class InvoiceExportManager extends EventEmitter {
     }
     this.sharedAssetsAdded.clear();
     const input = this.lastInput;
-    const downloadFiles = input.downloadXml || input.downloadHtml || input.downloadPdf;
+    const downloadFiles =
+      input.downloadXml || input.downloadHtml || input.downloadPdf;
     sendGAEvent("export_build", {
       invoiceType: input.invoiceType,
       downloadFiles: downloadFiles ? "true" : "false",
       totalInvoices: this.invoicesSheet1.length + this.invoicesSheet2.length,
     });
 
-    const wb = XLSX.utils.book_new();
+    const wb = new ExcelJS.Workbook();
     let allProducts: any[] = [];
 
     this._log({
       id: "list-tab1",
       message: `🔄  Tạo sheet hóa đơn điện tử`,
     });
-    const sheet1Result = await createInvoicesSheet(
+    const sheet1Result = createInvoicesSheet(
+      wb,
+      "Hóa đơn điện tử",
       this.invoicesSheet1,
       input.invoiceType,
-      input.mergeDetails ?? true,
     );
-    XLSX.utils.book_append_sheet(wb, sheet1Result.mainSheet, "Hóa đơn điện tử");
     if (sheet1Result.products) {
       allProducts.push(...sheet1Result.products);
     }
@@ -238,15 +242,11 @@ export class InvoiceExportManager extends EventEmitter {
       id: "list-tab2",
       message: `🔄  Tạo sheet hóa đơn có mã từ máy tính tiền`,
     });
-    const sheet2Result = await createInvoicesSheet(
+    const sheet2Result = createInvoicesSheet(
+      wb,
+      "HĐ có mã từ máy tính tiền",
       this.invoicesSheet2,
       input.invoiceType,
-      input.mergeDetails ?? true,
-    );
-    XLSX.utils.book_append_sheet(
-      wb,
-      sheet2Result.mainSheet,
-      "HĐ có mã từ máy tính tiền",
     );
     if (sheet2Result.products) {
       allProducts.push(...sheet2Result.products);
@@ -261,8 +261,7 @@ export class InvoiceExportManager extends EventEmitter {
         message: "🔄 Đang tạo sheet DS sản phẩm...",
         id: "product-sheet",
       });
-      const productsSheet = createProductsSheet(allProducts);
-      XLSX.utils.book_append_sheet(wb, productsSheet, "DS sản phẩm");
+      createProductsSheet(wb, "DS sản phẩm", allProducts);
       this._log({
         message: "✅ Hoàn tất tạo sheet DS sản phẩm",
         id: "product-sheet",
@@ -275,7 +274,8 @@ export class InvoiceExportManager extends EventEmitter {
     });
 
     const excelFileName = getExcelFileName(input);
-    XLSX.writeFile(wb, excelFileName);
+    const blob = await excelToBlob(wb);
+    saveAs(blob, excelFileName);
     this._log({
       status: "success",
       message: "✅ Đã tải xong file Excel",
@@ -294,30 +294,56 @@ export class InvoiceExportManager extends EventEmitter {
       if (rootFolder) {
         // Process invoices separately by type to group them
         if (this.invoicesSheet1.length > 0) {
-          const queryTypeFolder = rootFolder.folder(invoiceQueryTypeNames["query"]);
+          const queryTypeFolder = rootFolder.folder(
+            invoiceQueryTypeNames["query"],
+          );
           if (queryTypeFolder) {
             if (input.downloadPdf) {
-              await this._processPdfConversions(this.invoicesSheet1, queryTypeFolder, input);
+              await this._processPdfConversions(
+                this.invoicesSheet1,
+                queryTypeFolder,
+                input,
+              );
             } else {
               for (const invoice of this.invoicesSheet1) {
                 if (!invoice.xmlBlob) continue;
                 const invoicePrefix = `${invoice.khhdon}_${invoice.shdon}`;
-                await this._processInvoiceFiles(invoice, invoicePrefix, queryTypeFolder, input, null, null);
+                await this._processInvoiceFiles(
+                  invoice,
+                  invoicePrefix,
+                  queryTypeFolder,
+                  input,
+                  null,
+                  null,
+                );
               }
             }
           }
         }
 
         if (this.invoicesSheet2.length > 0) {
-          const scoQueryTypeFolder = rootFolder.folder(invoiceQueryTypeNames["sco-query"]);
+          const scoQueryTypeFolder = rootFolder.folder(
+            invoiceQueryTypeNames["sco-query"],
+          );
           if (scoQueryTypeFolder) {
             if (input.downloadPdf) {
-              await this._processPdfConversions(this.invoicesSheet2, scoQueryTypeFolder, input);
+              await this._processPdfConversions(
+                this.invoicesSheet2,
+                scoQueryTypeFolder,
+                input,
+              );
             } else {
               for (const invoice of this.invoicesSheet2) {
                 if (!invoice.xmlBlob) continue;
                 const invoicePrefix = `${invoice.khhdon}_${invoice.shdon}`;
-                await this._processInvoiceFiles(invoice, invoicePrefix, scoQueryTypeFolder, input, null, null);
+                await this._processInvoiceFiles(
+                  invoice,
+                  invoicePrefix,
+                  scoQueryTypeFolder,
+                  input,
+                  null,
+                  null,
+                );
               }
             }
           }
