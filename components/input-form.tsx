@@ -14,20 +14,11 @@ import { RainbowButton } from "./magicui/rainbow-button";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { LoginButton } from "./login-button";
-import { ShineBorder } from "./magicui/shine-border";
 import { ExportInput, InvoiceQueryType, InvoiceType } from "./app-section";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "./ui/checkbox";
 import { creditUsageEstimate } from "@/lib/credit";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ChevronRight, ShieldCheck } from "lucide-react";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
 
 function formatDateInput(date: Date) {
   const year = date.getFullYear();
@@ -48,7 +39,6 @@ export function InputForm(props: {
   const [downloadXml, setDownloadXml] = useState(true);
   const [downloadHtml, setDownloadHtml] = useState(true);
   const [downloadPdf, setDownloadPdf] = useState(false);
-  const [isAdvancedOpen, setIsAdvancedOpen] = useState(true);
 
   const today = new Date();
   const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -130,20 +120,6 @@ export function InputForm(props: {
 
   return (
     <Card className="relative overflow-hidden">
-      <CardHeader>
-        <CardTitle>Nhập thông tin</CardTitle>
-        <CardDescription>
-            <div className="flex items-center gap-2">
-              <span>Lo ngại về bảo mật? </span>
-              <Link
-                href="/blog/tai-hoa-don-extension"
-                className="font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent"
-              >
-                Sử dụng Chrome extension
-              </Link>{" "}
-            </div>
-        </CardDescription>
-      </CardHeader>
       <CardContent>
         <form>
           <div className="grid w-full items-center gap-4">
@@ -362,7 +338,6 @@ export function InputForm(props: {
           <LoginButton className="w-full" text="Đăng nhập để tải file" />
         )}
       </CardFooter>
-      <ShineBorder />
     </Card>
   );
 }

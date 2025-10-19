@@ -43,6 +43,8 @@ export default function TestimonialsSection() {
                   alt={testimonial.name}
                   fill
                   className="object-cover object-center rounded-t-2xl"
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  quality={70}
                 />
               </CardHeader>
               <CardContent className="text-center pb-1">
