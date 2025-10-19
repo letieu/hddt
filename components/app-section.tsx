@@ -336,7 +336,7 @@ export function AppSection({ className }: { className?: string }) {
 
   return (
     <section
-      className={cn("relative py-20 px-4 overflow-hidden", className)}
+      className={cn("relative py-20 px-4 overflow-hidden bg-gradient-to-b from-background to-card", className)}
       id="app"
     >
       <div className="container mx-auto max-w-7xl relative z-10">

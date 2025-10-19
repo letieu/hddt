@@ -31,7 +31,7 @@ export function HeroSection() {
   const [showContactPopup, setShowContactPopup] = useState(false);
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-background to-card">
+    <section className="py-20 px-4">
       <div className="container mx-auto max-w-6xl text-center">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 text-balance">
@@ -70,18 +70,18 @@ export function HeroSection() {
               <span>Không cần cài đặt</span>
             </div>
             <div className="flex items-center gap-2">
-              <Zap className="h-5 w-5 text-primary" />
+              <FileOutput className="h-5 w-5 text-primary" />
               <span>Tải toàn bộ hóa đơn, không giới hạn ngày</span>
             </div>
             <div className="flex items-center gap-2">
-              <FileOutput className="h-5 w-5 text-primary" />
-              <span>Kèm theo chi tiết sản phẩm</span>
+              <Zap className="h-5 w-5 text-primary" />
+              <span>Tối ưu tốc độ tải xuống</span>
             </div>
           </div>
         </div>
 
         <div className="mt-16 relative">
-          <div className="bg-card rounded-lg shadow-2xl p-8 max-w-4xl mx-auto">
+          <div className="rounded-lg shadow-2xl p-8 max-w-4xl mx-auto">
             <div className="bg-muted/30 rounded-lg p-8 text-left">
               <h3 className="text-xl font-bold text-foreground mb-6 text-center">
                 Kết quả bao gồm

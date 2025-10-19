@@ -3,7 +3,7 @@ import Image from "next/image";
 import { getListOfPosts } from "@/lib/mdx";
 
 export async function Footer() {
-  const posts = (await getListOfPosts()).slice(0, 5);
+  const posts = (await getListOfPosts()).slice(0, 6);
 
   return (
     <footer className="bg-card border-t">
