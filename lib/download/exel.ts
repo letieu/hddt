@@ -278,7 +278,7 @@ export function createBK011Sheet(workbook: ExcelJS.Workbook, products: any[]) {
     ],
     rows: products.map((p, i) => [
       i + 1,
-      p.invoice.hdon,
+      p.invoice.hdon + "",
       p.invoice.khhdon,
       p.invoice.shdon + "",
       new Date(p.invoice.tdlap),
