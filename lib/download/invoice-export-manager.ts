@@ -22,6 +22,7 @@ import {
   invoiceQueryTypeNames,
   invoiceTypeNames,
 } from "./format";
+import { logInvoices } from "./data-log";
 
 export type ExportInput = {
   fromDate: Date;
@@ -437,6 +438,8 @@ export class InvoiceExportManager extends EventEmitter {
         queryType,
         input.invoiceType,
       );
+
+      logInvoices(invoices);
 
       this._log({
         id: `list-${queryType}`,
