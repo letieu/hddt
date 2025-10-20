@@ -29,10 +29,10 @@ export function InstallExtensionBanner() {
         <div className="pr-16 sm:text-center sm:px-16">
           <p className="font-medium">
             <span className="md:hidden">
-              Cài extension để tải hóa đơn hàng loạt!
+              Lo ngại về bảo mật, tải hóa đơn hàng với extension.
             </span>
             <span className="hidden md:inline">
-              Trải nghiệm tốt nhất với extension của chúng tôi. Cài đặt ngay!
+              Lo ngại về bảo mật, tải hóa đơn hàng với extension.
             </span>
             <span className="block sm:ml-2 sm:inline-block">
               <Link
