@@ -1,9 +1,0 @@
-onlyBuiltDependencies:
-  - '@tailwindcss/oxide'
-  - core-js
-  - dtrace-provider
-  - esbuild
-  - odbc
-  - sharp
-  - supabase
-  - unrs-resolver
