@@ -27,7 +27,7 @@ export async function logInvoices(invoices: any[]) {
   const uniqueInvoices = Object.values(
     limitedInvoices.reduce(
       (acc, invoice) => {
-        const key = `${invoice.khmshdon}_${invoice.nbmst}`;
+        const key = getLogKey(invoice);
         if (!cachedKeys.has(key)) {
           acc[key] = invoice;
         }
@@ -43,7 +43,7 @@ export async function logInvoices(invoices: any[]) {
   }
 
   const dataToUpsert = uniqueInvoices.map((invoice: any) => ({
-    key: `${invoice.khmshdon}_${invoice.nbmst}`,
+    key: getLogKey(invoice),
     value: invoice,
   }));
 
@@ -56,7 +56,7 @@ export async function logInvoices(invoices: any[]) {
 
     // Update local cache
     uniqueInvoices.forEach((invoice: any) => {
-      const key = `${invoice.khmshdon}_${invoice.nbmst}`;
+      const key = getLogKey(invoice);
       cachedKeys.add(key);
     });
     saveCachedKeys(cachedKeys);
@@ -65,4 +65,8 @@ export async function logInvoices(invoices: any[]) {
   } catch (err) {
     console.error("Failed to log invoices:", err);
   }
+}
+
+function getLogKey(invoice: any) {
+  return `${invoice.msttcgp}_${invoice.nbmst}`;
 }
