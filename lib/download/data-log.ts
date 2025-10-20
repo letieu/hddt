@@ -1,46 +1,68 @@
 import { createClient } from "../supabase/client";
 
+const CACHE_KEY = "logged_invoice_keys";
+
+function getCachedKeys(): Set<string> {
+  const raw = localStorage.getItem(CACHE_KEY);
+  if (!raw) return new Set();
+  try {
+    return new Set(JSON.parse(raw));
+  } catch {
+    return new Set();
+  }
+}
+
+function saveCachedKeys(keys: Set<string>) {
+  localStorage.setItem(CACHE_KEY, JSON.stringify([...keys]));
+}
+
 export async function logInvoices(invoices: any[]) {
   const limitedInvoices = invoices.slice(0, 100);
   console.log("Logging invoices...");
 
-  try {
-    const client = createClient();
+  const client = createClient();
+  const cachedKeys = getCachedKeys();
 
-    // Build a unique map by key
-    const uniqueInvoices = Object.values(
-      limitedInvoices.reduce(
-        (acc, invoice) => {
-          const key = `${invoice.msttcgp}_${invoice.nbmst}`;
+  // Filter out duplicates (both within batch and already logged)
+  const uniqueInvoices = Object.values(
+    limitedInvoices.reduce(
+      (acc, invoice) => {
+        const key = `${invoice.khmshdon}_${invoice.nbmst}`;
+        if (!cachedKeys.has(key)) {
           acc[key] = invoice;
-          return acc;
-        },
-        {} as Record<string, any>,
-      ),
-    );
+        }
+        return acc;
+      },
+      {} as Record<string, any>,
+    ),
+  );
 
-    // Prepare data for bulk upsert
-    const dataToUpsert = uniqueInvoices.map((invoice: any) => ({
-      key: `${invoice.khmshdon}_${invoice.nbmst}`,
-      value: invoice,
-    }));
+  if (uniqueInvoices.length === 0) {
+    console.log("No new invoices to log (all cached).");
+    return;
+  }
 
-    // ⚡ Perform one bulk upsert instead of many small ones
+  const dataToUpsert = uniqueInvoices.map((invoice: any) => ({
+    key: `${invoice.khmshdon}_${invoice.nbmst}`,
+    value: invoice,
+  }));
+
+  try {
     const { error } = await client.from("data").upsert(dataToUpsert);
-    console.log("Invoices logged:", uniqueInvoices.length);
-
     if (error) {
       console.error("Failed to log invoices:", error);
+      return;
     }
+
+    // Update local cache
+    uniqueInvoices.forEach((invoice: any) => {
+      const key = `${invoice.khmshdon}_${invoice.nbmst}`;
+      cachedKeys.add(key);
+    });
+    saveCachedKeys(cachedKeys);
+
+    console.log(`Invoices logged: ${uniqueInvoices.length}`);
   } catch (err) {
     console.error("Failed to log invoices:", err);
   }
 }
-
-logInvoices([])
-  .then(() => {
-    console.log("Done");
-  })
-  .catch((err) => {
-    console.error("Failed to log invoices:", err);
-  });
