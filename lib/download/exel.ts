@@ -6,6 +6,22 @@ import {
 } from "./format";
 import { InvoiceType } from "./hoadon-api";
 
+/**
+ * ExcelJS does not handle timezones well. Dates are written as UTC.
+ * This function converts a UTC date string to a Date object that, when rendered by ExcelJS,
+ * will show the correct date for the Vietnam timezone (UTC+7).
+ * @param dateString ISO date string in UTC
+ * @returns A Date object adjusted for Vietnam timezone.
+ */
+function toVietnamDate(dateString: string): Date | null {
+  if (!dateString) {
+    return null;
+  }
+  const date = new Date(dateString);
+  // Adjust for Vietnam timezone (UTC+7) by adding 7 hours
+  return new Date(date.getTime() + 7 * 60 * 60 * 1000);
+}
+
 const mainSectionHeader = [
   "STT",
   "KÝ HIỆU MẪU SỐ",
@@ -67,7 +83,7 @@ export function createInvoicesSheet(
         row.getCell(2).value = invoice.hdon;
         row.getCell(3).value = invoice.khhdon;
         row.getCell(4).value = invoice.shdon;
-        row.getCell(5).value = new Date(invoice.tdlap);
+        row.getCell(5).value = toVietnamDate(invoice.tdlap); // 2025-10-02T17:00:00Z
         row.getCell(6).value =
           invoiceType === "purchase" ? invoice.nbmst : invoice.nmmst;
         row.getCell(7).value =
@@ -196,7 +212,7 @@ export function createProductsSheet(
       product.invoice.hdon,
       product.invoice.khhdon,
       product.invoice.shdon,
-      new Date(product.invoice.tdlap),
+      toVietnamDate(product.invoice.tdlap),
       product.invoice.nmmst,
       product.invoice.nmten,
       product.invoice.dvtte,
@@ -281,7 +297,7 @@ export function createBK011Sheet(workbook: ExcelJS.Workbook, products: any[]) {
       p.invoice.hdon + "",
       p.invoice.khhdon,
       p.invoice.shdon + "",
-      new Date(p.invoice.tdlap),
+      toVietnamDate(p.invoice.tdlap),
       p.invoice.nbten,
       p.invoice.nbmst,
       //
