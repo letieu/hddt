@@ -23,7 +23,6 @@ const plans = [
     description: "Mua theo lượt tải, không giới hạn MST",
     features: ["100 credits", "(≈) 50 lượt xuất file", "Không giới hạn MST"],
     popular: false,
-    lifetime: false,
   },
   {
     name: "Gói A2",
@@ -31,19 +30,13 @@ const plans = [
     description: "Mua theo lượt tải, không giới hạn MST",
     features: ["400 credits", "(≈) 200 lượt xuất file", "Không giới hạn MST"],
     popular: false,
-    lifetime: false,
   },
   {
     name: "Gói A3",
-    price: "Không giới hạn",
+    price: 449_000,
     description: "Trọn đời, không giới hạn số lần",
-    features: [
-      "999999999999 credits",
-      "Không giới hạn số lần",
-      "Không giới hạn MST",
-    ],
+    features: ["Không giới hạn số lần", "Không giới hạn MST"],
     popular: true,
-    lifetime: true,
   },
 ];
 
@@ -88,7 +81,7 @@ export function PricingSection() {
                       : plan.price}
                   </span>
                 </div>
-                <CardDescription className="mt-2 text-pretty h-12">
+                <CardDescription className="mt-2 text-pretty h-12 text-xl">
                   {plan.description}
                 </CardDescription>
               </CardHeader>
