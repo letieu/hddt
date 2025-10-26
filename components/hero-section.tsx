@@ -96,7 +96,7 @@ export function HeroSection() {
                       Danh sách hóa đơn
                     </p>
                     <p className="text-muted-foreground">
-                      File excel hóa đơn bán ra, mua vào, hóa đơn có mã từ
+                      File excel list hóa đơn bán ra, mua vào, hóa đơn có mã từ
                       máy tính tiền
                     </p>
                   </div>
@@ -107,7 +107,7 @@ export function HeroSection() {
                   </div>
                   <div>
                     <p className="font-semibold text-foreground">
-                      File <strong>XML</strong>, <strong>HTML</strong>, <strong>PDF</strong> theo hóa đơn
+                      File XML, HTML, PDF theo hóa đơn
                     </p>
                     <p className="text-muted-foreground">
                       Toàn bộ file kèm theo danh sách hóa đơn
@@ -120,10 +120,10 @@ export function HeroSection() {
                   </div>
                   <div>
                     <p className="font-semibold text-foreground">
-                      Danh sách sản phẩm, <strong>bảng kê</strong>hoá đơn
+                      Danh sách sản phẩm, bảng kê hoá đơn
                     </p>
                     <p className="text-muted-foreground">
-                      Danh sách sản phẩm trong file excel, <strong>bảng kê</strong> hoá
+                      Kèm theo danh sách sản phẩm trong file excel, bảng kê hoá
                       đơn, chứng từ hàng hoá, dịch vụ mua vào, bán ra
                     </p>
                   </div>
@@ -135,7 +135,7 @@ export function HeroSection() {
                   <div>
                     <p className="font-semibold text-foreground">
                       Định dạng để dễ dàng nhập vào các phần mềm kế toán như
-                      <strong>Misa</strong>
+                      Misa
                     </p>
                     <p className="text-muted-foreground">
                       File Excel được định dạng để dễ dàng nhập vào các phần mềm
