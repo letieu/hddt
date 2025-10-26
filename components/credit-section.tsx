@@ -208,7 +208,7 @@ export function CreditSection() {
                 <CardContent className="flex-grow">
                   {option.isLifetime ? (
                     <div className="text-4xl font-extrabold mb-1">
-                      Khoản giới hạn
+                      Không giới hạn
                     </div>
                   ) : (
                     <div className="text-4xl font-extrabold mb-1">
