@@ -55,6 +55,31 @@ export async function Footer() {
                   Tải hóa đơn gốc
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/hoa-don-tien-dien-evn"
+                  className="text-muted-foreground hover:text-accent transition-colors"
+                >
+                  Hóa đơn tiền điện EVN
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Blog Link */}
+          <div>
+            <h3 className="font-semibold text-card-foreground mb-4">
+              Blog
+            </h3>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  href="/blog"
+                  className="text-muted-foreground hover:text-accent transition-colors"
+                >
+                  Tất cả bài viết
+                </Link>
+              </li>
             </ul>
           </div>
 
