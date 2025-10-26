@@ -18,17 +18,28 @@ const formatPrice = (price: number) => {
 
 const plans = [
   {
+    name: "Gói A1",
+    price: 49_000,
+    description: "Mua theo lượt tải, không giới hạn MST",
+    features: ["100 credits", "(≈) 50 lượt xuất file", "Không giới hạn MST"],
+    popular: false,
+  },
+  {
     name: "Gói A2",
-    price: 50000,
-    description: "Gói phổ biến, phù hợp cho hầu hết người dùng.",
-    features: ["100 credits", "(≈) 50 lượt xuất file", "Hỗ trợ ưu tiên"],
+    price: 149_000,
+    description: "Mua theo lượt tải, không giới hạn MST",
+    features: ["400 credits", "(≈) 200 lượt xuất file", "Không giới hạn MST"],
     popular: false,
   },
   {
     name: "Gói A3",
-    price:500000,
+    price: 449_000,
     description: "Trọn đời, không giới hạn số lần",
-    features: ["999999999999 credits", "Không giới hạn số lần", "Hỗ trợ ưu tiên"],
+    features: [
+      "999999999999 credits",
+      "Không giới hạn số lần",
+      "Không giới hạn MST",
+    ],
     popular: true,
   },
 ];

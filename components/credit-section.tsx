@@ -21,18 +21,26 @@ type CreditOption = {
 };
 const creditOptions: CreditOption[] = [
   {
+    id: "a1",
+    name: "Gói A1",
+    credits: 100,
+    price: 49_000,
+    description: "(≈) 50 lượt xuất file",
+    isPopular: false,
+  },
+  {
     id: "a2",
     name: "Gói A2",
-    credits: 100,
-    price: 50_000,
-    description: "(≈) 50 lượt xuất file",
+    credits: 400,
+    price: 149_000,
+    description: "(≈) 200 lượt xuất file",
     isPopular: false,
   },
   {
     id: "a3",
     name: "Gói A3",
     credits: 99999999,
-    price: 500000,
+    price: 449_000,
     description: "Trọn đời, không giới hạn số lần",
     isPopular: true,
   },
