@@ -23,6 +23,7 @@ const plans = [
     description: "Mua theo lượt tải, không giới hạn MST",
     features: ["100 credits", "(≈) 50 lượt xuất file", "Không giới hạn MST"],
     popular: false,
+    lifetime: false,
   },
   {
     name: "Gói A2",
@@ -30,10 +31,11 @@ const plans = [
     description: "Mua theo lượt tải, không giới hạn MST",
     features: ["400 credits", "(≈) 200 lượt xuất file", "Không giới hạn MST"],
     popular: false,
+    lifetime: false,
   },
   {
     name: "Gói A3",
-    price: 449_000,
+    price: "Không giới hạn",
     description: "Trọn đời, không giới hạn số lần",
     features: [
       "999999999999 credits",
@@ -41,6 +43,7 @@ const plans = [
       "Không giới hạn MST",
     ],
     popular: true,
+    lifetime: true,
   },
 ];
 

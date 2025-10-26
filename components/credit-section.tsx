@@ -18,6 +18,7 @@ type CreditOption = {
   price: number;
   description: string;
   isPopular?: boolean;
+  isLifetime?: boolean;
 };
 const creditOptions: CreditOption[] = [
   {
@@ -39,10 +40,11 @@ const creditOptions: CreditOption[] = [
   {
     id: "a3",
     name: "Gói A3",
-    credits: 99999999,
+    credits: 999999999,
     price: 449_000,
     description: "Trọn đời, không giới hạn số lần",
     isPopular: true,
+    isLifetime: true,
   },
 ];
 
@@ -204,12 +206,19 @@ export function CreditSection() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow">
-                  <div className="text-4xl font-extrabold mb-1">
-                    {option.credits}{" "}
-                    <span className="text-xl font-semibold text-muted-foreground">
-                      credit
-                    </span>
-                  </div>
+                  {option.isLifetime ? (
+                    <div className="text-4xl font-extrabold mb-1">
+                      Khoản giới hạn
+                    </div>
+                  ) : (
+                    <div className="text-4xl font-extrabold mb-1">
+                      {option.credits}{" "}
+                      <span className="text-xl font-semibold text-muted-foreground">
+                        credit
+                      </span>
+                    </div>
+                  )}
+
                   <p className="text-2xl font-bold text-blue-600 mb-2">
                     {formatPrice(option.price)}
                   </p>
