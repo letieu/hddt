@@ -24,17 +24,17 @@ const creditOptions: CreditOption[] = [
   {
     id: "a1",
     name: "Gói A1",
-    credits: 100,
+    credits: 50,
     price: 49_000,
-    description: "(≈) 50 lượt xuất file",
+    description: "(≈) 10 lượt xuất file",
     isPopular: false,
   },
   {
     id: "a2",
     name: "Gói A2",
-    credits: 400,
+    credits: 200,
     price: 149_000,
-    description: "(≈) 200 lượt xuất file",
+    description: "(≈) 40 lượt xuất file",
     isPopular: false,
   },
   {

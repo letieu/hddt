@@ -21,14 +21,14 @@ const plans = [
     name: "Gói A1",
     price: 49_000,
     description: "Mua theo lượt tải, không giới hạn MST",
-    features: ["100 credits", "(≈) 50 lượt xuất file", "Không giới hạn MST"],
+    features: ["50 credits", "(≈) 10 lượt xuất file", "Không giới hạn MST"],
     popular: false,
   },
   {
     name: "Gói A2",
     price: 149_000,
     description: "Mua theo lượt tải, không giới hạn MST",
-    features: ["400 credits", "(≈) 200 lượt xuất file", "Không giới hạn MST"],
+    features: ["200 credits", "(≈) 40 lượt xuất file", "Không giới hạn MST"],
     popular: false,
   },
   {
