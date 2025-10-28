@@ -39,6 +39,8 @@ import {
 import { creditUsageEstimate } from "@/lib/credit";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export type ExportInput = {
   credential: {
@@ -89,6 +91,8 @@ export function AppSection({ className }: { className?: string }) {
   const [failedItems, setFailedItems] = useState<FailedItems | null>(null);
 
   const [exportState, setExportState] = useState<ExportState>("idle");
+
+  const router = useRouter();
 
   useEffect(() => {
     const getUser = async () => {
@@ -175,6 +179,15 @@ export function AppSection({ className }: { className?: string }) {
       );
 
       setExportState("idle");
+
+      toast("Không đủ Credit, vui lòng nạp thêm", {
+        action: {
+          label: "Nạp Credit",
+          onClick: () => {
+            router.push("/dashboard");
+          },
+        },
+      });
 
       return;
     }
@@ -336,7 +349,10 @@ export function AppSection({ className }: { className?: string }) {
 
   return (
     <section
-      className={cn("relative py-20 px-4 overflow-hidden bg-gradient-to-b from-background to-card", className)}
+      className={cn(
+        "relative py-20 px-4 overflow-hidden bg-gradient-to-b from-background to-card",
+        className,
+      )}
       id="app"
     >
       <div className="container mx-auto max-w-7xl relative z-10">
