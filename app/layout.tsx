@@ -8,7 +8,8 @@ import { Header } from "@/components/header";
 import { InstallExtensionBanner } from "@/components/install-extension-banner";
 import { Toaster } from "@/components/ui/sonner";
 
-const title = "Tải Hóa Đơn Điện Tử Hàng Loạt - Nhanh Chóng và Tự Động";
+const title =
+  "Tải Hóa Đơn Điện Tử Hàng Loạt - tải XML, PDF, Bảng kê hóa đơn tự động";
 const description =
   "Tải hóa đơn điện tử hàng loạt nhanh chóng và tự động, tải XML, PDF hoá đơn bằng 1 click. Tải hoá đơn mua vào, hoá đơn bán ra, hoá đơn khởi tạo từ máy tính tiền.";
 const url = "https://taihoadon.online";

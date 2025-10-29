@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RainbowButton } from "./magicui/rainbow-button";
 import { useMemo, useState } from "react";
+import { cn } from "@/lib/utils";
 import { LoginButton } from "./login-button";
 import { ExportInput, InvoiceQueryType, InvoiceType } from "./app-section";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -35,6 +36,41 @@ export function InputForm(props: {
 
   const [fromDate, setFromDate] = useState(formatDateInput(firstOfMonth));
   const [toDate, setToDate] = useState(formatDateInput(today));
+
+  const getValidDateString = (dateString: string): string => {
+    if (!dateString) {
+      return "";
+    }
+
+    const parts = dateString.split("-");
+    if (parts.length !== 3) {
+      return dateString; // Not a full YYYY-MM-DD string yet
+    }
+
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10); // 1-indexed month
+    const day = parseInt(parts[2], 10);
+
+    if (isNaN(year) || isNaN(month) || isNaN(day)) {
+      return dateString; // If any part is not a number, return original
+    }
+
+    // Check for valid month range (1-12)
+    if (month < 1 || month > 12) {
+      return dateString; // Invalid month, return original
+    }
+
+    // Get the last day of the given month
+    const lastDayOfTargetMonth = new Date(year, month, 0).getDate();
+
+    // If the day is greater than the last day of the month, set it to the last day
+    if (day > lastDayOfTargetMonth) {
+      return `${String(year).padStart(4, "0")}-${String(month).padStart(2, "0")}-${String(lastDayOfTargetMonth).padStart(2, "0")}`;
+    }
+
+    // If the day is valid, return the original string (padded for consistency)
+    return `${String(year).padStart(4, "0")}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  };
 
   const [invoiceBuyer, setInvoiceBuyer] = useState("");
   const [invoiceSeller, setInvoiceSeller] = useState("");
@@ -156,7 +192,9 @@ export function InputForm(props: {
                   type="date"
                   id="from-date"
                   value={fromDate}
-                  onChange={(e) => setFromDate(e.target.value)}
+                  onChange={(e) =>
+                    setFromDate(getValidDateString(e.target.value))
+                  }
                   max={formatDateInput(today)}
                 />
                 <span>đến</span>
@@ -164,7 +202,9 @@ export function InputForm(props: {
                   type="date"
                   id="to-date"
                   value={toDate}
-                  onChange={(e) => setToDate(e.target.value)}
+                  onChange={(e) =>
+                    setToDate(getValidDateString(e.target.value))
+                  }
                   max={formatDateInput(today)}
                 />
               </div>
@@ -254,7 +294,7 @@ export function InputForm(props: {
                 </Label>
               </div>
             </div>
-            <div className="space-y-2 pt-4">
+            <div className="space-y-2 pt-2">
               <Label>Loại file tải về</Label>
               <div className="flex items-center space-x-2">
                 <Checkbox
