@@ -17,6 +17,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
     {
+      url: "https://taihoadon.online/tai-hoa-don-goc",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: "https://taihoadon.online/hoa-don-tien-dien-evn",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.5,
+    },
+    {
       url: "https://taihoadon.online/blog",
       lastModified: new Date(),
       changeFrequency: "monthly",
