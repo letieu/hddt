@@ -22,7 +22,6 @@ export async function POST(req: NextRequest) {
   }
 
   const res = await downloadProvider.download(params);
-  console.log("Downloaded", params);
 
   return new NextResponse(res, {
     headers: {

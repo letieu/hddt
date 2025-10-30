@@ -43,7 +43,7 @@
 - [ ] 0309478306:Công ty Cổ phần TS24
 - [ ] 0315298333:Công ty TNHH Hóa đơn điện tử TCT
 - [ ] 0303609305:Công ty TNHH Tin học Tia lửa Việt
-- [ ] 0100727825:Công ty Cổ phần phần mềm quản lý doanh nghiệp
+- [x] 0100727825:Công ty Cổ phần phần mềm quản lý doanh nghiệp
 - [ ] 0315467091:Công ty TNHH ACCONLINE.VN
 - [ ] 0315638251:Công ty Cổ phần công nghệ hóa đơn điện tử HT
 - [ ] 0105958921:Công ty Cổ phần công nghệ ITT

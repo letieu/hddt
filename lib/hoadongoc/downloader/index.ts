@@ -1,3 +1,4 @@
+import { FastProvider } from "./fast-provider";
 import { GioathongProvider } from "./giaothongso-provider";
 import { MInvoiceProvider } from "./m-invoice-provider";
 import { MeinvoiceProvider } from "./meinvoice-provider";
@@ -38,8 +39,18 @@ const downloadProviders = [
   // Nhà cung cấp
   new MeinvoiceProvider(),
   new MInvoiceProvider(),
+  new FastProvider(),
 ];
 
 export function getDownloadProvider(params: DownloadParams) {
   return downloadProviders.find((p) => p.detectProvider(params));
+}
+
+export function downloadPdf(params: DownloadParams) {
+  const downloadProvider = getDownloadProvider(params);
+  if (!downloadProvider) {
+    throw new Error("No provider found for " + (params.id));
+  }
+
+  return downloadProvider.download(params);
 }
