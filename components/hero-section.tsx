@@ -120,7 +120,7 @@ export function HeroSection() {
                   </div>
                   <div>
                     <p className="font-semibold text-foreground">
-                      Danh sách sản phẩm, bảng kê hoá đơn
+                      Bảng kê hoá đơn, Danh sách sản phẩm
                     </p>
                     <p className="text-muted-foreground">
                       Kèm theo danh sách sản phẩm trong file excel, bảng kê hoá
