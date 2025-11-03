@@ -52,6 +52,97 @@ const detailSectionHeader = [
   "TIỀN THUẾ",
 ];
 
+export function createCombinedInvoicesSheet(
+  workbook: ExcelJS.Workbook,
+  sheetName: string,
+  invoices: any[],
+  invoicesFromCashRegister: any[],
+  invoiceType: InvoiceType,
+) {
+  const mainSheet = workbook.addWorksheet(sheetName);
+
+  const combinedHeader = ["LOẠI HÓA ĐƠN", ...mainSectionHeader];
+  // Add headers
+  const headerRow = mainSheet.addRow(combinedHeader);
+  headerRow.font = { bold: true };
+
+  // Freeze header row
+  mainSheet.views = [{ state: "frozen", ySplit: 1 }];
+
+  // Add data
+  let rowIndex = 1;
+  invoices.forEach((invoice) => {
+    rowIndex++;
+    const row = mainSheet.getRow(rowIndex);
+    row.getCell(1).value = "HĐ điện tử";
+    row.getCell(2).value = rowIndex - 1;
+    row.getCell(3).value = invoice.hdon;
+    row.getCell(4).value = invoice.khhdon;
+    row.getCell(5).value = invoice.shdon;
+    row.getCell(6).value = toVietnamDate(invoice.tdlap); // 2025-10-02T17:00:00Z
+    row.getCell(7).value =
+      invoiceType === "purchase" ? invoice.nbmst : invoice.nmmst;
+    row.getCell(8).value =
+      invoiceType === "purchase" ? invoice.nbten : invoice.nmten;
+    row.getCell(9).value = invoice.tgtcthue;
+    row.getCell(10).value = invoice.tgtthue;
+    row.getCell(11).value = invoice.ttcktmai;
+    row.getCell(12).value = invoice.tgtphi;
+    row.getCell(13).value = invoice.tgtttbso;
+    row.getCell(14).value = invoice.dvtte;
+    row.getCell(15).value = invoice.tgia || 1;
+    row.getCell(16).value =
+      invoiceStatusTitle[invoice.tthai] ?? invoice.tthai;
+    row.getCell(17).value =
+      invoiceCheckResultTitlte[invoice.ttxly] ?? invoice.ttxly;
+  });
+
+  invoicesFromCashRegister.forEach((invoice) => {
+    rowIndex++;
+    const row = mainSheet.getRow(rowIndex);
+    row.getCell(1).value = "HĐ từ máy tính tiền";
+    row.getCell(2).value = rowIndex - 1;
+    row.getCell(3).value = invoice.hdon;
+    row.getCell(4).value = invoice.khhdon;
+    row.getCell(5).value = invoice.shdon;
+    row.getCell(6).value = toVietnamDate(invoice.tdlap); // 2025-10-02T17:00:00Z
+    row.getCell(7).value =
+      invoiceType === "purchase" ? invoice.nbmst : invoice.nmmst;
+    row.getCell(8).value =
+      invoiceType === "purchase" ? invoice.nbten : invoice.nmten;
+    row.getCell(9).value = invoice.tgtcthue;
+    row.getCell(10).value = invoice.tgtthue;
+    row.getCell(11).value = invoice.ttcktmai;
+    row.getCell(12).value = invoice.tgtphi;
+    row.getCell(13).value = invoice.tgtttbso;
+    row.getCell(14).value = invoice.dvtte;
+    row.getCell(15).value = invoice.tgia || 1;
+    row.getCell(16).value =
+      invoiceStatusTitle[invoice.tthai] ?? invoice.tthai;
+    row.getCell(17).value =
+      invoiceCheckResultTitlte[invoice.ttxly] ?? invoice.ttxly;
+  });
+
+  // Formatting
+  mainSheet.columns.forEach((column, i) => {
+    let maxLength = 0;
+    column.eachCell!({ includeEmpty: true }, (cell) => {
+      const columnLength = cell.value ? cell.value.toString().length : 10;
+      if (columnLength > maxLength) {
+        maxLength = columnLength;
+      }
+    });
+    column.width = maxLength < 10 ? 10 : maxLength > 60 ? 60 : maxLength;
+  });
+
+  mainSheet.getColumn(6).numFmt = "dd/mm/yyyy";
+  mainSheet.getColumn(9).numFmt = '#,##0 "đ"';
+  mainSheet.getColumn(10).numFmt = '#,##0 "đ"';
+  mainSheet.getColumn(11).numFmt = '#,##0 "đ"';
+  mainSheet.getColumn(12).numFmt = '#,##0 "đ"';
+  mainSheet.getColumn(13).numFmt = '#,##0 "đ"';
+}
+
 export function createInvoicesSheet(
   workbook: ExcelJS.Workbook,
   sheetName: string,

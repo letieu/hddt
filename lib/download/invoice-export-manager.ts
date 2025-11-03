@@ -11,6 +11,7 @@ import {
   fetchInvoiceDetail,
 } from "@/lib/download/hoadon-api";
 import {
+  createCombinedInvoicesSheet,
     createBK011Sheet,
   createInvoicesSheet,
   createProductsSheet,
@@ -220,6 +221,19 @@ export class InvoiceExportManager extends EventEmitter {
     createInvoicesSheet(
       wb,
       "HĐ có mã từ máy tính tiền",
+      this.invoicesSheet2,
+      input.invoiceType,
+    );
+
+    // sheet 4: Tong hop hoa don
+    this._log({
+      id: "excel",
+      message: `🔄  Tạo sheet tổng hợp hóa đơn`,
+    });
+    createCombinedInvoicesSheet(
+      wb,
+      "Tổng hợp hóa đơn",
+      this.invoicesSheet1,
       this.invoicesSheet2,
       input.invoiceType,
     );
