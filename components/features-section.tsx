@@ -47,7 +47,7 @@ export function FeaturesSection() {
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-balance">
-            Tại sao chọn công cụ tải hoá đơn điện tử của chúng tôi?
+            Tại sao chọn phần mềm tải hoá đơn điện tử của chúng tôi?
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
             Tải hóa đơn điện tử, hóa đơn khởi tạo từ máy tính tiền hàng loạt, hỗ
