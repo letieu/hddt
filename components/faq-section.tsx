@@ -27,6 +27,11 @@ const faqs = [
       "Có, công cụ của chúng tôi tự động tạo bảng kê chi tiết các hóa đơn đã tải về, dễ dàng kê khai thuế và quản lý.",
   },
   {
+    question: "Có tải được hóa đơn gốc không?",
+    answer:
+      <span>Công cụ tải hóa đơn gốc được phát triển độc lập tại địa chỉ <a className="text-blue" href="https://taihoadon.online/tai-hoa-don-goc">https://taihoadon.online/tai-hoa-don-goc</a> . Vui lòng truy cập trang web để sử dụng dịch vụ tải hóa đơn gốc.</span>
+  },
+  {
     question: "Sau khi tải, tôi sẽ nhận được những gì?",
     answer:
       `Sau khi quá trình tải hoàn tất, bạn sẽ nhận được 1 file Excel và 1 file nén (ZIP).
