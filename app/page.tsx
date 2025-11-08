@@ -3,6 +3,7 @@ import { FeaturesSection } from "@/components/features-section";
 import { HeroSection } from "@/components/hero-section";
 import { PricingSection } from "@/components/pricing-section";
 import TestimonialsSection from "@/components/testimonials-section";
+import { FAQSection } from "@/components/faq-section";
 import dynamic from "next/dynamic";
 
 const AppSection = dynamic(() =>
@@ -18,6 +19,7 @@ export default function HomePage() {
       <ExcelDemoSection />
       <TestimonialsSection />
       <PricingSection />
+      <FAQSection />
     </main>
   );
 }

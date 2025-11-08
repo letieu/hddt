@@ -64,7 +64,7 @@ export function CreditCountButton({ className }: { className?: string }) {
       <Link href="/dashboard">
         <RainbowButton className={className}>
           <span className="pl-2">{creditCount}</span>
-          <Wallet />
+          <span className="">Credit</span>
         </RainbowButton>
       </Link>
     )
