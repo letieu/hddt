@@ -330,19 +330,31 @@ export function InputForm(props: {
           </div>
         </form>
       </CardContent>
-      <CardFooter className="flex justify-between">
+      <CardFooter className="flex flex-col justify-between">
         {isLoggedIn ? (
-          <RainbowButton
-            className="w-full"
-            onClick={handleClick}
-            disabled={props.downloading}
-          >
-            Tải dữ liệu{" "}
-            <span className="ml-1">( {estimateCreditUsage || 0} Credit )</span>
-            {props.downloading && (
-              <span className="ml-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></span>
-            )}
-          </RainbowButton>
+          <div className="flex w-full flex-col">
+            <RainbowButton
+              className="w-full"
+              onClick={handleClick}
+              disabled={props.downloading}
+            >
+              Tải dữ liệu{" "}
+              <span className="ml-1">
+                ( {estimateCreditUsage || 0} Credit )
+              </span>
+              {props.downloading && (
+                <span className="ml-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></span>
+              )}
+            </RainbowButton>
+            <a
+              href="https://taihoadon.online/dashboard"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 text-right text-sm text-blue-500 hover:underline"
+            >
+              Nạp thêm Credit
+            </a>
+          </div>
         ) : (
           <LoginButton className="w-full" text="Đăng nhập để tải file" />
         )}
