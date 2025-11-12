@@ -72,50 +72,7 @@ export function MstForm() {
     };
   }, [supabase.auth]);
 
-  const checkCredit = async (creditsToDeduct: number) => {
-    const { error } = await supabase.functions.invoke("check-credit", {
-      body: { creditAmount: creditsToDeduct },
-    });
 
-    if (!error) {
-      return;
-    }
-
-    let errorMessage;
-    if (error instanceof FunctionsHttpError) {
-      const errorResponse = await error.context.json();
-      errorMessage = errorResponse?.error ?? error.message;
-    } else if (error instanceof FunctionsRelayError) {
-      errorMessage = error.message;
-    } else if (error instanceof FunctionsFetchError) {
-      errorMessage = error.message;
-    }
-
-    return errorMessage;
-  };
-
-  const deductCredit = async (creditsToDeduct: number) => {
-    toast("Đang trừ credit...");
-    try {
-      const { data, error } = await supabase.functions.invoke("deduct-credit", {
-        body: { creditAmount: creditsToDeduct },
-      });
-      if (error) {
-        throw error;
-      }
-      if (data.error) {
-        throw new Error(data.error);
-      }
-      toast.success("Thành công", {
-        description: "Đã trừ credit thành công.",
-      });
-      window.dispatchEvent(new Event("credit-update"));
-    } catch (e: any) {
-      toast.error("Lỗi", {
-        description: `Lỗi khi trừ credit: ${e.message}. Vui lòng liên hệ hỗ trợ.`,
-      });
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -137,22 +94,9 @@ export function MstForm() {
       return;
     }
 
-    const creditsToDeduct = taxIds.length;
-    const errorMessage = await checkCredit(creditsToDeduct);
-    if (errorMessage) {
-      setResults([
-        {
-          MST: "ERROR",
-          "Tên người nộp thuế": errorMessage,
-        },
-      ]);
-      return;
-    }
-
     sendGAEvent("check_mst_start");
     setLoading(true);
     setResults([]); // Clear previous results
-    let successfulLookups = 0;
     try {
       const allCrawlData: any[] = [];
       for (const mst of taxIds) {
@@ -162,10 +106,15 @@ export function MstForm() {
 
         if (error) {
           console.error(`Error crawling MST ${mst}:`, error);
+          let errorMessage = error.message;
+          if (error instanceof FunctionsHttpError) {
+            const errorJson = await error.context.json();
+            errorMessage = errorJson.error;
+          }
           allCrawlData.push({
             MST: mst,
             "Tên người nộp thuế": "Lỗi",
-            "Địa chỉ trụ sở/địa chỉ kinh doanh": error.message,
+            "Địa chỉ trụ sở/địa chỉ kinh doanh": errorMessage,
             "Cơ quan thuế quản lý": "",
             "Trạng thái MST": "",
           });
@@ -174,7 +123,7 @@ export function MstForm() {
 
         if (data?.data && data.data.length > 0) {
           allCrawlData.push(...data.data);
-          successfulLookups++;
+          window.dispatchEvent(new Event("credit-update"));
         } else {
           allCrawlData.push({
             MST: mst,
@@ -187,9 +136,6 @@ export function MstForm() {
       }
 
       setResults(allCrawlData);
-      if (successfulLookups > 0) {
-        await deductCredit(successfulLookups);
-      }
       sendGAEvent("check_mst_success");
     } catch (e: any) {
       console.error("Unexpected error:", e);

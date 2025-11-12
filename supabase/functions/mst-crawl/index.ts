@@ -1,5 +1,7 @@
 import * as cheerio from "npm:cheerio@1.0.0-rc.12";
 import { corsHeaders } from "../_shared/cors.ts";
+import { createClient } from "npm:@supabase/supabase-js@2";
+import { CreditError, deductCredits } from "../_shared/credit.ts";
 
 const CAP_SOLVER_KEY = Deno.env.get("CAP_SOLVER_KEY");
 
@@ -150,6 +152,31 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    );
+
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!,
+      {
+        global: {
+          headers: { Authorization: req.headers.get("Authorization")! },
+        },
+      },
+    );
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+
+    await deductCredits(supabaseAdmin, user.id, 1);
+
     // type: cn - Cá nhân, dn - Doanh nghiệp
     const { mst, type } = await req.json();
     if (!mst || !type) {
@@ -174,8 +201,9 @@ Deno.serve(async (req) => {
     });
   } catch (err) {
     console.error("[ERROR]", err);
+    const isCreditError = err instanceof CreditError;
     return new Response(JSON.stringify({ error: err.message }), {
-      status: 500,
+      status: isCreditError ? 402 : 500,
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
   }

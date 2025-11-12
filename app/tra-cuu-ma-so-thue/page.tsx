@@ -1,3 +1,4 @@
+"use client";
 import { MstForm } from "@/components/mst-form";
 import {
   Card,
@@ -7,8 +8,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Toaster } from "@/components/ui/sonner";
-import { Check, Search, FileDown, Users } from "lucide-react";
+import { Check, Search, FileDown, Users, LogIn } from "lucide-react";
 import { Metadata } from "next";
+import { createClient } from "@/lib/supabase/client";
+import { useEffect, useState } from "react";
+import { User } from "@supabase/supabase-js";
+import { Button } from "@/components/ui/button";
 
 const features = [
   {
@@ -37,34 +42,65 @@ const features = [
   },
 ];
 
-const title = "Tra Cứu Mã Số Thuế - Nhanh Chóng và Tự Động";
-const description =
-  "Tra cứu mã số thuế cá nhân, doanh nghiệp hàng loạt. Kết qủa bao gồm thông tin về tổ chức, cá nhân, và hộ kinh doanh, cơ quan thuế quản lý và trạng thái của mã số thuế.";
-const url = "https://taihoadon.online";
-const imageUrl = `${url}/og/tra-cuu-ma-so-thue.png`;
 
-export const metadata: Metadata = {
-  metadataBase: new URL(url),
-  title: title,
-  description: description,
-  openGraph: {
-    title,
-    description,
-    url,
-    images: [
-      {
-        url: imageUrl,
-        width: 1200,
-        height: 630,
-        alt: title,
+
+
+
+function LoginPrompt() {
+  const supabase = createClient();
+  const handleLogin = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${location.origin}/auth/callback`,
       },
-    ],
-    locale: "vi_VN",
-    type: "website",
-  },
-};
+    });
+  };
+
+  return (
+    <Card className="max-w-3xl mx-auto text-center">
+      <CardHeader>
+        <CardTitle>Yêu cầu đăng nhập</CardTitle>
+        <CardDescription>
+          Bạn cần đăng nhập để sử dụng chức năng tra cứu mã số thuế.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button onClick={handleLogin}>
+          <LogIn className="mr-2 h-4 w-4" /> Đăng nhập với Google
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function MstPage() {
+  const supabase = createClient();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user);
+      setLoading(false);
+    };
+    getUser();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+        setLoading(false);
+      },
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [supabase.auth]);
+
   return (
     <div className="min-h-screen bg-background">
       <Toaster />
@@ -81,7 +117,7 @@ export default function MstPage() {
                 gồm thông tin về tổ chức, cá nhân, và hộ kinh doanh, cơ quan
                 thuế quản lý và trạng thái của mã số thuế.
               </p>
-              <MstForm />
+              {loading ? null : user ? <MstForm /> : <LoginPrompt />}
             </div>
           </div>
         </section>
@@ -118,41 +154,6 @@ export default function MstPage() {
                   </CardContent>
                 </Card>
               ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="guide" className="py-20 px-4 bg-card">
-          <div className="container mx-auto max-w-4xl">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Hướng Dẫn và Thông Tin
-              </h2>
-            </div>
-            <div className="space-y-8 text-lg text-muted-foreground">
-              <div>
-                <h3 className="text-2xl font-semibold text-foreground mb-3">
-                  Mã Số Thuế là gì?
-                </h3>
-                <p>
-                  Mã số thuế (MST) là một mã số duy nhất do cơ quan thuế cấp cho
-                  các tổ chức, cá nhân, và hộ kinh doanh tại Việt Nam để nhận
-                  diện và quản lý việc nộp thuế. Đối với doanh nghiệp, MST cũng
-                  chính là mã số doanh nghiệp. Đối với cá nhân, MST được cấp dựa
-                  trên số CMND/CCCD.
-                </p>
-              </div>
-              <div>
-                <h3 className="text-2xl font-semibold text-foreground mb-3">
-                  Tầm quan trọng của việc tra cứu Mã Số Thuế
-                </h3>
-                <p>
-                  Kiểm tra thông tin đối tác, khách hàng để đảm bảo tính pháp lý
-                  và tránh rủi ro trong kinh doanh.
-                </p>
-                <p>Phục vụ công tác kế toán, kê khai và nộp thuế chính xác.</p>
-                <p>Xác thực thông tin cá nhân cho các thủ tục hành chính.</p>
-              </div>
             </div>
           </div>
         </section>
