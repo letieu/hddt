@@ -32,13 +32,14 @@ async function resolveCaptcha(imageBase64: string) {
   return data.solution.text;
 }
 
-// 🔹 Simple cookie jar (manual)
-let cookies: string[] = [];
-
-async function fetchWithCookies(url: string, opts: RequestInit = {}) {
+async function fetchWithCookies(
+  url: string,
+  opts: RequestInit = {},
+  cookieJar: string[] = [],
+): Promise<{ res: Response; cookieJar: string[] }> {
   const headers = new Headers(opts.headers);
-  if (cookies.length > 0) {
-    headers.set("Cookie", cookies.join("; "));
+  if (cookieJar.length > 0) {
+    headers.set("Cookie", cookieJar.join("; "));
   }
 
   const res = await fetch(url, { ...opts, headers });
@@ -50,22 +51,23 @@ async function fetchWithCookies(url: string, opts: RequestInit = {}) {
       const cookie = cookieStr.split(";")[0];
       const [name] = cookie.split("=");
       // replace if exists
-      cookies = cookies.filter((c) => !c.startsWith(`${name}=`));
-      cookies.push(cookie);
+      cookieJar = cookieJar.filter((c) => !c.startsWith(`${name}=`));
+      cookieJar.push(cookie);
     });
   }
 
-  return res;
+  return { res, cookieJar };
 }
 
-async function fetchCaptchaAndSolve() {
-  const captchaRes = await fetchWithCookies(
+async function fetchCaptchaAndSolve(cookieJar: string[]) {
+  const { res: captchaRes, cookieJar: updatedCookieJar } = await fetchWithCookies(
     "https://tracuunnt.gdt.gov.vn/tcnnt/captcha.png?uid=",
     {
       headers: {
         "User-Agent": "Mozilla/5.0",
       },
     },
+    cookieJar,
   );
 
   if (!captchaRes.ok) throw new Error("Cannot fetch captcha");
@@ -79,10 +81,15 @@ async function fetchCaptchaAndSolve() {
 
   const solvedCaptcha = await resolveCaptcha(imageBase64);
   console.log("[INFO] Captcha solved:", solvedCaptcha);
-  return solvedCaptcha;
+  return { solvedCaptcha, cookieJar: updatedCookieJar };
 }
 
-async function fetchTaxInfo(mst: string, type: "cn" | "dn", captcha: string) {
+async function fetchTaxInfo(
+  mst: string,
+  type: "cn" | "dn",
+  captcha: string,
+  cookieJar: string[],
+) {
   const body = new URLSearchParams({
     cm: "cm",
     mst,
@@ -99,17 +106,17 @@ async function fetchTaxInfo(mst: string, type: "cn" | "dn", captcha: string) {
     url = `https://tracuunnt.gdt.gov.vn/tcnnt/mstdn.jsp?taxId=${mst}`;
   }
 
-  const res = await fetchWithCookies(url, {
+  const { res, cookieJar: updatedCookieJar } = await fetchWithCookies(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       Referer: `https://tracuunnt.gdt.gov.vn/tcnnt/mstcn.jsp?taxId=${mst}`,
     },
     body,
-  });
+  }, cookieJar);
 
   if (!res.ok) throw new Error("Cannot fetch tax info");
-  return await res.text();
+  return { html: await res.text(), cookieJar: updatedCookieJar };
 }
 
 function getCompanyDetail(html: string) {
@@ -192,8 +199,19 @@ Deno.serve(async (req) => {
       });
     }
 
-    const captcha = await fetchCaptchaAndSolve();
-    const html = await fetchTaxInfo(mst, type, captcha);
+    let cookieJar: string[] = [];
+    const { solvedCaptcha: captcha, cookieJar: cookieJarAfterCaptcha } =
+      await fetchCaptchaAndSolve(cookieJar);
+    cookieJar = cookieJarAfterCaptcha;
+
+    const { html, cookieJar: cookieJarAfterTaxInfo } = await fetchTaxInfo(
+      mst,
+      type,
+      captcha,
+      cookieJar,
+    );
+    cookieJar = cookieJarAfterTaxInfo;
+
     const detail = getCompanyDetail(html);
 
     return new Response(JSON.stringify({ data: detail }), {
