@@ -98,56 +98,38 @@ export function MstForm() {
     setLoading(true);
     setResults([]); // Clear previous results
     try {
-      const allCrawlData: any[] = [];
-      for (const mst of taxIds) {
-        const { data, error } = await supabase.functions.invoke("mst-crawl", {
-          body: { mst, type: selectedType },
+      const { data, error } = await supabase.functions.invoke("mst-crawl", {
+        body: { msts: taxIds, type: selectedType }, // Changed to msts array
+      });
+
+      if (error) {
+        console.error(`Error crawling MSTs:`, error);
+        let errorMessage = error.message;
+        if (error instanceof FunctionsHttpError) {
+          const errorJson = await error.context.json();
+          errorMessage = errorJson.error;
+        }
+        toast.error("Lỗi tra cứu", {
+          description: errorMessage,
         });
-
-        if (error) {
-          console.error(`Error crawling MST ${mst}:`, error);
-          let errorMessage = error.message;
-          if (error instanceof FunctionsHttpError) {
-            const errorJson = await error.context.json();
-            errorMessage = errorJson.error;
-          }
-          allCrawlData.push({
-            MST: mst,
-            "Tên người nộp thuế": "Lỗi",
-            "Địa chỉ trụ sở/địa chỉ kinh doanh": errorMessage,
-            "Cơ quan thuế quản lý": "",
-            "Trạng thái MST": "",
-          });
-          continue;
-        }
-
-        if (data?.data && data.data.length > 0) {
-          allCrawlData.push(...data.data);
-          window.dispatchEvent(new Event("credit-update"));
-        } else {
-          allCrawlData.push({
-            MST: mst,
-            "Tên người nộp thuế": "Không tìm thấy dữ liệu",
-            "Địa chỉ trụ sở/địa chỉ kinh doanh": "",
-            "Cơ quan thuế quản lý": "",
-            "Trạng thái MST": "",
-          });
-        }
+        setResults([]); // Clear results on a general error
+        return;
       }
 
-      setResults(allCrawlData);
+      if (data?.data) {
+        setResults(data.data);
+        window.dispatchEvent(new Event("credit-update")); // Update credits
+      } else {
+        setResults([]); // No data returned
+      }
+
       sendGAEvent("check_mst_success");
     } catch (e: any) {
       console.error("Unexpected error:", e);
-      setResults([
-        {
-          MST: "N/A",
-          "Tên người nộp thuế": "Lỗi hệ thống",
-          "Địa chỉ trụ sở/địa chỉ kinh doanh": e.message,
-          "Cơ quan thuế quản lý": "",
-          "Trạng thái MST": "",
-        },
-      ]);
+      toast.error("Lỗi hệ thống", {
+        description: e.message,
+      });
+      setResults([]); // Clear results on unexpected error
     } finally {
       setLoading(false);
     }

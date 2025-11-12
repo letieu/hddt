@@ -152,18 +152,12 @@ function getCompanyDetail(html: string) {
   return results;
 }
 
-// 🚀 Supabase Edge Function Entry
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    const supabaseAdmin = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
-
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_ANON_KEY")!,
@@ -174,7 +168,9 @@ Deno.serve(async (req) => {
       },
     );
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
@@ -182,15 +178,15 @@ Deno.serve(async (req) => {
       });
     }
 
-    await deductCredits(supabaseAdmin, user.id, 1);
-
-    // type: cn - Cá nhân, dn - Doanh nghiệp
-    const { mst, type } = await req.json();
-    if (!mst || !type) {
-      return new Response(JSON.stringify({ error: "Missing mst or type" }), {
+    const { msts, type } = await req.json();
+    if (!msts || !Array.isArray(msts) || msts.length === 0 || !type) {
+      return new Response(JSON.stringify({ error: "Missing msts or type" }), {
         status: 400,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
       });
     }
+
+    await deductCredits(supabase, user.id, msts.length);
 
     if (type !== "cn" && type !== "dn") {
       return new Response(JSON.stringify({ error: "Invalid type" }), {
@@ -199,22 +195,67 @@ Deno.serve(async (req) => {
       });
     }
 
-    let cookieJar: string[] = [];
-    const { solvedCaptcha: captcha, cookieJar: cookieJarAfterCaptcha } =
-      await fetchCaptchaAndSolve(cookieJar);
-    cookieJar = cookieJarAfterCaptcha;
+    const lookupPromises = msts.map(async (mst) => {
+      let cookieJar: string[] = []; // Each lookup gets its own cookieJar
+      try {
+        const { solvedCaptcha: captcha, cookieJar: cookieJarAfterCaptcha } =
+          await fetchCaptchaAndSolve(cookieJar);
+        cookieJar = cookieJarAfterCaptcha;
 
-    const { html, cookieJar: cookieJarAfterTaxInfo } = await fetchTaxInfo(
-      mst,
-      type,
-      captcha,
-      cookieJar,
-    );
-    cookieJar = cookieJarAfterTaxInfo;
+        const { html, cookieJar: cookieJarAfterTaxInfo } = await fetchTaxInfo(
+          mst,
+          type,
+          captcha,
+          cookieJar,
+        );
+        // cookieJar = cookieJarAfterTaxInfo; // Not strictly needed as this promise is isolated
 
-    const detail = getCompanyDetail(html);
+        const detail = getCompanyDetail(html);
 
-    return new Response(JSON.stringify({ data: detail }), {
+        if (detail && detail.length > 0) {
+          return detail; // Return the actual data
+        } else {
+          return [{ // Return a structured "not found" message
+            MST: mst,
+            "Tên người nộp thuế": "Không tìm thấy dữ liệu",
+            "Địa chỉ trụ sở/địa chỉ kinh doanh": "",
+            "Cơ quan thuế quản lý": "",
+            "Trạng thái MST": "",
+          }];
+        }
+      } catch (error: any) {
+        console.error(`Error crawling MST ${mst}:`, error);
+        return [{ // Return a structured error message
+          MST: mst,
+          "Tên người nộp thuế": "Lỗi",
+          "Địa chỉ trụ sở/địa chỉ kinh doanh": error.message,
+          "Cơ quan thuế quản lý": "",
+          "Trạng thái MST": "",
+        }];
+      }
+    });
+
+    const results = await Promise.allSettled(lookupPromises);
+
+    const allCrawlData: any[] = [];
+    results.forEach((result) => {
+      if (result.status === "fulfilled") {
+        allCrawlData.push(...result.value);
+      } else {
+        // This case should ideally not be hit if individual promise catches errors
+        // but it's good for robustness.
+        console.error("Promise rejected:", result.reason);
+        allCrawlData.push({
+          MST: "N/A", // Or try to extract from result.reason if possible
+          "Tên người nộp thuế": "Lỗi hệ thống",
+          "Địa chỉ trụ sở/địa chỉ kinh doanh": result.reason?.message || "Unknown error",
+          "Cơ quan thuế quản lý": "",
+          "Trạng thái MST": "",
+        });
+      }
+    });
+
+    return new Response(JSON.stringify({ data: allCrawlData }), {
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
   } catch (err) {
