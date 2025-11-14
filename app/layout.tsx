@@ -56,7 +56,6 @@ export default function RootLayout({
       <head />
       <body className={`font-sans ${roboto.className}`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <InstallExtensionBanner />
           <Header />
           {children}
           <Footer />
