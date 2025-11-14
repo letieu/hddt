@@ -298,6 +298,16 @@ export function InputForm(props: {
               <Label>Loại file tải về</Label>
               <div className="flex items-center space-x-2">
                 <Checkbox
+                  id="download-excel"
+                  disabled
+                  checked={true}
+                />
+                <Label htmlFor="download-excel" className="font-normal">
+                  Tải file Excel
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
                   id="download-xml"
                   checked={downloadXml}
                   onCheckedChange={(checked) => setDownloadXml(!!checked)}

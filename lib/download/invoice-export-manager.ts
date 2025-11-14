@@ -12,7 +12,7 @@ import {
 } from "@/lib/download/hoadon-api";
 import {
   createCombinedInvoicesSheet,
-    createBK011Sheet,
+  createBK011Sheet,
   createInvoicesSheet,
   createProductsSheet,
   excelToBlob,
@@ -359,6 +359,10 @@ export class InvoiceExportManager extends EventEmitter {
           status: "success",
           message: "✅ Đã tải xong file zip",
         });
+
+        this.emit("build-finish", {
+          zipFileName,
+        } as InvoiceExportResult);
       } else {
         this._log({
           message: "❌ Lỗi tạo file zip",
@@ -373,17 +377,16 @@ export class InvoiceExportManager extends EventEmitter {
         message: "✅ Đã tải xong file Excel",
         id: "excel",
       });
+
+      this.emit("build-finish", {
+        excelFileName,
+      } as InvoiceExportResult);
     }
 
     this._log({
       status: "success",
       message: "✅ 📥✨ Hoàn tất tải dữ liệu 🎉🎯🚀✅",
     });
-
-    this.emit("build-finish", {
-      excelFileName,
-      zipFileName,
-    } as InvoiceExportResult);
   }
 
   private async handleDownloadXML(
