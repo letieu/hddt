@@ -275,24 +275,25 @@ export class InvoiceExportManager extends EventEmitter {
     });
 
     const excelFileName = getExcelFileName(input);
-    const blob = await excelToBlob(wb);
-    saveAs(blob, excelFileName);
-    this._log({
-      status: "success",
-      message: "✅ Đã tải xong file Excel",
-      id: "excel",
-    });
+    const excelBlob = await excelToBlob(wb);
 
     let zipFileName: string | undefined;
     if (downloadFiles) {
       this._log({
         id: "zip-start",
-        message: "🔄 Đang tạo file zip XML...",
+        message: "🔄 Đang tạo file zip...",
       });
 
       const rootZip = new JSZip();
       const rootFolder = rootZip.folder(getZipRootFolderName(input));
       if (rootFolder) {
+        // Add Excel file to zip
+        rootFolder.file(excelFileName, excelBlob);
+        this._log({
+          message: "✅ Đã thêm file Excel vào file nén.",
+          id: "excel-zip",
+        });
+
         // Process invoices separately by type to group them
         if (this.invoicesSheet1.length > 0) {
           const queryTypeFolder = rootFolder.folder(
@@ -356,14 +357,22 @@ export class InvoiceExportManager extends EventEmitter {
         this._log({
           id: "zip-end",
           status: "success",
-          message: "✅ Đã tải xong file zip XML",
+          message: "✅ Đã tải xong file zip",
         });
       } else {
         this._log({
-          message: "❌ Lỗi tạo file zip XML",
+          message: "❌ Lỗi tạo file zip",
           id: "zip",
         });
       }
+    } else {
+      // If not downloading other files, just save the Excel.
+      saveAs(excelBlob, excelFileName);
+      this._log({
+        status: "success",
+        message: "✅ Đã tải xong file Excel",
+        id: "excel",
+      });
     }
 
     this._log({
