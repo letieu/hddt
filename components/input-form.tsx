@@ -350,7 +350,7 @@ export function InputForm(props: {
             >
               Tải dữ liệu{" "}
               <span className="ml-1">
-                ( {estimateCreditUsage || 0} Credit )
+                (Tốn {estimateCreditUsage || 0} Credit )
               </span>
               {props.downloading && (
                 <span className="ml-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></span>
