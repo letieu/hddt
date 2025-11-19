@@ -252,7 +252,7 @@ export function AppSection({ className }: { className?: string }) {
         } else {
           setFailedItems(null);
 
-          setExportState("success");
+          setExportState("building");
 
           // Automatically build if successful
 
