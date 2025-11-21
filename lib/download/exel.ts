@@ -6,6 +6,8 @@ import {
 } from "./format";
 import { InvoiceType } from "./hoadon-api";
 
+const moneyFormat = '#,##0'
+
 /**
  * ExcelJS does not handle timezones well. Dates are written as UTC.
  * This function converts a UTC date string to a Date object that, when rendered by ExcelJS,
@@ -147,11 +149,11 @@ export function createCombinedInvoicesSheet(
   });
 
   mainSheet.getColumn(6).numFmt = "dd/mm/yyyy";
-  mainSheet.getColumn(14).numFmt = '#,##0 "đ"';
-  mainSheet.getColumn(15).numFmt = '#,##0 "đ"';
-  mainSheet.getColumn(16).numFmt = '#,##0 "đ"';
-  mainSheet.getColumn(17).numFmt = '#,##0 "đ"';
-  mainSheet.getColumn(18).numFmt = '#,##0 "đ"';
+  mainSheet.getColumn(14).numFmt = moneyFormat;
+  mainSheet.getColumn(15).numFmt = moneyFormat;
+  mainSheet.getColumn(16).numFmt = moneyFormat;
+  mainSheet.getColumn(17).numFmt = moneyFormat;
+  mainSheet.getColumn(18).numFmt = moneyFormat;
 }
 
 export function createInvoicesSheet(
@@ -254,15 +256,15 @@ export function createInvoicesSheet(
   });
 
   mainSheet.getColumn(5).numFmt = "dd/mm/yyyy"; // NGÀY LẬP
-  mainSheet.getColumn(12).numFmt = '#,##0 "đ"'; // TỔNG TIỀN CHƯA THUẾ
-  mainSheet.getColumn(13).numFmt = '#,##0 "đ"'; // TỔNG TIỀN THUẾ
-  mainSheet.getColumn(14).numFmt = '#,##0 "đ"'; // TỔNG TIỀN CHIẾT KHẤU THƯƠNG MẠI
-  mainSheet.getColumn(15).numFmt = '#,##0 "đ"'; // TỔNG TIỀN PHÍ
-  mainSheet.getColumn(16).numFmt = '#,##0 "đ"'; // TỔNG TIỀN THANH TOÁN
-  mainSheet.getColumn(25).numFmt = '#,##0 "đ"'; // ĐƠN GIÁ
+  mainSheet.getColumn(12).numFmt = moneyFormat; // TỔNG TIỀN CHƯA THUẾ
+  mainSheet.getColumn(13).numFmt = moneyFormat; // TỔNG TIỀN THUẾ
+  mainSheet.getColumn(14).numFmt = moneyFormat; // TỔNG TIỀN CHIẾT KHẤU THƯƠNG MẠI
+  mainSheet.getColumn(15).numFmt = moneyFormat; // TỔNG TIỀN PHÍ
+  mainSheet.getColumn(16).numFmt = moneyFormat; // TỔNG TIỀN THANH TOÁN
+  mainSheet.getColumn(25).numFmt = moneyFormat; // ĐƠN GIÁ
   mainSheet.getColumn(26).numFmt = "0.00%"; // THUẾ SUẤT
-  mainSheet.getColumn(27).numFmt = '#,##0 "đ"'; // THÀNH TIỀN
-  mainSheet.getColumn(28).numFmt = '#,##0.00 "đ"'; // TIỀN THUẾ
+  mainSheet.getColumn(27).numFmt = moneyFormat; // THÀNH TIỀN
+  mainSheet.getColumn(28).numFmt = moneyFormat; // TIỀN THUẾ
 }
 
 export async function excelToBlob(workbook: ExcelJS.Workbook): Promise<Blob> {
@@ -353,11 +355,10 @@ export function createProductsSheet(
   });
 
   productsSheet.getColumn("E").numFmt = "dd/mm/yyyy";
-  productsSheet.getColumn("R").numFmt = "#,##0";
-  productsSheet.getColumn("U").numFmt = '#,##0 "đ"';
-  productsSheet.getColumn("V").numFmt = '#,##0.00 "đ"';
-
-  productsSheet.getColumn("T").numFmt = "0.00%";
+  productsSheet.getColumn("R").numFmt = moneyFormat;
+  productsSheet.getColumn("S").numFmt = "0.00%";
+  productsSheet.getColumn("T").numFmt = moneyFormat;
+  productsSheet.getColumn("U").numFmt = moneyFormat;
 
   productsSheet.views = [{ state: "frozen", ySplit: 1 }];
 }
@@ -438,10 +439,10 @@ export function createBK011Sheet(workbook: ExcelJS.Workbook, products: any[]) {
   const lastDataRow = firstDataRow + products.length - 1;
 
   for (let i = firstDataRow; i <= lastDataRow; i++) {
-    ws.getCell(`K${i}`).numFmt = '#,##0.00 "đ"';
-    ws.getCell(`L${i}`).numFmt = '#,##0.00 "đ"';
+    ws.getCell(`K${i}`).numFmt = moneyFormat;
+    ws.getCell(`L${i}`).numFmt = moneyFormat;
     ws.getCell(`M${i}`).numFmt = "0.00%";
-    ws.getCell(`N${i}`).numFmt = '#,##0.00 "đ"';
+    ws.getCell(`N${i}`).numFmt = moneyFormat;
   }
-  ws.getCell(`N${lastDataRow + 1}`).numFmt = '#,##0.00 "đ"'; // total row
+  ws.getCell(`N${lastDataRow + 1}`).numFmt = moneyFormat; // total row
 }
