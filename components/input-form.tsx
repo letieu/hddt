@@ -195,7 +195,6 @@ export function InputForm(props: {
                   onChange={(e) =>
                     setFromDate(getValidDateString(e.target.value))
                   }
-                  max={formatDateInput(today)}
                 />
                 <span>đến</span>
                 <Input
@@ -205,7 +204,6 @@ export function InputForm(props: {
                   onChange={(e) =>
                     setToDate(getValidDateString(e.target.value))
                   }
-                  max={formatDateInput(today)}
                 />
               </div>
               {errors.date && (
