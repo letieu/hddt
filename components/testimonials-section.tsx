@@ -7,7 +7,7 @@ export default function TestimonialsSection() {
       id="testimonials"
       className="py-24 px-4 bg-gradient-to-b from-background to-muted/30"
     >
-      <div className="container mx-auto max-w-6xl">
+      <div className="container mx-auto max-w-8xl">
         <h2 className="text-center text-4xl font-extrabold tracking-tight text-foreground md:text-5xl">
           Khách hàng nói gì về chúng tôi
         </h2>
@@ -15,7 +15,7 @@ export default function TestimonialsSection() {
           Cảm ơn Khách hàng đã tin tưởng và sử dụng sản phẩm của chúng tôi.
         </p>
 
-        <div className="mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {[
             {
               name: "Anh Nguyên",
