@@ -63,14 +63,20 @@ export async function Footer() {
                   Hóa đơn tiền điện EVN
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/tra-cuu-ma-so-thue"
+                  className="text-muted-foreground hover:text-accent transition-colors"
+                >
+                  Tra MST hàng loạt
+                </Link>
+              </li>
             </ul>
           </div>
 
           {/* Blog Link */}
           <div>
-            <h3 className="font-semibold text-card-foreground mb-4">
-              Blog
-            </h3>
+            <h3 className="font-semibold text-card-foreground mb-4">Blog</h3>
             <ul className="space-y-2">
               <li>
                 <Link

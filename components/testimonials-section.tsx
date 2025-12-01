@@ -32,6 +32,11 @@ export default function TestimonialsSection() {
               text: "Phần mềm dùng OK, hỗ trợ quá OK.",
               img: "/testimonial/03.jpg",
             },
+            {
+              name: "Anh Tú",
+              text: "Tốc độ nhanh",
+              img: "/testimonial/04.jpg",
+            },
           ].map((testimonial, i) => (
             <Card
               key={i}

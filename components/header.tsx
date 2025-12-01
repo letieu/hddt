@@ -7,7 +7,8 @@ import { ThemeToggle } from "./theme-toggle";
 const links = [
   { href: "/", label: "Tải hóa đơn" },
   { href: "/tai-hoa-don-goc", label: "Tải hóa đơn gốc" },
-  { href: "/hoa-don-tien-dien-evn", label: "Hóa đơn tiền điện EVN" },
+  { href: "/tra-cuu-ma-so-thue", label: "Tra MST" },
+  // { href: "/hoa-don-tien-dien-evn", label: "Hóa đơn tiền điện EVN" },
   // { href: "/lap-to-khai-thue", label: "Lập tờ khai" },
 ];
 
