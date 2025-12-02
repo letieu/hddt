@@ -67,7 +67,7 @@ export function HeroSection() {
           <div className="mt-12 flex flex-wrap justify-center items-center gap-x-8 gap-y-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <Cloud className="h-5 w-5 text-primary" />
-              <span>Miễn phí dùng thử</span>
+              <span>Không cần cài đặt</span>
             </div>
             <div className="flex items-center gap-2">
               <FileOutput className="h-5 w-5 text-primary" />
@@ -75,7 +75,7 @@ export function HeroSection() {
             </div>
             <div className="flex items-center gap-2">
               <Zap className="h-5 w-5 text-primary" />
-              <span>Tối ưu tốc độ tải xuống</span>
+              <span>Miễn phí dùng thử</span>
             </div>
           </div>
         </div>
