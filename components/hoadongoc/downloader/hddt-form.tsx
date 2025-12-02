@@ -257,4 +257,3 @@ export function HoadonGocForm({ onSearch, isBusy }: HoadonGocFormProps) {
     </form>
   );
 }
-

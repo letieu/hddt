@@ -27,10 +27,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default function MstLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function MstLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

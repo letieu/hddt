@@ -18,7 +18,8 @@ export async function deductCredits(
     .eq("user_id", userId)
     .single();
 
-  if (fetchError && fetchError.code !== "PGRST116") { // PGRST116: row not found
+  if (fetchError && fetchError.code !== "PGRST116") {
+    // PGRST116: row not found
     console.error("[ERROR] Fetching credits:", fetchError);
     throw new Error(fetchError.message);
   }

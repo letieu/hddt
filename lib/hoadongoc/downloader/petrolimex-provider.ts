@@ -123,4 +123,3 @@ function extractCheckCode(html: string) {
   const url = new URL(link, "https://example.com"); // base URL to make URL() work
   return url.searchParams.get("checkCode");
 }
-

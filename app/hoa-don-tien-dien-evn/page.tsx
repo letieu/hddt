@@ -2,7 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowDown, Bot, Clock, DownloadCloud, FileSpreadsheet, Zap } from "lucide-react";
+import {
+  ArrowDown,
+  Bot,
+  Clock,
+  DownloadCloud,
+  FileSpreadsheet,
+  Zap,
+} from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -92,8 +99,12 @@ export default function EvnInvoicePage() {
       <section className="bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-4 py-20">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold">Hoạt động như thế nào?</h2>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">Quy trình 3 bước đơn giản</p>
+            <h2 className="text-3xl md:text-4xl font-bold">
+              Hoạt động như thế nào?
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 mt-2">
+              Quy trình 3 bước đơn giản
+            </p>
           </div>
           <div className="relative">
             <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-blue-600"></div>
@@ -103,21 +114,27 @@ export default function EvnInvoicePage() {
                   <FileSpreadsheet className="h-8 w-8 text-blue-600" />
                 </div>
                 <h3 className="text-xl font-bold mt-6">Bước 1</h3>
-                <p className="text-gray-600 dark:text-gray-400 mt-2">Nhập danh sách tài khoản EVN từ file Excel</p>
+                <p className="text-gray-600 dark:text-gray-400 mt-2">
+                  Nhập danh sách tài khoản EVN từ file Excel
+                </p>
               </div>
               <div className="text-center relative">
                 <div className="relative z-10 mx-auto bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-full w-16 h-16 flex items-center justify-center">
                   <Bot className="h-8 w-8 text-blue-600" />
                 </div>
                 <h3 className="text-xl font-bold mt-6">Bước 2</h3>
-                <p className="text-gray-600 dark:text-gray-400 mt-2">Hệ thống tự động tải và xử lý dữ liệu</p>
+                <p className="text-gray-600 dark:text-gray-400 mt-2">
+                  Hệ thống tự động tải và xử lý dữ liệu
+                </p>
               </div>
               <div className="text-center relative">
                 <div className="relative z-10 mx-auto bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-full w-16 h-16 flex items-center justify-center">
                   <DownloadCloud className="h-8 w-8 text-blue-600" />
                 </div>
                 <h3 className="text-xl font-bold mt-6">Bước 3</h3>
-                <p className="text-gray-600 dark:text-gray-400 mt-2">Nhận file hóa đơn đã được sắp xếp</p>
+                <p className="text-gray-600 dark:text-gray-400 mt-2">
+                  Nhận file hóa đơn đã được sắp xếp
+                </p>
               </div>
             </div>
           </div>
@@ -127,7 +144,9 @@ export default function EvnInvoicePage() {
       {/* Image Section */}
       <section className="container mx-auto px-4 py-20">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold">Giao diện trực quan</h2>
+          <h2 className="text-3xl md:text-4xl font-bold">
+            Giao diện trực quan
+          </h2>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
             Dễ dàng sử dụng và theo dõi tiến trình
           </p>
@@ -161,7 +180,10 @@ export default function EvnInvoicePage() {
         </Button>
       </section>
 
-      <ContactPopup open={showContactPopup} onOpenChange={setShowContactPopup} />
+      <ContactPopup
+        open={showContactPopup}
+        onOpenChange={setShowContactPopup}
+      />
     </>
   );
 }

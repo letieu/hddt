@@ -67,7 +67,7 @@ export function HeroSection() {
           <div className="mt-12 flex flex-wrap justify-center items-center gap-x-8 gap-y-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <Cloud className="h-5 w-5 text-primary" />
-              <span>Không cần cài đặt</span>
+              <span>Miễn phí dùng thử</span>
             </div>
             <div className="flex items-center gap-2">
               <FileOutput className="h-5 w-5 text-primary" />
@@ -199,7 +199,10 @@ export function HeroSection() {
         </AlertDialogContent>
       </AlertDialog>
 
-      <ContactPopup open={showContactPopup} onOpenChange={setShowContactPopup} />
+      <ContactPopup
+        open={showContactPopup}
+        onOpenChange={setShowContactPopup}
+      />
     </section>
   );
 }

@@ -28,20 +28,29 @@ const faqs = [
   },
   {
     question: "Có tải được hóa đơn gốc không?",
-    answer:
-      <span>Công cụ tải hóa đơn gốc được phát triển độc lập tại địa chỉ <a className="text-blue" href="https://taihoadon.online/tai-hoa-don-goc">https://taihoadon.online/tai-hoa-don-goc</a> . Vui lòng truy cập trang web để sử dụng dịch vụ tải hóa đơn gốc.</span>
+    answer: (
+      <span>
+        Công cụ tải hóa đơn gốc được phát triển độc lập tại địa chỉ{" "}
+        <a
+          className="text-blue"
+          href="https://taihoadon.online/tai-hoa-don-goc"
+        >
+          https://taihoadon.online/tai-hoa-don-goc
+        </a>{" "}
+        . Vui lòng truy cập trang web để sử dụng dịch vụ tải hóa đơn gốc.
+      </span>
+    ),
   },
   {
     question: "Sau khi tải, tôi sẽ nhận được những gì?",
-    answer:
-      `Sau khi quá trình tải hoàn tất, bạn sẽ nhận được 1 file Excel và 1 file nén (ZIP).
+    answer: `Sau khi quá trình tải hoàn tất, bạn sẽ nhận được 1 file Excel và 1 file nén (ZIP).
         - File Excel bao gồm: 
             + (Hóa đơn điện tử/ hóa đơn từ máy tính tiền) + chi tiết sp từng hóa đơn
             + Danh sách sản phẩm
             + Bảng kê hóa đơn
             + File tổng hợp danh sách hóa đơn
         - File nén (ZIP) bao gồm tất cả các hóa đơn ở định dạng XML, HTML, PDF.
-    `
+    `,
   },
   {
     question: "Chi phí sử dụng dịch vụ là bao nhiêu?",
@@ -65,7 +74,9 @@ export function FAQSection() {
           {faqs.map((faq, index) => (
             <AccordionItem value={`item-${index}`} key={index}>
               <AccordionTrigger>{faq.question}</AccordionTrigger>
-              <AccordionContent className="whitespace-pre-wrap">{faq.answer}</AccordionContent>
+              <AccordionContent className="whitespace-pre-wrap">
+                {faq.answer}
+              </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
@@ -73,4 +84,3 @@ export function FAQSection() {
     </section>
   );
 }
-

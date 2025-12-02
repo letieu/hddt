@@ -735,9 +735,7 @@ const providerList = [
 ];
 
 export function getProviderDetail(params: DownloadParams) {
-  const provider = providerList.find(
-    (p) => p.MST === params.msttcgp,
-  );
+  const provider = providerList.find((p) => p.MST === params.msttcgp);
   if (!provider) {
     return null;
   }

@@ -5,8 +5,12 @@ import {
   invoiceItemTypeTitle,
 } from "./format";
 import { InvoiceType } from "./hoadon-api";
+import {
+  getLookupProvider,
+  type DownloadParams,
+} from "../hoadongoc/downloader";
 
-const moneyFormat = '#,##0'
+const moneyFormat = "#,##0";
 
 /**
  * ExcelJS does not handle timezones well. Dates are written as UTC.
@@ -72,7 +76,12 @@ export function createCombinedInvoicesSheet(
   const mainSheet = workbook.addWorksheet(sheetName);
 
   const mainSectionHeader = getMainSectionHeader(); // Removed invoiceType argument
-  const combinedHeader = ["LOẠI HÓA ĐƠN", ...mainSectionHeader];
+  const combinedHeader = [
+    "LOẠI HÓA ĐƠN",
+    ...mainSectionHeader,
+    "Link tra cứu",
+    "Mã tra cứu",
+  ];
   // Add headers
   const headerRow = mainSheet.addRow(combinedHeader);
   headerRow.font = { bold: true };
@@ -82,58 +91,51 @@ export function createCombinedInvoicesSheet(
 
   // Add data
   let rowIndex = 1;
-  invoices.forEach((invoice) => {
-    rowIndex++;
-    const row = mainSheet.getRow(rowIndex);
-    row.getCell(1).value = "HĐ điện tử";
-    row.getCell(2).value = rowIndex - 1;
-    row.getCell(3).value = invoice.hdon;
-    row.getCell(4).value = invoice.khhdon;
-    row.getCell(5).value = invoice.shdon;
-    row.getCell(6).value = toVietnamDate(invoice.tdlap); // NGÀY LẬP
-    row.getCell(8).value = invoice.nbmst; // MST NGƯỜI BÁN
-    row.getCell(9).value = invoice.nbten; // TÊN NGƯỜI BÁN
-    row.getCell(10).value = invoice.nbdchi; // ĐỊA CHỈ NGƯỜI BÁN
-    row.getCell(11).value = invoice.nmmst; // MST NGƯỜI MUA
-    row.getCell(12).value = invoice.nmten; // TÊN NGƯỜI MUA
-    row.getCell(13).value = invoice.nmdchi; // ĐỊA CHỈ NGƯỜI MUA
-    row.getCell(14).value = invoice.tgtcthue; // TỔNG TIỀN CHƯA THUẾ
-    row.getCell(15).value = invoice.tgtthue; // TỔNG TIỀN THUẾ
-    row.getCell(16).value = invoice.ttcktmai; // TỔNG TIỀN CHIẾT KHẤU THƯƠNG MẠI
-    row.getCell(17).value = invoice.tgtphi; // TỔNG TIỀN PHÍ
-    row.getCell(18).value = invoice.tgtttbso; // TỔNG TIỀN THANH TOÁN
-    row.getCell(19).value = invoice.dvtte; // ĐƠN VỊ TIỀN TỆ
-    row.getCell(20).value = invoice.tgia || 1; // TỶ GIÁ
-    row.getCell(21).value = invoiceStatusTitle[invoice.tthai] ?? invoice.tthai; // TRẠNG THÁI HÓA ĐƠN
-    row.getCell(22).value =
-      invoiceCheckResultTitlte[invoice.ttxly] ?? invoice.ttxly; // KẾT QUẢ KIỂM TRA HÓA ĐƠN
-  });
+  const allInvoices = [
+    ...invoices.map((i) => ({ ...i, type: "HĐ điện tử" })),
+    ...invoicesFromCashRegister.map((i) => ({
+      ...i,
+      type: "HĐ từ máy tính tiền",
+    })),
+  ];
 
-  invoicesFromCashRegister.forEach((invoice) => {
+  allInvoices.forEach((invoice) => {
     rowIndex++;
     const row = mainSheet.getRow(rowIndex);
-    row.getCell(1).value = "HĐ từ máy tính tiền";
+    row.getCell(1).value = invoice.type;
     row.getCell(2).value = rowIndex - 1;
     row.getCell(3).value = invoice.hdon;
     row.getCell(4).value = invoice.khhdon;
     row.getCell(5).value = invoice.shdon;
     row.getCell(6).value = toVietnamDate(invoice.tdlap); // NGÀY LẬP
-    row.getCell(7).value = invoice.nbmst;
-    row.getCell(8).value = invoice.nbten;
-    row.getCell(9).value = invoice.nbdchi;
-    row.getCell(10).value = invoice.nmmst;
-    row.getCell(11).value = invoice.nmten;
-    row.getCell(12).value = invoice.nmdchi;
-    row.getCell(13).value = invoice.tgtcthue;
-    row.getCell(14).value = invoice.tgtthue;
-    row.getCell(15).value = invoice.ttcktmai;
-    row.getCell(16).value = invoice.tgtphi;
-    row.getCell(17).value = invoice.tgtttbso;
-    row.getCell(18).value = invoice.dvtte;
-    row.getCell(19).value = invoice.tgia || 1;
-    row.getCell(20).value = invoiceStatusTitle[invoice.tthai] ?? invoice.tthai;
+    row.getCell(7).value = invoice.nbmst; // MST NGƯỜI BÁN
+    row.getCell(8).value = invoice.nbten; // TÊN NGƯỜI BÁN
+    row.getCell(9).value = invoice.nbdchi; // ĐỊA CHỈ NGƯỜI BÁN
+    row.getCell(10).value = invoice.nmmst; // MST NGƯỜI MUA
+    row.getCell(11).value = invoice.nmten; // TÊN NGƯỜI MUA
+    row.getCell(12).value = invoice.nmdchi; // ĐỊA CHỈ NGƯỜI MUA
+    row.getCell(13).value = invoice.tgtcthue; // TỔNG TIỀN CHƯA THUẾ
+    row.getCell(14).value = invoice.tgtthue; // TỔNG TIỀN THUẾ
+    row.getCell(15).value = invoice.ttcktmai; // TỔNG TIỀN CHIẾT KHẤU THƯƠNG MẠI
+    row.getCell(16).value = invoice.tgtphi; // TỔNG TIỀN PHÍ
+    row.getCell(17).value = invoice.tgtttbso; // TỔNG TIỀN THANH TOÁN
+    row.getCell(18).value = invoice.dvtte; // ĐƠN VỊ TIỀN TỆ
+    row.getCell(19).value = invoice.tgia || 1; // TỶ GIÁ
+    row.getCell(20).value = invoiceStatusTitle[invoice.tthai] ?? invoice.tthai; // TRẠNG THÁI HÓA ĐƠN
     row.getCell(21).value =
-      invoiceCheckResultTitlte[invoice.ttxly] ?? invoice.ttxly;
+      invoiceCheckResultTitlte[invoice.ttxly] ?? invoice.ttxly; // KẾT QUẢ KIỂM TRA HÓA ĐƠN
+
+    const provider = getLookupProvider(invoice as DownloadParams);
+    if (provider) {
+      const lookupUrl = provider.lookupUrl(invoice as DownloadParams);
+      if (lookupUrl) {
+        row.getCell(22).value = {
+          text: lookupUrl,
+          hyperlink: lookupUrl,
+        };
+      }
+      row.getCell(23).value = provider.lookupInfo(invoice as DownloadParams);
+    }
   });
 
   // Formatting
@@ -149,11 +151,11 @@ export function createCombinedInvoicesSheet(
   });
 
   mainSheet.getColumn(6).numFmt = "dd/mm/yyyy";
+  mainSheet.getColumn(13).numFmt = moneyFormat;
   mainSheet.getColumn(14).numFmt = moneyFormat;
   mainSheet.getColumn(15).numFmt = moneyFormat;
   mainSheet.getColumn(16).numFmt = moneyFormat;
   mainSheet.getColumn(17).numFmt = moneyFormat;
-  mainSheet.getColumn(18).numFmt = moneyFormat;
 }
 
 export function createInvoicesSheet(

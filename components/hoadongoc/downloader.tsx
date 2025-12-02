@@ -3,10 +3,7 @@
 import { useState } from "react";
 import { CaptchaDialog } from "@/components/captcha-popup";
 import { useHoadonDientuSearch } from "./hooks/use-hoadondientu-search";
-import {
-  InvoiceWithProvider,
-  LogEntry,
-} from "@/lib/hoadongoc/types";
+import { InvoiceWithProvider, LogEntry } from "@/lib/hoadongoc/types";
 import { detectProvider } from "@/lib/hoadongoc/utils";
 import { InputForm } from "./downloader/input-form";
 import { Logs } from "./downloader/logs";

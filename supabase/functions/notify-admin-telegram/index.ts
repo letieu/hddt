@@ -39,7 +39,7 @@ Deno.serve(async (req) => {
 
 <b>User Email:</b> ${record.user_email}
 <b>Credit Option:</b> ${record.credit_option_name} (${record.credit_amount} credits)
-<b>Price:</b> ${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(record.price)}
+<b>Price:</b> ${new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(record.price)}
 <b>Payment Info:</b> <code>${record.payment_info}</code>
     `;
 

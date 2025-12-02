@@ -26,7 +26,9 @@ export function Header() {
                 alt="Tải hóa đơn logo"
               />
             </div>
-            <span className="text-xl font-bold text-foreground">Tải hóa đơn</span>
+            <span className="text-xl font-bold text-foreground">
+              Tải hóa đơn
+            </span>
           </Link>
 
           {/* Desktop Nav */}

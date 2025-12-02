@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Table,
@@ -10,10 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import {
-  InvoiceWithProvider,
-  mockInvoice,
-} from "@/lib/hoadongoc/types";
+import { InvoiceWithProvider, mockInvoice } from "@/lib/hoadongoc/types";
 
 interface ResultTableProps {
   searchState: "idle" | "searching" | "success" | "failed";

@@ -1,3 +1,4 @@
+import { FallbackProvider } from "./fallback-provider";
 import { FastProvider } from "./fast-provider";
 import { GioathongProvider } from "./giaothongso-provider";
 import { MInvoiceProvider } from "./m-invoice-provider";
@@ -32,7 +33,7 @@ export interface HoadongocDownloadProvider {
   download(params: DownloadParams): Promise<ArrayBuffer>;
 }
 
-const downloadProviders = [
+const downloadProviders: HoadongocDownloadProvider[] = [
   // Người bán
   new GioathongProvider(),
   new PetrolimexProvider(),
@@ -42,6 +43,15 @@ const downloadProviders = [
   new FastProvider(),
 ];
 
+const allProviders: HoadongocDownloadProvider[] = [
+  ...downloadProviders,
+  new FallbackProvider(),
+];
+
+export function getLookupProvider(params: DownloadParams) {
+  return allProviders.find((p) => p.detectProvider(params));
+}
+
 export function getDownloadProvider(params: DownloadParams) {
   return downloadProviders.find((p) => p.detectProvider(params));
 }
@@ -49,7 +59,7 @@ export function getDownloadProvider(params: DownloadParams) {
 export function downloadPdf(params: DownloadParams) {
   const downloadProvider = getDownloadProvider(params);
   if (!downloadProvider) {
-    throw new Error("No provider found for " + (params.id));
+    throw new Error("No provider found for " + params.id);
   }
 
   return downloadProvider.download(params);

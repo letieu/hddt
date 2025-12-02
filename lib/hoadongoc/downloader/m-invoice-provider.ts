@@ -15,17 +15,13 @@ export class MInvoiceProvider implements HoadongocDownloadProvider {
   }
 
   lookupInfo(params: DownloadParams) {
-    const code = params.cttkhac.find(
-      (t) => t.ttruong === "Số bảo mật",
-    )?.dlieu;
+    const code = params.cttkhac.find((t) => t.ttruong === "Số bảo mật")?.dlieu;
 
     return `Mã: ${code}`;
   }
 
   async download(params: DownloadParams): Promise<ArrayBuffer> {
-    const code = params.cttkhac.find(
-      (t) => t.ttruong === "Số bảo mật",
-    )?.dlieu;
+    const code = params.cttkhac.find((t) => t.ttruong === "Số bảo mật")?.dlieu;
 
     const downloadUrl = `https://tracuuhoadon.minvoice.com.vn/api/Search/SearchInvoice?masothue=${params.nbmst}&sobaomat=${code}&type=PDF`;
     const response = await fetch(downloadUrl, {

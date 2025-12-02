@@ -50,18 +50,28 @@ Deno.serve(async (req) => {
     if (body.message) {
       const message = body.message;
       if (!message || !message.text) {
-        return new Response(JSON.stringify({ message: "No message text" }), { status: 200 });
+        return new Response(JSON.stringify({ message: "No message text" }), {
+          status: 200,
+        });
       }
 
       const chatId = message.chat.id;
       const text = message.text;
 
       if (chatId.toString() !== TELEGRAM_ADMIN_ID) {
-        await sendTelegramMessage(chatId, "You are not authorized to use this bot.");
-        return new Response(JSON.stringify({ message: "Unauthorized" }), { status: 401 });
+        await sendTelegramMessage(
+          chatId,
+          "You are not authorized to use this bot.",
+        );
+        return new Response(JSON.stringify({ message: "Unauthorized" }), {
+          status: 401,
+        });
       }
 
-      await sendTelegramMessage(chatId, "I am a bot for payment notifications. I don't have any other commands.");
+      await sendTelegramMessage(
+        chatId,
+        "I am a bot for payment notifications. I don't have any other commands.",
+      );
     }
 
     // Handle button clicks (callback queries)
@@ -71,25 +81,38 @@ Deno.serve(async (req) => {
 
       if (action === "approve") {
         // 1. Get notification details
-        const { data: notification, error: notificationError } = await supabaseAdmin
-          .from("payment_notifications")
-          .select("*")
-          .eq("id", notificationId)
-          .single();
+        const { data: notification, error: notificationError } =
+          await supabaseAdmin
+            .from("payment_notifications")
+            .select("*")
+            .eq("id", notificationId)
+            .single();
 
-        if (notificationError) throw new Error(`Notification fetch failed: ${notificationError.message}`);
+        if (notificationError)
+          throw new Error(
+            `Notification fetch failed: ${notificationError.message}`,
+          );
         if (notification.status === "completed") {
-          await answerCallbackQuery(callbackQuery.id, "This payment has already been approved.");
-          return new Response(JSON.stringify({ message: "Already approved" }), { status: 200 });
+          await answerCallbackQuery(
+            callbackQuery.id,
+            "This payment has already been approved.",
+          );
+          return new Response(JSON.stringify({ message: "Already approved" }), {
+            status: 200,
+          });
         }
 
         // 2. Update user credits
-        const { error: creditError } = await supabaseAdmin.rpc("increment_credit", {
-          user_id_input: notification.user_id,
-          increment_value: notification.credit_amount,
-        });
+        const { error: creditError } = await supabaseAdmin.rpc(
+          "increment_credit",
+          {
+            user_id_input: notification.user_id,
+            increment_value: notification.credit_amount,
+          },
+        );
 
-        if (creditError) throw new Error(`Credit update failed: ${creditError.message}`);
+        if (creditError)
+          throw new Error(`Credit update failed: ${creditError.message}`);
 
         // 3. Update notification status
         const { error: updateError } = await supabaseAdmin
@@ -97,20 +120,32 @@ Deno.serve(async (req) => {
           .update({ status: "completed" })
           .eq("id", notificationId);
 
-        if (updateError) throw new Error(`Notification update failed: ${updateError.message}`);
+        if (updateError)
+          throw new Error(`Notification update failed: ${updateError.message}`);
 
         // 4. Provide feedback to admin
         await answerCallbackQuery(callbackQuery.id, "Payment approved!");
 
         const approvedMessage = callbackQuery.message.text + "✅ Approved";
-        await editMessageText(callbackQuery.message.chat.id, callbackQuery.message.message_id, approvedMessage);
+        await editMessageText(
+          callbackQuery.message.chat.id,
+          callbackQuery.message.message_id,
+          approvedMessage,
+        );
       }
     }
 
-    return new Response(JSON.stringify({ message: "Processed" }), { status: 200 });
+    return new Response(JSON.stringify({ message: "Processed" }), {
+      status: 200,
+    });
   } catch (error) {
     console.error("Error processing webhook:", error);
-    await sendTelegramMessage(TELEGRAM_ADMIN_ID, "An error occurred while processing your request.");
-    return new Response(JSON.stringify({ error: error.message }), { status: 400 });
+    await sendTelegramMessage(
+      TELEGRAM_ADMIN_ID,
+      "An error occurred while processing your request.",
+    );
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 400,
+    });
   }
 });

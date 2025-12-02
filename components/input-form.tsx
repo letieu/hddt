@@ -295,11 +295,7 @@ export function InputForm(props: {
             <div className="space-y-2 pt-2">
               <Label>Loại file tải về</Label>
               <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="download-excel"
-                  disabled
-                  checked={true}
-                />
+                <Checkbox id="download-excel" disabled checked={true} />
                 <Label htmlFor="download-excel" className="font-normal">
                   Tải file Excel
                 </Label>

@@ -60,15 +60,16 @@ async function fetchWithCookies(
 }
 
 async function fetchCaptchaAndSolve(cookieJar: string[]) {
-  const { res: captchaRes, cookieJar: updatedCookieJar } = await fetchWithCookies(
-    "https://tracuunnt.gdt.gov.vn/tcnnt/captcha.png?uid=",
-    {
-      headers: {
-        "User-Agent": "Mozilla/5.0",
+  const { res: captchaRes, cookieJar: updatedCookieJar } =
+    await fetchWithCookies(
+      "https://tracuunnt.gdt.gov.vn/tcnnt/captcha.png?uid=",
+      {
+        headers: {
+          "User-Agent": "Mozilla/5.0",
+        },
       },
-    },
-    cookieJar,
-  );
+      cookieJar,
+    );
 
   if (!captchaRes.ok) throw new Error("Cannot fetch captcha");
 
@@ -106,14 +107,18 @@ async function fetchTaxInfo(
     url = `https://tracuunnt.gdt.gov.vn/tcnnt/mstdn.jsp?taxId=${mst}`;
   }
 
-  const { res, cookieJar: updatedCookieJar } = await fetchWithCookies(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      Referer: `https://tracuunnt.gdt.gov.vn/tcnnt/mstcn.jsp?taxId=${mst}`,
+  const { res, cookieJar: updatedCookieJar } = await fetchWithCookies(
+    url,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Referer: `https://tracuunnt.gdt.gov.vn/tcnnt/mstcn.jsp?taxId=${mst}`,
+      },
+      body,
     },
-    body,
-  }, cookieJar);
+    cookieJar,
+  );
 
   if (!res.ok) throw new Error("Cannot fetch tax info");
   return { html: await res.text(), cookieJar: updatedCookieJar };
@@ -215,23 +220,29 @@ Deno.serve(async (req) => {
         if (detail && detail.length > 0) {
           return detail; // Return the actual data
         } else {
-          return [{ // Return a structured "not found" message
-            MST: mst,
-            "Tên người nộp thuế": "Không tìm thấy dữ liệu",
-            "Địa chỉ trụ sở/địa chỉ kinh doanh": "",
-            "Cơ quan thuế quản lý": "",
-            "Trạng thái MST": "",
-          }];
+          return [
+            {
+              // Return a structured "not found" message
+              MST: mst,
+              "Tên người nộp thuế": "Không tìm thấy dữ liệu",
+              "Địa chỉ trụ sở/địa chỉ kinh doanh": "",
+              "Cơ quan thuế quản lý": "",
+              "Trạng thái MST": "",
+            },
+          ];
         }
       } catch (error: any) {
         console.error(`Error crawling MST ${mst}:`, error);
-        return [{ // Return a structured error message
-          MST: mst,
-          "Tên người nộp thuế": "Lỗi",
-          "Địa chỉ trụ sở/địa chỉ kinh doanh": error.message,
-          "Cơ quan thuế quản lý": "",
-          "Trạng thái MST": "",
-        }];
+        return [
+          {
+            // Return a structured error message
+            MST: mst,
+            "Tên người nộp thuế": "Lỗi",
+            "Địa chỉ trụ sở/địa chỉ kinh doanh": error.message,
+            "Cơ quan thuế quản lý": "",
+            "Trạng thái MST": "",
+          },
+        ];
       }
     });
 
@@ -248,7 +259,8 @@ Deno.serve(async (req) => {
         allCrawlData.push({
           MST: "N/A", // Or try to extract from result.reason if possible
           "Tên người nộp thuế": "Lỗi hệ thống",
-          "Địa chỉ trụ sở/địa chỉ kinh doanh": result.reason?.message || "Unknown error",
+          "Địa chỉ trụ sở/địa chỉ kinh doanh":
+            result.reason?.message || "Unknown error",
           "Cơ quan thuế quản lý": "",
           "Trạng thái MST": "",
         });

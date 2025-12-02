@@ -55,7 +55,7 @@ export function CaptchaDialog({
     setLoading(false);
 
     if (error) {
-      setErrMsg(error)
+      setErrMsg(error);
       return;
     }
 

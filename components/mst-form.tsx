@@ -72,8 +72,6 @@ export function MstForm() {
     };
   }, [supabase.auth]);
 
-
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isLoggedIn || !user) {

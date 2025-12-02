@@ -42,10 +42,6 @@ const features = [
   },
 ];
 
-
-
-
-
 function LoginPrompt() {
   const supabase = createClient();
   const handleLogin = async () => {
